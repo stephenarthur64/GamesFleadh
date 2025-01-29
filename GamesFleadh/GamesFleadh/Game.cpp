@@ -48,7 +48,7 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 1.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
-    DrawModel(*player.getModel(), player.getPositon(), 1.0f, GREEN);
+    DrawModel(*player.getModel(), {newCamX - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, GREEN);
 
     DrawGrid(20, 1.0f);
 
@@ -61,7 +61,7 @@ void Game::render()
 
 void Game::update()
 {
-    inputControl(newCamX);
+    inputControl();
     camera.position = { newCamX, 2.0f, 0.0f };
 
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
@@ -84,16 +84,18 @@ void Game::loadAssets()
     *player.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
 }
 
-void Game::inputControl(float& t_camPos)
+void Game::inputControl()
 {
     if (IsKeyDown(KEY_W))
     {
-        t_camPos -= 0.1f;
+        newCamX -= 0.1f;
     }
     if (IsKeyDown(KEY_S))
     {
-        t_camPos += 0.1f;
+        newCamX += 0.1f;
     }
+
+
     if (IsKeyDown(KEY_UP))
     {
         player.move(NORTH);

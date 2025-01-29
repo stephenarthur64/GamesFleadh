@@ -14,7 +14,7 @@ public:
 	void update();
 	void loadAssets();
 
-	void inputControl(float& t_camPos);
+	void inputControl();
 
 private:
 	Camera camera;
