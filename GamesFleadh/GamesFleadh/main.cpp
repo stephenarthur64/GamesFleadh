@@ -17,6 +17,19 @@
 
 #include "raylib.h"
 
+void inputControl(float &t_camPos)
+{
+    if (IsKeyDown(KEY_W))
+    {
+        t_camPos -= 0.1f;
+    }
+    if (IsKeyDown(KEY_S))
+    {
+        t_camPos += 0.1f;
+    }
+}
+
+
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
@@ -26,13 +39,14 @@ int main(void)
     //--------------------------------------------------------------------------------------
     const int screenWidth = 800;
     const int screenHeight = 450;
+    float newCamX = 8.0f;
 
     InitWindow(screenWidth, screenHeight, "raylib [models] example - heightmap loading and drawing");
 
     // Define our custom camera to look into our 3d world
     Camera camera = { 0 };
     camera.position = { 8.0f, 2.0f, 0.0f };     // Camera position
-    camera.target = { -23.0f, 0.0f, -8.0f };          // Camera looking at point
+    camera.target = { -230.0f, 0.0f, 0.0f };          // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
     camera.fovy = 90.0f;                                    // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
@@ -55,10 +69,14 @@ int main(void)
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
+
+        inputControl(newCamX);
+        camera.position = { newCamX, 2.0f, 0.0f };
         // Update
         //----------------------------------------------------------------------------------
         UpdateCamera(&camera, CAMERA_PERSPECTIVE);
         //----------------------------------------------------------------------------------
+        
 
         // Draw
         //----------------------------------------------------------------------------------
