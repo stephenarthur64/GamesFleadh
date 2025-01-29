@@ -58,6 +58,7 @@ void Game::render()
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
     DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, GREEN);
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, RED);
+    DrawModel(*player.getBulletModel(), player.getBulletPositon(), 0.5f, BLUE);
 
     DrawText(TextFormat("GP%d: %s", gamepad, GetGamepadName(gamepad)), 10, 10, 10, BLACK);
 
@@ -96,6 +97,7 @@ void Game::loadAssets()
 
     *player.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
     *enemy.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
+    *player.getBulletModel() = LoadModel("ASSETS/RS/bulletProto.glb");
 }
 
 void Game::inputControl()
