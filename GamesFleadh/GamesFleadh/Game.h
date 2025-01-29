@@ -31,7 +31,8 @@ private:
 	Model heightmapModel;
 	Vector3 mapPosition;
 	Vector3 mapPosition2;
-	float newCamX = 8.0f;
+	Vector3 camPos;
+	
 	float camSpeed = 0.1f;
 
 	int gamepad = 0;

@@ -33,7 +33,8 @@ void Game::init()
 
     // Define our custom camera to look into our 3d world
     camera = { 0 };
-    camera.position = { 8.0f, 2.0f, 0.0f };     // Camera position
+    camPos = { 8.0f, 2.0f, 0.0f };
+    camera.position = camPos;     // Camera position
     camera.target = { -230.0f, 0.0f, 0.0f };          // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
     camera.fovy = 90.0f;                                    // Camera field-of-view Y
@@ -55,7 +56,7 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
-    DrawModel(*player.getModel(), {newCamX - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, GREEN);
+    DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, GREEN);
 
     DrawText(TextFormat("GP%d: %s", gamepad, GetGamepadName(gamepad)), 10, 10, 10, BLACK);
 
@@ -72,7 +73,7 @@ void Game::update()
 {
     gamepadUpdate();
     inputControl();
-    camera.position = { newCamX, 2.0f, 0.0f };
+    camera.position = camPos;
 
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
@@ -101,22 +102,22 @@ void Game::inputControl()
     {
         if (leftStickY < 0)
         {
-           newCamX -= 0.1f * (-leftStickY);
+           camPos.x -= 0.1f * (-leftStickY);
         }
         else
         {
-            newCamX -= 0.1f;
+            camPos.x -= 0.1f;
         }
     }
     if (IsKeyDown(KEY_S) || leftStickY > 0)
     {
         if (leftStickY > 0)
         {
-           newCamX += 0.1f * (leftStickY);
+           camPos.x += 0.1f * (leftStickY);
         }
         else
         {
-            newCamX += 0.1f;
+            camPos.x += 0.1f;
         }
     }
 
@@ -124,18 +125,22 @@ void Game::inputControl()
     if (IsKeyDown(KEY_UP) || rightStickY < 0)
     {
         player.move(NORTH);
+        camPos.y += 0.1f;
     }
     if (IsKeyDown(KEY_DOWN) || rightStickY > 0)
     {
         player.move(SOUTH);
+        camPos.y -= 0.1f;
     }
     if (IsKeyDown(KEY_LEFT) || rightStickX < 0)
     {
         player.move(EAST);
+        camPos.z += 0.1f;
     }
     if (IsKeyDown(KEY_RIGHT) || rightStickX > 0)
     {
         player.move(WEST);
+        camPos.z -= 0.1f;
     }
 }
 
