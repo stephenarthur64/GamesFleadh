@@ -2,6 +2,12 @@
 
 Game::Game()
 {
+    leftStickX = 0.0f;
+    leftStickY = 0.0f;
+    rightStickX = 0.0f;
+    rightStickY = 0.0f;
+    leftTrigger = 0.0f;
+    rightTrigger = 0.0f;
 }
 
 Game::~Game()
@@ -34,6 +40,7 @@ void Game::init()
     camera.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
     
     loadAssets();
+    gamepadInit();
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 }
@@ -50,6 +57,8 @@ void Game::render()
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
     DrawModel(*player.getModel(), {newCamX - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, GREEN);
 
+    DrawText(TextFormat("GP%d: %s", gamepad, GetGamepadName(gamepad)), 10, 10, 10, BLACK);
+
     DrawGrid(20, 1.0f);
 
     EndMode3D();
@@ -61,15 +70,17 @@ void Game::render()
 
 void Game::update()
 {
+    gamepadUpdate();
     inputControl();
     camera.position = { newCamX, 2.0f, 0.0f };
 
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
+
 }
 
 void Game::loadAssets()
 {
-    heightmapImage = LoadImage("ASSETS/heightmap4.png");     // Load heightmap image (RAM)
+    heightmapImage = LoadImage("ASSETS/heightmapWider.png");     // Load heightmap image (RAM)
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
     heightmapMesh = GenMeshHeightmap(heightmapImage, { 16, 8, 16 }); // Generate heightmap mesh (RAM and VRAM)
@@ -86,30 +97,90 @@ void Game::loadAssets()
 
 void Game::inputControl()
 {
-    if (IsKeyDown(KEY_W))
+    if (IsKeyDown(KEY_W) || leftStickY < 0)
     {
-        newCamX -= 0.1f;
+        if (leftStickY < 0)
+        {
+           newCamX -= 0.1f * (-leftStickY);
+        }
+        else
+        {
+            newCamX -= 0.1f;
+        }
     }
-    if (IsKeyDown(KEY_S))
+    if (IsKeyDown(KEY_S) || leftStickY > 0)
     {
-        newCamX += 0.1f;
+        if (leftStickY > 0)
+        {
+           newCamX += 0.1f * (leftStickY);
+        }
+        else
+        {
+            newCamX += 0.1f;
+        }
     }
 
 
-    if (IsKeyDown(KEY_UP))
+    if (IsKeyDown(KEY_UP) || rightStickY < 0)
     {
         player.move(NORTH);
     }
-    if (IsKeyDown(KEY_DOWN))
+    if (IsKeyDown(KEY_DOWN) || rightStickY > 0)
     {
         player.move(SOUTH);
     }
-    if (IsKeyDown(KEY_LEFT))
+    if (IsKeyDown(KEY_LEFT) || rightStickX < 0)
     {
         player.move(EAST);
     }
-    if (IsKeyDown(KEY_RIGHT))
+    if (IsKeyDown(KEY_RIGHT) || rightStickX > 0)
     {
         player.move(WEST);
     }
+}
+
+void Game::gamepadInit()
+{
+    // Set axis deadzones
+    leftStickDeadzoneX = 0.1f;
+    leftStickDeadzoneY = 0.1f;
+    rightStickDeadzoneX = 0.1f;
+    rightStickDeadzoneY = 0.1f;
+    leftTriggerDeadzone = -0.9f;
+    rightTriggerDeadzone = -0.9f;
+
+    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    //--------------------------------------------------------------------------------------
+
+    int gamepad = 0; // which gamepad to display
+}
+
+void Game::gamepadUpdate()
+{
+    if (IsKeyPressed(KEY_LEFT) && gamepad > 0) gamepad--;
+    if (IsKeyPressed(KEY_RIGHT)) gamepad++;
+
+    if (IsGamepadAvailable(gamepad))
+    {
+        // Get axis values
+        leftStickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
+        leftStickY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
+        rightStickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X);
+        rightStickY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y);
+        leftTrigger = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_TRIGGER);
+        rightTrigger = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_TRIGGER);
+
+        // Calculate deadzones
+        if (leftStickX > -leftStickDeadzoneX && leftStickX < leftStickDeadzoneX) leftStickX = 0.0f;
+        if (leftStickY > -leftStickDeadzoneY && leftStickY < leftStickDeadzoneY) leftStickY = 0.0f;
+        if (rightStickX > -rightStickDeadzoneX && rightStickX < rightStickDeadzoneX) rightStickX = 0.0f;
+        if (rightStickY > -rightStickDeadzoneY && rightStickY < rightStickDeadzoneY) rightStickY = 0.0f;
+        if (leftTrigger < leftTriggerDeadzone) leftTrigger = -1.0f;
+        if (rightTrigger < rightTriggerDeadzone) rightTrigger = -1.0f;
+    }
+}
+
+void Game::gamepadControl()
+{
+    
 }
