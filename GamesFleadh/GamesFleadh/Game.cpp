@@ -193,3 +193,7 @@ void Game::gamepadControl()
 {
     
 }
+
+void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
+{
+}

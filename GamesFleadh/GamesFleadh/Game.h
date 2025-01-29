@@ -23,6 +23,7 @@ public:
 	void gamepadInit();
 	void gamepadUpdate();
 	void gamepadControl();
+	void checkCollisions(BoundingBox t_a, BoundingBox t_b);
 
 private:
 	Camera camera;
