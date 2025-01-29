@@ -57,6 +57,9 @@ int main(void)
     Mesh mesh = GenMeshHeightmap(image, { 16, 8, 16 }); // Generate heightmap mesh (RAM and VRAM)
     Model model = LoadModelFromMesh(mesh);                  // Load model from generated mesh
 
+    Model player = LoadModel("ASSETS/RS/bugProto01.glb");
+    Vector3 playerPosition = { 0.0f, 0.0f, 0.0f };
+
     model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture; // Set map diffuse texture
     Vector3 mapPosition = { -8.0f, 0.0f, -8.0f };           // Define model position
     Vector3 mapPosition2 = { -23.0f, 0.0f, -8.0f };
@@ -88,6 +91,7 @@ int main(void)
 
         DrawModel(model, mapPosition, 1.0f, WHITE);
         DrawModel(model, mapPosition2, 1.0f, WHITE);
+        DrawModel(player, playerPosition, 1.0f, GREEN);
 
         DrawGrid(20, 1.0f);
 
