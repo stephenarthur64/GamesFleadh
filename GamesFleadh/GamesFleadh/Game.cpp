@@ -57,6 +57,7 @@ void Game::render()
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
     DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, GREEN);
+    DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, RED);
 
     DrawText(TextFormat("GP%d: %s", gamepad, GetGamepadName(gamepad)), 10, 10, 10, BLACK);
 
@@ -94,6 +95,7 @@ void Game::loadAssets()
     UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
 
     *player.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
+    *enemy.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
 }
 
 void Game::inputControl()

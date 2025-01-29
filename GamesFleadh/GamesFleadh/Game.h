@@ -6,6 +6,7 @@
 
 #include "Globals.h"
 #include "Player.h"
+#include "Enemy.h"
 
 class Game
 {
@@ -52,5 +53,6 @@ private:
 	float rightTrigger;
 
 	Player player;
+	Enemy enemy;
 };
 
