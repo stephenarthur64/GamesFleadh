@@ -1,21 +1,6 @@
 ﻿
-
-/*******************************************************************************************
-*
-*   raylib [models] example - Heightmap loading and drawing
-*
-*   Example complexity rating: [★☆☆☆] 1/4
-*
-*   Example originally created with raylib 1.8, last time updated with raylib 3.5
-*
-*   Example licensed under an unmodified zlib/libpng license, which is an OSI-certified,
-*   BSD-like license that allows static linking with closed source software
-*
-*   Copyright (c) 2015-2025 Ramon Santamaria (@raysan5)
-*
-********************************************************************************************/
-
 #include "raylib.h"
+#include "Globals.h"
 
 void inputControl(float &t_camPos)
 {
@@ -27,13 +12,13 @@ void inputControl(float &t_camPos)
     {
         t_camPos += 0.1f;
     }
+    if (IsKeyDown(KEY_UP))
+    {
+
+    }
 }
 
-
-//------------------------------------------------------------------------------------
-// Program main entry point
-//------------------------------------------------------------------------------------
-int main(void)
+int main()
 {
     // Initialization
     //--------------------------------------------------------------------------------------
@@ -67,7 +52,6 @@ int main(void)
     UnloadImage(image);             // Unload heightmap image from RAM, already uploaded to VRAM
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-    //--------------------------------------------------------------------------------------
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -75,10 +59,8 @@ int main(void)
 
         inputControl(newCamX);
         camera.position = { newCamX, 2.0f, 0.0f };
-        // Update
-        //----------------------------------------------------------------------------------
+
         UpdateCamera(&camera, CAMERA_PERSPECTIVE);
-        //----------------------------------------------------------------------------------
         
 
         // Draw
