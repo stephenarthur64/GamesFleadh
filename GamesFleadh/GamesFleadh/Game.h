@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include "Globals.h"
+#include "Player.h"
 
 class Game
 {
@@ -11,6 +12,7 @@ public:
 	void init();
 	void render();
 	void update();
+	void loadAssets();
 
 	void inputControl(float& t_camPos);
 
@@ -23,5 +25,7 @@ private:
 	Vector3 mapPosition;
 	Vector3 mapPosition2;
 	float newCamX = 8.0f;
+
+	Player player;
 };
 

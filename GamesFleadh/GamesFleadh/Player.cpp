@@ -1,8 +1,7 @@
 #include "Player.h"
 
 
-//LoadModel("ASSETS/RS/bugProto01.glb");
-Player::Player() : m_speed(2.0f)
+Player::Player() : m_speed(0.1f), m_position({0.0f, 0.0f, 0.0f})
 {
 }
 

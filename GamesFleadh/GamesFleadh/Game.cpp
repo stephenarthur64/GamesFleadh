@@ -32,18 +32,8 @@ void Game::init()
     camera.up = { 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
     camera.fovy = 90.0f;                                    // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
-
-    heightmapImage = LoadImage("ASSETS/heightmap4.png");     // Load heightmap image (RAM)
-    heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
-
-    heightmapMesh = GenMeshHeightmap(heightmapImage, { 16, 8, 16 }); // Generate heightmap mesh (RAM and VRAM)
-    heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
-
-    heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
-    mapPosition = { -8.0f, 0.0f, -8.0f };           // Define model position
-    mapPosition2 = { -23.0f, 0.0f, -8.0f };
-
-    UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
+    
+    loadAssets();
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 }
@@ -58,7 +48,7 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 1.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
-   // DrawModel(player, playerPosition, 1.0f, GREEN);
+    DrawModel(*player.getModel(), player.getPositon(), 1.0f, GREEN);
 
     DrawGrid(20, 1.0f);
 
@@ -77,6 +67,23 @@ void Game::update()
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 }
 
+void Game::loadAssets()
+{
+    heightmapImage = LoadImage("ASSETS/heightmap4.png");     // Load heightmap image (RAM)
+    heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
+
+    heightmapMesh = GenMeshHeightmap(heightmapImage, { 16, 8, 16 }); // Generate heightmap mesh (RAM and VRAM)
+    heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
+
+    heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
+    mapPosition = { -8.0f, 0.0f, -8.0f };           // Define model position
+    mapPosition2 = { -23.0f, 0.0f, -8.0f };
+
+    UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
+
+    *player.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
+}
+
 void Game::inputControl(float& t_camPos)
 {
     if (IsKeyDown(KEY_W))
@@ -89,6 +96,18 @@ void Game::inputControl(float& t_camPos)
     }
     if (IsKeyDown(KEY_UP))
     {
-
+        player.move(NORTH);
+    }
+    if (IsKeyDown(KEY_DOWN))
+    {
+        player.move(SOUTH);
+    }
+    if (IsKeyDown(KEY_LEFT))
+    {
+        player.move(EAST);
+    }
+    if (IsKeyDown(KEY_RIGHT))
+    {
+        player.move(WEST);
     }
 }
