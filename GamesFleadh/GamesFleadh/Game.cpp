@@ -53,7 +53,7 @@ void Game::render()
 
     BeginMode3D(camera);
 
-    DrawModel(heightmapModel, mapPosition, 1.0f, WHITE);
+    DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
     DrawModel(*player.getModel(), {newCamX - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, GREEN);
 
@@ -87,7 +87,7 @@ void Game::loadAssets()
     heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
 
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
-    mapPosition = { -8.0f, 0.0f, -8.0f };           // Define model position
+    mapPosition = { -8.0f, 0.0f, -32.0f };           // Define model position
     mapPosition2 = { -23.0f, 0.0f, -8.0f };
 
     UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
