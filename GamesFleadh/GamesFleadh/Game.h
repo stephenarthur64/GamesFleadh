@@ -1,8 +1,7 @@
 #pragma once
 #include <raylib.h>
-#define XBOX_ALIAS_1 "xbox"
-#define XBOX_ALIAS_2 "x-box"
 #define PS_ALIAS     "playstation"
+
 
 #include "Globals.h"
 #include "Player.h"

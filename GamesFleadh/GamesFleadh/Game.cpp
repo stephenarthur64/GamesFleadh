@@ -60,12 +60,11 @@ void Game::render()
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, RED);
     DrawModel(*player.getBulletModel(), player.getBulletPositon(), 0.5f, BLUE);
 
-    DrawText(TextFormat("GP%d: %s", gamepad, GetGamepadName(gamepad)), 10, 10, 10, BLACK);
-
     DrawGrid(20, 1.0f);
 
     EndMode3D();
 
+    DrawText(TextFormat("DETECTED BUTTON: %i", GetGamepadButtonPressed()), 10, 430, 10, RED);
     DrawFPS(10, 10);
 
     EndDrawing();
@@ -150,6 +149,8 @@ void Game::inputControl()
 
 void Game::gamepadInit()
 {
+    TextFindIndex(TextToLower(GetGamepadName(gamepad)), PS_ALIAS);
+
     // Set axis deadzones
     leftStickDeadzoneX = 0.1f;
     leftStickDeadzoneY = 0.1f;
@@ -157,22 +158,19 @@ void Game::gamepadInit()
     rightStickDeadzoneY = 0.1f;
     leftTriggerDeadzone = -0.9f;
     rightTriggerDeadzone = -0.9f;
-
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-    //--------------------------------------------------------------------------------------
-
-    int gamepad = 0; // which gamepad to display
 }
 
 void Game::gamepadUpdate()
 {
-    if (IsKeyPressed(KEY_LEFT) && gamepad > 0) gamepad--;
-    if (IsKeyPressed(KEY_RIGHT)) gamepad++;
 
     if (IsGamepadAvailable(gamepad))
     {
         // Get axis values
         leftStickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
+        if (IsGamepadAvailable(gamepad))
+        {
+            player.move(NORTH);
+        }
         leftStickY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
         rightStickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X);
         rightStickY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y);
