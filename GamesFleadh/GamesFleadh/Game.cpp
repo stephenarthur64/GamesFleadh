@@ -76,6 +76,7 @@ void Game::update()
 {
     gamepadUpdate();
     inputControl();
+    player.updateBullet();
     camera.position = camPos;
     checkCollisions(player.getHitbox(), enemy.getHitbox());
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
@@ -154,6 +155,11 @@ void Game::inputControl()
     {
         player.move(WEST);
         camPos.z -= 0.1f;
+    }
+
+    if (IsKeyDown(KEY_ENTER))
+    {
+        player.shootBullet();
     }
 }
 

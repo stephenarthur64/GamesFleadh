@@ -59,3 +59,13 @@ void Player::collision(bool collide)
 		m_colour = GREEN;
 	}
 }
+
+void Player::shootBullet()
+{
+	bullet.spawn(m_position, -2.0f);
+}
+
+void Player::updateBullet()
+{
+	bullet.move();
+}

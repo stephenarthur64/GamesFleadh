@@ -8,10 +8,14 @@ public:
 	Model* getModel() { return &m_body; }
 	Vector3 getPositon() { return m_position; }
 	BoundingBox getHitbox() { return m_hitbox; }
+	void spawn(Vector3 t_pos, float speed);
+	void move();
 
 private:
 	Model m_body;
 	Vector3 m_position;
 	BoundingBox m_hitbox;
+	float m_speed;
+	bool m_active;
 };
 

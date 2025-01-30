@@ -19,6 +19,9 @@ public:
 	Color getColor() { return m_colour; }
 	void collision(bool collide);
 
+	void shootBullet();
+	void updateBullet();
+
 
 private:
 	Vector3 m_position;
