@@ -62,10 +62,15 @@ void Player::collision(bool collide)
 
 void Player::shootBullet()
 {
-	bullet.spawn(m_position, -2.0f);
+	bullet.spawn(m_position, -0.3f);
 }
 
 void Player::updateBullet()
 {
 	bullet.move();
+}
+
+void Player::despawnBullet()
+{
+	bullet.despawn();
 }

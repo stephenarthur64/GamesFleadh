@@ -57,9 +57,10 @@ void Game::render()
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
     DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, player.getColor());
-    DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, RED);
+    DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
     DrawModel(*player.getBulletModel(), player.getBulletPositon(), 0.5f, BLUE);
     DrawBoundingBox(player.getHitbox(), RED);
+    DrawBoundingBox(player.getBulletHitBox(), RED);
 
 
     DrawGrid(20, 1.0f);
@@ -207,4 +208,15 @@ void Game::gamepadControl()
 void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 {
     player.collision(CheckCollisionBoxes(t_a, t_b));   
+
+    
+    if (CheckCollisionBoxSphere(enemy.getHitbox(), player.getBulletPositon(), 1.0f))
+    {
+        enemy.collision(true);
+        player.despawnBullet();
+    }
+    else
+    {
+        enemy.collision(false);
+    }
 }

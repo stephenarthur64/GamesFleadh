@@ -8,7 +8,10 @@ public:
 	Model* getModel() { return &m_body; }
 	Vector3 getPositon() { return m_position; }
 	BoundingBox getHitbox() { return m_hitbox; }
+	void setHitBox();
+
 	void spawn(Vector3 t_pos, float speed);
+	void despawn();
 	void move();
 
 private:

@@ -21,6 +21,7 @@ public:
 
 	void shootBullet();
 	void updateBullet();
+	void despawnBullet();
 
 
 private:
