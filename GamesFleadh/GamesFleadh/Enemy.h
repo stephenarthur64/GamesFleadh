@@ -8,6 +8,8 @@ public:
 	Model* getModel() { return &m_body; }
 	Vector3 getPositon() { return m_position; }
 	BoundingBox getHitbox() { return m_hitbox; }
+	void setHitBox();
+	void updateHitBox();
 
 private:
 	Model m_body;

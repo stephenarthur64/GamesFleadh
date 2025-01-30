@@ -35,6 +35,7 @@ private:
 	Vector3 camPos;
 	
 	float camSpeed = 0.1f;
+	float camDirection;
 
 	int gamepad = 0;
 

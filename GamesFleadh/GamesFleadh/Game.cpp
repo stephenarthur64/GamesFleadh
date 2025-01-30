@@ -56,9 +56,11 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
-    DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, GREEN);
+    DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, player.getColor());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, RED);
     DrawModel(*player.getBulletModel(), player.getBulletPositon(), 0.5f, BLUE);
+    DrawBoundingBox(player.getHitbox(), DARKGREEN);
+
 
     DrawGrid(20, 1.0f);
 
@@ -75,7 +77,7 @@ void Game::update()
     gamepadUpdate();
     inputControl();
     camera.position = camPos;
-
+    checkCollisions(player.getHitbox(), enemy.getHitbox());
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
 }
@@ -94,34 +96,42 @@ void Game::loadAssets()
 
     UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
 
-    *player.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
+    *player.getModel() = LoadModel("ASSETS/RS/cube.glb");
     *enemy.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
     *player.getBulletModel() = LoadModel("ASSETS/RS/bulletProto.glb");
+
+    player.setHitBox();
+    enemy.setHitBox();
 }
 
 void Game::inputControl()
 {
     if (IsKeyDown(KEY_W) || leftStickY < 0)
     {
+        camDirection = 0.0f;
         if (leftStickY < 0)
         {
-           camPos.x -= 0.1f * (-leftStickY);
+           camDirection -= camSpeed * (-leftStickY);
         }
         else
         {
-            camPos.x -= 0.1f;
+            camDirection -= camSpeed;
         }
+        player.updateHitBox(camDirection);
+        camPos.x += camDirection;
     }
     if (IsKeyDown(KEY_S) || leftStickY > 0)
     {
         if (leftStickY > 0)
         {
-           camPos.x += 0.1f * (leftStickY);
+            camDirection = camSpeed * (-leftStickY);
         }
         else
         {
-            camPos.x += 0.1f;
+            camDirection = camSpeed;
         }
+        player.updateHitBox(camDirection);
+        camPos.x += camDirection;
     }
 
 
@@ -167,10 +177,6 @@ void Game::gamepadUpdate()
     {
         // Get axis values
         leftStickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
-        if (IsGamepadAvailable(gamepad))
-        {
-            player.move(NORTH);
-        }
         leftStickY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
         rightStickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X);
         rightStickY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y);
@@ -194,4 +200,5 @@ void Game::gamepadControl()
 
 void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 {
+    player.collision(CheckCollisionBoxes(t_a, t_b));   
 }

@@ -14,12 +14,20 @@ public:
 	Vector3 getBulletPositon() { return bullet.getPositon(); }
 	BoundingBox getHitbox() { return m_hitbox; }
 	BoundingBox getBulletHitBox() { return bullet.getHitbox(); }
+	void setHitBox();
+	void updateHitBox(float t_x);
+	Color getColor() { return m_colour; }
+	void collision(bool collide);
+
 
 private:
 	Vector3 m_position;
 	float m_speed;
 	Model m_body;
 	BoundingBox m_hitbox;
+	Color m_colour;
+
+	const Vector3 DIMENSIONS;
 
 	Bullet bullet;
 };
