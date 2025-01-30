@@ -59,7 +59,7 @@ void Game::render()
     DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, player.getColor());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, RED);
     DrawModel(*player.getBulletModel(), player.getBulletPositon(), 0.5f, BLUE);
-    DrawBoundingBox(player.getHitbox(), DARKGREEN);
+    DrawBoundingBox(player.getHitbox(), RED);
 
 
     DrawGrid(20, 1.0f);

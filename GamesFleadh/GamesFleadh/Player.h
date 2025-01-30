@@ -27,7 +27,8 @@ private:
 	BoundingBox m_hitbox;
 	Color m_colour;
 
-	const Vector3 DIMENSIONS;
+	float camOffsetMin = 6.0f;
+	float camOffsetMax = 4.0f;
 
 	Bullet bullet;
 };
