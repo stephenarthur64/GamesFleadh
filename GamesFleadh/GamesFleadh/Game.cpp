@@ -104,7 +104,8 @@ void Game::loadAssets()
 
     UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
 
-    *player.getModel() = LoadModel("ASSETS/RS/cube.glb");
+    *player.getModel() = LoadModel("ASSETS/RS/bumblebee.glb");
+    player.getModel()->transform = MatrixRotateXYZ({ 0, DEG2RAD * 90.0f, 0 });
     *enemy.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
     for (int i = 0; i < player.getBulletMax(); i++)
     {
