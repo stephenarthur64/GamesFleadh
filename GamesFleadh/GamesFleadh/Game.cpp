@@ -55,7 +55,7 @@ void Game::render()
     BeginMode3D(camera);
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
-    DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
+    DrawModel(heightmapModel, mapPosition2, 4.0f, WHITE);
     DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, player.getColor());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
     for (int i = 0; i < player.getBulletMax(); i++)
@@ -72,7 +72,7 @@ void Game::render()
 
     EndMode3D();
 
-    DrawText(TextFormat("DETECTED BUTTON: %i", GetGamepadButtonPressed()), 10, 430, 10, RED);
+    DrawText(TextFormat("PLAYER X POSITION: %f", camPos.x), 10, 430, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
     DrawFPS(10, 10);
 
@@ -83,6 +83,7 @@ void Game::update()
 {
     gamepadUpdate();
     inputControl();
+    mapMove();
     player.updateBullet();
     camera.position = camPos;
     checkCollisions(player.getHitbox(), enemy.getHitbox());
@@ -99,8 +100,8 @@ void Game::loadAssets()
     heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
 
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
-    mapPosition = { -8.0f, 0.0f, -32.0f };           // Define model position
-    mapPosition2 = { -23.0f, 0.0f, -8.0f };
+    mapPosition = { -60.0f, 0.0f, -32.0f };           // Define model position
+    mapPosition2 = { -100.0f, 0.0f, -32.0f };
 
     UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
 
@@ -211,11 +212,6 @@ void Game::gamepadUpdate()
     }
 }
 
-void Game::gamepadControl()
-{
-    
-}
-
 void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 {
     int collide = 0;
@@ -236,5 +232,21 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
     if (collide != 1)
     {
         enemy.collision(false);
+    }
+}
+
+void Game::mapMove()
+{
+    float newMapX = mapPosition.x;
+    float newMapX2 = mapPosition2.x;
+
+    if (camPos.x < newMapX2 + 40.0f)
+    {
+        mapPosition.x = newMapX2 - 50.0f;
+    }
+
+    if (camPos.x < newMapX + 40.0f)
+    {
+        mapPosition2.x = newMapX - 50.0f;
     }
 }
