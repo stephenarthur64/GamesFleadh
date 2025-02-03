@@ -19,5 +19,8 @@ private:
 	Vector3 m_position;
 	BoundingBox m_hitbox;
 	Color m_colour;
+
+	float hitboxOffsetMin = 5.0f;
+	float hitboxOffsetMax = 1.0f;
 };
 

@@ -8,6 +8,8 @@ Enemy::Enemy() : m_position({2.0f, 2.0f, 3.0f})
 void Enemy::setHitBox()
 {
 	m_hitbox = GetModelBoundingBox(m_body);
+	m_hitbox.min.z = m_position.z - hitboxOffsetMin;
+	m_hitbox.max.z = m_position.z - hitboxOffsetMax;
 	updateHitBox();
 }
 

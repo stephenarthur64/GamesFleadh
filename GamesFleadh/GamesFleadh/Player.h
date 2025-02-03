@@ -33,8 +33,8 @@ private:
 	BoundingBox m_hitbox;
 	Color m_colour;
 
-	float camOffsetMin = 6.0f;
-	float camOffsetMax = 7.0f;
+	float hitboxOffsetMin = 6.0f;
+	float hitboxOffsetMax = 7.0f;
 
 	Bullet bullet[10];
 	int bulletCount;
