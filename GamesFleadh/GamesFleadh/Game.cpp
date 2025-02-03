@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game()
+Game::Game() : score(0)
 {
     leftStickX = 0.0f;
     leftStickY = 0.0f;
@@ -60,6 +60,7 @@ void Game::render()
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
     DrawModel(*player.getBulletModel(), player.getBulletPositon(), 0.5f, BLUE);
     DrawBoundingBox(player.getHitbox(), RED);
+    DrawBoundingBox(enemy.getHitbox(), GREEN);
     DrawBoundingBox(player.getBulletHitBox(), RED);
 
 
@@ -68,6 +69,7 @@ void Game::render()
     EndMode3D();
 
     DrawText(TextFormat("DETECTED BUTTON: %i", GetGamepadButtonPressed()), 10, 430, 10, RED);
+    DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
     DrawFPS(10, 10);
 
     EndDrawing();
@@ -214,6 +216,7 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
     {
         enemy.collision(true);
         player.despawnBullet();
+        score += 10;
     }
     else
     {

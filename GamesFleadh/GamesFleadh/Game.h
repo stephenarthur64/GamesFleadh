@@ -53,6 +53,8 @@ private:
 	float leftTrigger;
 	float rightTrigger;
 
+	int score;
+
 	Player player;
 	Enemy enemy;
 };
