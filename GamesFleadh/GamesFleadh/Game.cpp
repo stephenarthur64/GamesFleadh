@@ -145,7 +145,7 @@ void Game::inputControl()
         player.updateHitBox(camDirection);
         camPos.x += camDirection;
     }
-
+    
 
     if (IsKeyDown(KEY_UP) || rightStickY < 0)
     {

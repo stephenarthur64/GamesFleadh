@@ -38,6 +38,7 @@ void Player::setHitBox()
 {
 	m_hitbox = GetMeshBoundingBox(m_body.meshes[0]);
 	m_hitbox.min.x = m_position.x - camOffsetMin;
+	m_hitbox.max.z = m_position.z + 1.5f;
 	m_hitbox.max.x = m_position.x - camOffsetMax;
 }
 

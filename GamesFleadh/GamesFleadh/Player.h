@@ -34,7 +34,7 @@ private:
 	Color m_colour;
 
 	float camOffsetMin = 6.0f;
-	float camOffsetMax = 4.0f;
+	float camOffsetMax = 7.0f;
 
 	Bullet bullet[10];
 	int bulletCount;
