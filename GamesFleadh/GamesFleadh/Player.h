@@ -9,11 +9,13 @@ public:
 	Player();
 	void move(int t_directon);
 	Model* getModel() { return &m_body; }
-	Model* getBulletModel() { return bullet.getModel(); }
+	Model* getBulletModel(int count) { return bullet[count].getModel(); }
 	Vector3 getPositon() { return m_position; }
-	Vector3 getBulletPositon() { return bullet.getPositon(); }
+	Vector3 getBulletPositon(int count) { return bullet[count].getPositon(); }
 	BoundingBox getHitbox() { return m_hitbox; }
-	BoundingBox getBulletHitBox() { return bullet.getHitbox(); }
+	BoundingBox getBulletHitBox(int count) { return bullet[count].getHitbox(); }
+	const int getBulletMax() { return MAX_BULLETS; }
+	int currentBullet() { return bulletCount; }
 	void setHitBox();
 	void updateHitBox(float t_x);
 	Color getColor() { return m_colour; }
@@ -21,7 +23,7 @@ public:
 
 	void shootBullet();
 	void updateBullet();
-	void despawnBullet();
+	void despawnBullet(int bulletNum);
 
 
 private:
@@ -34,6 +36,8 @@ private:
 	float camOffsetMin = 6.0f;
 	float camOffsetMax = 4.0f;
 
-	Bullet bullet;
+	Bullet bullet[10];
+	int bulletCount;
+	const int MAX_BULLETS = 10;
 };
 

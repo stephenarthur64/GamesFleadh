@@ -58,10 +58,14 @@ void Game::render()
     DrawModel(heightmapModel, mapPosition2, 1.0f, WHITE);
     DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, player.getColor());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
-    DrawModel(*player.getBulletModel(), player.getBulletPositon(), 0.5f, BLUE);
+    for (int i = 0; i < player.getBulletMax(); i++)
+    {
+        DrawModel(*player.getBulletModel(i), player.getBulletPositon(i), 0.5f, BLUE);
+        DrawBoundingBox(player.getBulletHitBox(i), RED);
+    }
     DrawBoundingBox(player.getHitbox(), RED);
     DrawBoundingBox(enemy.getHitbox(), GREEN);
-    DrawBoundingBox(player.getBulletHitBox(), RED);
+    
 
 
     DrawGrid(20, 1.0f);
@@ -102,7 +106,10 @@ void Game::loadAssets()
 
     *player.getModel() = LoadModel("ASSETS/RS/cube.glb");
     *enemy.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
-    *player.getBulletModel() = LoadModel("ASSETS/RS/bulletProto.glb");
+    for (int i = 0; i < player.getBulletMax(); i++)
+    {
+        *player.getBulletModel(i) = LoadModel("ASSETS/RS/bulletProto.glb");
+    }
 
     player.setHitBox();
     enemy.setHitBox();
@@ -160,7 +167,7 @@ void Game::inputControl()
         camPos.z -= 0.1f;
     }
 
-    if (IsKeyDown(KEY_ENTER))
+    if (IsKeyPressed(KEY_ENTER))
     {
         player.shootBullet();
     }
@@ -209,16 +216,22 @@ void Game::gamepadControl()
 
 void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 {
+    int collide = 0;
+
     player.collision(CheckCollisionBoxes(t_a, t_b));   
 
-    
-    if (CheckCollisionBoxSphere(enemy.getHitbox(), player.getBulletPositon(), 1.0f))
+    for (int i = 0; i < player.getBulletMax(); i++)
     {
-        enemy.collision(true);
-        player.despawnBullet();
-        score += 10;
+        if (CheckCollisionBoxSphere(enemy.getHitbox(), player.getBulletPositon(i), 1.0f))
+        {
+            collide = 1;
+            enemy.collision(true);
+            player.despawnBullet(i);
+            score += 10;
+        }
     }
-    else
+
+    if (collide != 1)
     {
         enemy.collision(false);
     }

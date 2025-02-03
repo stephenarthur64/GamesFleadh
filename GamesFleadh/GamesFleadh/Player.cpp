@@ -1,9 +1,8 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.3f), m_position({8.0f, 0.0f, 0.0f})
+Player::Player() : m_speed(0.3f), m_position({8.0f, 0.0f, 0.0f}), bulletCount(0), m_colour(GREEN)
 {
-	m_colour = GREEN;
 }
 
 void Player::move(int t_directon)
@@ -62,15 +61,27 @@ void Player::collision(bool collide)
 
 void Player::shootBullet()
 {
-	bullet.spawn(m_position, -0.3f);
+	if (bulletCount < 10)
+	{
+		bullet[bulletCount].spawn(m_position, -0.3f);
+		bulletCount++;
+	}
+	else
+	{
+		bulletCount = 0;
+		bullet[bulletCount].spawn(m_position, -0.3f);
+	}
 }
 
 void Player::updateBullet()
 {
-	bullet.move();
+	for (int i = 0; i < MAX_BULLETS; i++)
+	{
+		bullet[i].move();
+	}
 }
 
-void Player::despawnBullet()
+void Player::despawnBullet(int bulletNum)
 {
-	bullet.despawn();
+	bullet[bulletNum].despawn();
 }
