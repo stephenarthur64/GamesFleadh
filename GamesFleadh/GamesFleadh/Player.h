@@ -20,6 +20,7 @@ public:
 	void updateHitBox(float t_x);
 	Color getColor() { return m_colour; }
 	void collision(bool collide);
+	void updateXPos(float newXPos);
 
 	void shootBullet();
 	void updateBullet();

@@ -60,6 +60,11 @@ void Player::collision(bool collide)
 	}
 }
 
+void Player::updateXPos(float newXPos)
+{
+	m_position.x = newXPos;
+}
+
 void Player::shootBullet()
 {
 	if (bulletCount < 10)

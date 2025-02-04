@@ -1,4 +1,16 @@
 #include "Game.h"
+#include <cmath> // Used for abs()
+
+// Bunch of variables RoB has made global in the name of making his code work quickly
+const Vector3 mapSize = { 16, 8, 16 };
+float worldNormalX;
+float worldNormalZ;
+float texUcoord;
+float texVcoord;
+
+Color colorFromPosition;
+float worldYNormalFromCol;
+float worldYPos;
 
 Game::Game() : score(0)
 {
@@ -14,6 +26,7 @@ Game::~Game()
 {
     UnloadTexture(heightmapTexture);     // Unload texture
     UnloadModel(heightmapModel);         // Unload model
+    UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
 }
 
 void Game::run()
@@ -56,7 +69,7 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 4.0f, WHITE);
-    DrawModel(*player.getModel(), {camPos.x - 5.0f, player.getPositon().y, player.getPositon().z }, 1.0f, player.getColor());
+    DrawModel(*player.getModel(), player.getPositon(), 1.0f, player.getColor());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
     for (int i = 0; i < player.getBulletMax(); i++)
     {
@@ -76,6 +89,12 @@ void Game::render()
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
     DrawFPS(10, 10);
 
+    //DrawText((TextFormat("XPos: %f, YPos: %f, ZPos: %f", player.getPositon().x, player.getPositon().y, player.getPositon().z)), 10, 10, 32, GREEN);
+    //DrawText((TextFormat("NormalX: %f, NormalZ: %f", worldNormalX, worldNormalZ)), 10, 45, 32, ORANGE);
+    //DrawText((TextFormat("TexU: %f, TexV: %f", texUcoord, texVcoord)), 10, 90, 32, PURPLE);
+    //DrawText((TextFormat("World Y Normal: %f", worldYNormalFromCol)), 10, 135, 32, BROWN);
+    //DrawText((TextFormat("World Y Pos: %f", worldYPos)), 10, 170, 32, SKYBLUE);
+
     EndDrawing();
 }
 
@@ -83,7 +102,37 @@ void Game::update()
 {
     gamepadUpdate();
     inputControl();
-    mapMove();
+    player.updateXPos(camPos.x - 5.0f);
+    mapMove(); // Repos terrain meshes based on camera X (distance/z) pos
+
+    // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE
+    // Get Normalised Coord
+     worldNormalX = (player.getPositon().x + abs(mapPosition.x)) / mapSize.x;
+     worldNormalZ = (player.getPositon().z + abs(mapPosition.z)) / mapSize.z;
+     texUcoord = worldNormalX * heightmapImage.width;
+     texVcoord = worldNormalZ * heightmapImage.height;
+
+    // Clampity clamp (make this a helper function?) 0.001f - just to be sure we don't get OOBounds error
+    if (texUcoord > heightmapImage.height - 0.001f) texUcoord = heightmapImage.height - 0.001f;
+    if (texUcoord < 0) texUcoord = 0;
+
+    if (texVcoord > heightmapImage.width - 0.001f) texVcoord = heightmapImage.width - 0.001f;
+    if (texVcoord < 0) texVcoord = 0;
+
+     colorFromPosition = GetImageColor(heightmapImage, texUcoord, texVcoord);
+     worldYNormalFromCol = colorFromPosition.r / 255.0f;
+     worldYPos = worldYNormalFromCol * mapSize.y;
+
+    if (player.getPositon().y <= worldYPos)
+    {
+        player.collision(true);
+    }
+    else
+    {
+        player.collision(false);
+    }
+    // RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
+
     player.updateBullet();
     camera.position = camPos;
     checkCollisions(player.getHitbox(), enemy.getHitbox());
@@ -96,14 +145,15 @@ void Game::loadAssets()
     heightmapImage = LoadImage("ASSETS/heightmapWider.png");     // Load heightmap image (RAM)
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
-    heightmapMesh = GenMeshHeightmap(heightmapImage, { 16, 8, 16 }); // Generate heightmap mesh (RAM and VRAM)
+    
+    heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
     heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
 
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
     mapPosition = { -60.0f, 0.0f, -32.0f };           // Define model position
     mapPosition2 = { -100.0f, 0.0f, -32.0f };
 
-    UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
+    
 
     *player.getModel() = LoadModel("ASSETS/RS/bumblebee.glb");
     player.getModel()->transform = MatrixRotateXYZ({ 0, DEG2RAD * 90.0f, 0 });
