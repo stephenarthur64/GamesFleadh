@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include "Globals.h"
 #include "Bullet.h"
+#include "raymath.h"
 
 class Player
 {
@@ -21,6 +22,7 @@ public:
 	Color getColor() { return m_colour; }
 	void collision(bool collide);
 	void updateXPos(float newXPos);
+	void updateModelRotate();
 
 	void shootBullet();
 	void updateBullet();
@@ -33,6 +35,8 @@ private:
 	Model m_body;
 	BoundingBox m_hitbox;
 	Color m_colour;
+	float m_roll;
+	float m_pitch;
 
 	float hitboxOffsetMin = 6.0f;
 	float hitboxOffsetMax = 7.0f;
