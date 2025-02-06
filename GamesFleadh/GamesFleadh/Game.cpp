@@ -46,9 +46,9 @@ void Game::init()
 
     // Define our custom camera to look into our 3d world
     camera = { 0 };
-    camPos = { 8.0f, 2.0f, 0.0f };
+    camPos = { 7.0f, 2.0f, 0.0f };
     camera.position = camPos;     // Camera position
-    camera.target = { -230.0f, 0.0f, 0.0f };          // Camera looking at point
+    camera.target = { 0.0f, 0.0f, -230.0f };          // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
     camera.fovy = 90.0f;                                    // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
@@ -68,7 +68,7 @@ void Game::render()
     BeginMode3D(camera);
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
-    DrawModel(heightmapModel, mapPosition2, 4.0f, WHITE);
+    DrawModel(heightmapModel, mapPosition2, 1.0f, GREEN);
     DrawModel(*player.getModel(), player.getPositon(), 1.0f, player.getColor());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
     for (int i = 0; i < player.getBulletMax(); i++)
@@ -85,7 +85,7 @@ void Game::render()
 
     EndMode3D();
 
-    DrawText(TextFormat("PLAYER X POSITION: %f", camPos.x), 10, 430, 10, RED);
+    DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPositon().z), 10, 430, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
     DrawFPS(10, 10);
 
@@ -102,7 +102,7 @@ void Game::update()
 {
     gamepadUpdate();
     inputControl();
-    player.updateXPos(camPos.x - 5.0f);
+    player.updateZPos(camPos.z - 5.0f);
     mapMove(); // Repos terrain meshes based on camera X (distance/z) pos
 
     // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE
@@ -148,10 +148,11 @@ void Game::loadAssets()
     
     heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
     heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
+    heightmapModel.transform = MatrixRotateXYZ({ DEG2RAD * 270.0f, DEG2RAD * 270.0f, DEG2RAD * 270.0f });
 
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
-    mapPosition = { -60.0f, 0.0f, -32.0f };           // Define model position
-    mapPosition2 = { -100.0f, 0.0f, -32.0f };
+    mapPosition = { 35.0f, 0.0f, -70.0f };           // Define model position
+    mapPosition2 = { -150.0f, 0.0f, -32.0f };
 
     
 
@@ -181,7 +182,7 @@ void Game::inputControl()
             camDirection -= camSpeed;
         }
         player.updateHitBox(camDirection);
-        camPos.x += camDirection;
+        camPos.z += camDirection;
     }
     if (IsKeyDown(KEY_S) || leftStickY > 0)
     {
@@ -194,7 +195,7 @@ void Game::inputControl()
             camDirection = camSpeed;
         }
         player.updateHitBox(camDirection);
-        camPos.x += camDirection;
+        camPos.z += camDirection;
     }
     
 
@@ -210,13 +211,13 @@ void Game::inputControl()
     }
     if (IsKeyDown(KEY_LEFT) || rightStickX < 0)
     {
-        player.move(EAST);
-        camPos.z += 0.1f;
+        player.move(WEST);
+        camPos.x -= 0.1f;
     }
     if (IsKeyDown(KEY_RIGHT) || rightStickX > 0)
     {
-        player.move(WEST);
-        camPos.z -= 0.1f;
+        player.move(EAST);
+        camPos.x += 0.1f;
     }
 
     if (IsKeyPressed(KEY_ENTER))
@@ -286,16 +287,17 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
 void Game::mapMove()
 {
+    //{ -60.0f, 0.0f, -32.0f }
     float newMapX = mapPosition.x;
     float newMapX2 = mapPosition2.x;
 
-    if (camPos.x < newMapX2 + 40.0f)
+    if (player.getPositon().x < -54.0f)
     {
-        mapPosition.x = newMapX2 - 50.0f;
+       
     }
 
     if (camPos.x < newMapX + 40.0f)
     {
-        mapPosition2.x = newMapX - 50.0f;
+       // mapPosition2.x = newMapX - 50.0f;
     }
 }

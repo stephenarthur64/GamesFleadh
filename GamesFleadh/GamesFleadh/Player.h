@@ -21,8 +21,10 @@ public:
 	void updateHitBox(float t_x);
 	Color getColor() { return m_colour; }
 	void collision(bool collide);
-	void updateXPos(float newXPos);
+	void updateZPos(float newXPos);
 	void updateModelRotate();
+
+	void resetToOrigin();
 
 	void shootBullet();
 	void updateBullet();
@@ -38,8 +40,8 @@ private:
 	float m_roll;
 	float m_pitch;
 
-	float hitboxOffsetMin = 6.0f;
-	float hitboxOffsetMax = 7.0f;
+	float hitboxOffsetMin = 1.0f;
+	float hitboxOffsetMax = 3.0f;
 
 	Bullet bullet[10];
 	int bulletCount;
