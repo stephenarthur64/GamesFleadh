@@ -18,6 +18,29 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Bullet.h" />
+    <ClInclude Include="include\command.h" />
+    <ClInclude Include="include\Enemy.h" />
+    <ClInclude Include="include\events.h" />
+    <ClInclude Include="include\fsm.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\Globals.h" />
+    <ClInclude Include="include\inputmanager.h" />
+    <ClInclude Include="include\mediator.h" />
+    <ClInclude Include="include\Player.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\command.c" />
+    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\fsm.c" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\inputmanager.c" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\mediator.c" />
+    <ClCompile Include="src\Player.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -104,12 +127,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\c00295678\Desktop\raylib-master\out\build\x64-Debug\raylib\include;.\raylib-master\out\build\x64-Debug\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;C:\Users\c00295678\Desktop\raylib-master\out\build\x64-Debug\raylib\include;.\raylib-master\out\build\x64-Debug\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\c00295678\Desktop\raylib-master\out\build\x64-Debug\raylib;.\raylib-master\out\build\x64-Debug\raylib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>.\include;C:\Users\c00295678\Desktop\raylib-master\out\build\x64-Debug\raylib;.\raylib-master\out\build\x64-Debug\raylib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>winmm.lib;raylib.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -129,20 +152,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Bullet.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="Globals.h" />
-    <ClInclude Include="Player.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
