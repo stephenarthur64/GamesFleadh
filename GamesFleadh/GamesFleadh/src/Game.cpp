@@ -69,7 +69,7 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 4.0f, GREEN);
-    DrawModel(*player.getModel(), player.getPositon(), 1.0f, player.getColor());
+    DrawModel(*player.getModel(), player.getPositon(), 1.0f, player.getColour());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
     for (int i = 0; i < player.getBulletMax(); i++)
     {

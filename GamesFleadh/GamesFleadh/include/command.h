@@ -1,5 +1,4 @@
-#ifndef COMMAND_H
-#define COMMAND_H
+#pragma once
 
 // Forward declaration of the Mediator struct
 typedef struct Mediator Mediator;
@@ -23,6 +22,5 @@ typedef enum
 } Command;
 
 // Function to execute a command
-void ExecuteCommand(Command command, Mediator *mediator);
+void ExecuteCommand(Command command, Mediator* mediator);
 
-#endif // COMMAND_H

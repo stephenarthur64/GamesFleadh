@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.3f), m_position({7.0f, 0.0f, 0.0f}), bulletCount(0), m_colour(WHITE), m_roll(0.0f), m_pitch(0.0f)
+Player::Player() : m_speed(0.3f),  bulletCount(0), m_roll(0.0f), m_pitch(0.0f)
 {
 }
 

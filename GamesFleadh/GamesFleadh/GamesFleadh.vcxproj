@@ -25,6 +25,7 @@
     <ClInclude Include="include\events.h" />
     <ClInclude Include="include\fsm.h" />
     <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\gameobject.h" />
     <ClInclude Include="include\Globals.h" />
     <ClInclude Include="include\inputmanager.h" />
     <ClInclude Include="include\mediator.h" />
@@ -32,13 +33,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Bullet.cpp" />
-    <ClCompile Include="src\command.c" />
+    <ClCompile Include="src\command.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\fsm.c" />
+    <ClCompile Include="src\fsm.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\inputmanager.c" />
+    <ClCompile Include="src\gameobject.cpp" />
+    <ClCompile Include="src\inputmanager.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\mediator.c" />
+    <ClCompile Include="src\mediator.cpp" />
     <ClCompile Include="src\Player.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

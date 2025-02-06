@@ -1,5 +1,4 @@
-#ifndef EVENTS_H
-#define EVENTS_H
+#pragma once
 
 // Define an enumeration for different event types
 typedef enum
@@ -15,5 +14,3 @@ typedef enum
     EVENT_RESPAWN,// Represents a respawn event
     EVENT_COUNT   // Represents the total number of events (for counting purposes)
 } Event;          // Define 'Event' as the type of the enum
-
-#endif

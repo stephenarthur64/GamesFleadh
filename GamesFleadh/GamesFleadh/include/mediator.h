@@ -1,5 +1,4 @@
-#ifndef MEDIATOR_H
-#define MEDIATOR_H
+#pragma once
 
 #include <stdbool.h>
 
@@ -17,5 +16,3 @@ Mediator *CreateMediator(GameObject *obj);
 
 // Execute Command
 void MediatorExecuteCommand(Command command, Mediator *mediator);
-
-#endif
