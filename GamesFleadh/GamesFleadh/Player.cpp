@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.3f), m_position({7.0f, 0.0f, 0.0f}), bulletCount(0), m_colour(GREEN), m_roll(0.0f), m_pitch(0.0f)
+Player::Player() : m_speed(0.3f), m_position({7.0f, 0.0f, 0.0f}), bulletCount(0), m_colour(WHITE), m_roll(0.0f), m_pitch(0.0f)
 {
 }
 
@@ -66,7 +66,7 @@ void Player::collision(bool collide)
 	}
 	else
 	{
-		m_colour = GREEN;
+		m_colour = WHITE;
 	}
 }
 
@@ -77,12 +77,13 @@ void Player::updateZPos(float newXPos)
 
 void Player::updateModelRotate()
 {
-	//m_body.transform = MatrixRotateXYZ({ 0, DEG2RAD * m_pitch, DEG2RAD* m_roll });
+	//m_body.transform = MatrixRotateXYZ({ DEG2RAD * 40.0f, DEG2RAD * 90.0f, DEG2RAD* 70.0f });
 }
 
 void Player::resetToOrigin()
 {
-	m_position.x = 0.0f;
+	m_position.z = -9.0f;
+	setHitBox();
 }
 
 void Player::shootBullet()

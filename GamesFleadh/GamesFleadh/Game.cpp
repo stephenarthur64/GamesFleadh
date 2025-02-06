@@ -48,7 +48,7 @@ void Game::init()
     camera = { 0 };
     camPos = { 7.0f, 2.0f, 0.0f };
     camera.position = camPos;     // Camera position
-    camera.target = { 0.0f, 0.0f, -230.0f };          // Camera looking at point
+    camera.target = { 0.0f, 0.0f, -2300.0f };          // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
     camera.fovy = 90.0f;                                    // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
@@ -68,7 +68,7 @@ void Game::render()
     BeginMode3D(camera);
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
-    DrawModel(heightmapModel, mapPosition2, 1.0f, GREEN);
+    DrawModel(heightmapModel, mapPosition2, 4.0f, GREEN);
     DrawModel(*player.getModel(), player.getPositon(), 1.0f, player.getColor());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
     for (int i = 0; i < player.getBulletMax(); i++)
@@ -76,7 +76,7 @@ void Game::render()
         DrawModel(*player.getBulletModel(i), player.getBulletPositon(i), 0.5f, BLUE);
         DrawBoundingBox(player.getBulletHitBox(i), RED);
     }
-    DrawBoundingBox(player.getHitbox(), RED);
+    //DrawBoundingBox(player.getHitbox(), RED);
     DrawBoundingBox(enemy.getHitbox(), GREEN);
     
 
@@ -152,7 +152,7 @@ void Game::loadAssets()
 
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
     mapPosition = { 35.0f, 0.0f, -70.0f };           // Define model position
-    mapPosition2 = { -150.0f, 0.0f, -32.0f };
+    mapPosition2 = { 35.0f, 0.0f, -130.0f };
 
     
 
@@ -287,13 +287,16 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
 void Game::mapMove()
 {
-    //{ -60.0f, 0.0f, -32.0f }
+    //{ 35.0f, 0.0f, -70.0f }; 
     float newMapX = mapPosition.x;
     float newMapX2 = mapPosition2.x;
 
-    if (player.getPositon().x < -54.0f)
+    if (player.getPositon().z < -74.0f)
     {
-       
+        mapPosition2 = { 35.0f, 0.0f, -70.0f };
+        mapPosition = { 35.0f, 0.0f, -130.0f };
+        camPos.z = -9.2f;
+        player.resetToOrigin();
     }
 
     if (camPos.x < newMapX + 40.0f)
