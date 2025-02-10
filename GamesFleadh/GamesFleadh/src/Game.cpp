@@ -104,6 +104,7 @@ void Game::update()
     inputControl();
     player.updateZPos(camPos.z - 5.0f);
     mapMove(); // Repos terrain meshes based on camera X (distance/z) pos
+    player.update();
 
     // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE
     // Get Normalised Coord

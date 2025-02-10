@@ -112,3 +112,4 @@ void Player::despawnBullet(int bulletNum)
 {
 	bullet[bulletNum].despawn();
 }
+

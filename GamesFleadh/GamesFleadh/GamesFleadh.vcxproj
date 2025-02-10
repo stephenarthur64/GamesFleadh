@@ -23,19 +23,18 @@
     <ClInclude Include="include\command.h" />
     <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\events.h" />
-    <ClInclude Include="include\fsm.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\gameobject.h" />
     <ClInclude Include="include\Globals.h" />
     <ClInclude Include="include\inputmanager.h" />
     <ClInclude Include="include\mediator.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\State.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\command.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\fsm.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\gameobject.cpp" />
     <ClCompile Include="src\inputmanager.cpp" />

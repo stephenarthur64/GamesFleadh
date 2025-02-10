@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "raymath.h"
 #include "gameobject.h"
+#include "State.h"
 
 class Player : public GameObject
 {
@@ -26,7 +27,6 @@ public:
 	void shootBullet();
 	void updateBullet();
 	void despawnBullet(int bulletNum);
-
 
 private:
 	float m_speed;
