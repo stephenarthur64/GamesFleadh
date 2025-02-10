@@ -1,6 +1,8 @@
 #pragma once
-#include "gameobject.h"
+//#include "gameobject.h"
 #include <raylib.h>
+
+class GameObject;
 
 class State {
 public:
@@ -9,6 +11,8 @@ public:
 	virtual void update(GameObject* obj) = 0;
 	virtual void enter(GameObject* obj) = 0;
 	virtual void exit(GameObject* obj) = 0;
+
+	State() = default; // This is bad and temporary.
 };
 
 class IdleState : public State {

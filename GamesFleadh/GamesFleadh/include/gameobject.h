@@ -5,7 +5,14 @@
 #include <raylib.h>
 #include "events.h"
 
+#include <State.h>
+
+
+
 class GameObject {
+
+
+
 public:
     GameObject() : m_position({ 7.0f, 0.0f, 0.0f }), m_colour(WHITE) {}
 
@@ -31,11 +38,15 @@ public:
 	}
 
 protected:
-    Model m_body;
-    Vector3 m_position;
-    BoundingBox m_hitbox;
-    Color m_colour;
-    State* currentState;
+	Model m_body;
+	Vector3 m_position;
+	BoundingBox m_hitbox;
+	Color m_colour;
+	State* currentState;
 };
+
+
+
+
 
 
