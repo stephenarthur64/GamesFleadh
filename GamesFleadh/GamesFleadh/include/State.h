@@ -1,8 +1,8 @@
 #pragma once
-//#include "gameobject.h"
 #include <raylib.h>
 
 class GameObject;
+class MovingState;
 
 class State {
 public:
@@ -19,23 +19,6 @@ class IdleState : public State {
 public:
 	void handleInput(GameObject* obj) override
 	{
-		if (IsKeyDown(KEY_UP))
-		{
-			obj->setState(new MovingState);
-		}
-		if (IsKeyDown(KEY_DOWN))
-		{
-			obj->setState(new MovingState);
-		}
-		if (IsKeyDown(KEY_LEFT))
-		{
-			obj->setState(new MovingState);
-		}
-		if (IsKeyDown(KEY_RIGHT))
-		{
-			obj->setState(new MovingState);
-		}
-
 	}
 	void update(GameObject* obj) override
 	{ // Idle behavior (e.g., standing still) ;

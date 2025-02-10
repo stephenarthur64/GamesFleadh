@@ -10,9 +10,6 @@
 
 
 class GameObject {
-
-
-
 public:
     GameObject() : m_position({ 7.0f, 0.0f, 0.0f }), m_colour(WHITE) {}
 
@@ -24,7 +21,10 @@ public:
 
 	void update()
 	{
-		currentState->handleInput(this);
+		if (currentState)
+		{
+			currentState->handleInput(this);
+		}
 	}
 
 	void setState(State* newState)
