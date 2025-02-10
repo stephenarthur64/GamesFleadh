@@ -57,6 +57,15 @@
     <ClInclude Include="include\gameobject.h">
       <Filter>Header Files\GO</Filter>
     </ClInclude>
+    <ClInclude Include="include\ConcreteCommands.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IdleState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MovingState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -85,6 +94,12 @@
     </ClCompile>
     <ClCompile Include="src\Player.cpp">
       <Filter>Source Files\GO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IdleState.cpp">
+      <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovingState.cpp">
+      <Filter>Source Files\FSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

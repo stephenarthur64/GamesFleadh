@@ -104,7 +104,6 @@ void Game::update()
     inputControl();
     player.updateZPos(camPos.z - 5.0f);
     mapMove(); // Repos terrain meshes based on camera X (distance/z) pos
-    player.update();
 
     // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE
     // Get Normalised Coord
@@ -199,27 +198,12 @@ void Game::inputControl()
         camPos.z += camDirection;
     }
     
-
-    if (IsKeyDown(KEY_UP) || rightStickY < 0)
+    Command* command = Input::getInstance()->handleInput();
+    if (command)
     {
-        player.move(NORTH);
-        camPos.y += 0.1f;
+        command->execute(&player);
     }
-    if (IsKeyDown(KEY_DOWN) || rightStickY > 0)
-    {
-        player.move(SOUTH);
-        camPos.y -= 0.1f;
-    }
-    if (IsKeyDown(KEY_LEFT) || rightStickX < 0)
-    {
-        player.move(WEST);
-        camPos.x -= 0.1f;
-    }
-    if (IsKeyDown(KEY_RIGHT) || rightStickX > 0)
-    {
-        player.move(EAST);
-        camPos.x += 0.1f;
-    }
+    
 
     if (IsKeyPressed(KEY_ENTER))
     {

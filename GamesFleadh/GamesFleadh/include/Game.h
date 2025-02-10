@@ -3,7 +3,8 @@
 #include "raymath.h"
 #define PS_ALIAS     "playstation"
 
-
+#include "Input.h"
+#include "Command.h"
 #include "Globals.h"
 #include "Player.h"
 #include "Enemy.h"

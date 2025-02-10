@@ -28,3 +28,25 @@
 //    // Free the GameObject memory
 //    free(obj);
 //}
+
+GameObject::GameObject() : m_position({ 7.0f, 0.0f, 0.0f }), m_colour(WHITE), currentState(nullptr)
+{
+}
+
+void GameObject::handleInput(Event t_event)
+{
+	State* tempState = nullptr;
+
+	if (currentState)
+	{
+		tempState = currentState->handleInput(t_event);
+	}
+
+	if (tempState != NULL)
+	{
+		currentState->exit(this);
+		delete currentState;
+		currentState = tempState;
+		currentState->enter(this);
+	}
+}
