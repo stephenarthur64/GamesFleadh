@@ -57,6 +57,7 @@ private:
 	float rightTrigger;
 
 	int score;
+	int activeMap;
 
 	Player player;
 	Enemy enemy;

@@ -12,7 +12,7 @@ Color colorFromPosition;
 float worldYNormalFromCol;
 float worldYPos;
 
-Game::Game() : score(0)
+Game::Game() : score(0), activeMap(1)
 {
     leftStickX = 0.0f;
     leftStickY = 0.0f;
@@ -105,6 +105,8 @@ void Game::update()
     player.updateZPos(camPos.z - 5.0f);
     player.update();
     mapMove(); // Repos terrain meshes based on camera X (distance/z) pos
+    /*camPos.z -= 6;
+    camPos.y = 10;*/
 
     // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE
     // Get Normalised Coord
@@ -302,16 +304,23 @@ void Game::mapMove()
     float newMapX = mapPosition.x;
     float newMapX2 = mapPosition2.x;
 
-    if (player.getPositon().z < -74.0f)
+    if (player.getPositon().z < -74.0f && activeMap == 1)
     {
         mapPosition2 = { 35.0f, 0.0f, -70.0f };
         mapPosition = { 35.0f, 0.0f, -130.0f };
+        activeMap = 2;
         camPos.z = -9.2f;
         player.resetToOrigin();
     }
 
-    if (camPos.x < newMapX + 40.0f)
+    if (player.getPositon().z < -74.0f && activeMap == 2)
     {
-       // mapPosition2.x = newMapX - 50.0f;
+        mapPosition = { 35.0f, 0.0f, -70.0f };
+        mapPosition2 = { 35.0f, 0.0f, -130.0f }; 
+        activeMap = 1;
+        camPos.z = -9.2f;
+        player.resetToOrigin();
     }
+
+    
 }
