@@ -12,6 +12,8 @@ public:
 
 	void collision(bool t_collision);
 
+	virtual void rotate(int t_direction) override;
+
 private:
 
 

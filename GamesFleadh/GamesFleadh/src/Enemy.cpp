@@ -36,3 +36,7 @@ void Enemy::collision(bool t_collision)
 		m_colour = RED;
 	}
 }
+
+void Enemy::rotate(int t_direction)
+{
+}

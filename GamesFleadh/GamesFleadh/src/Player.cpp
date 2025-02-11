@@ -4,6 +4,9 @@
 Player::Player() : m_speed(0.3f),  bulletCount(0), m_roll(0.0f), m_pitch(0.0f)
 {
 	currentState = new IdleState;
+	animsCount = 0;
+	animCurrentFrame = 0;
+	modelAnimations = LoadModelAnimations("ASSETS/RS/animTest.glb", &animsCount);
 }
 
 void Player::move(int t_directon)
@@ -36,7 +39,6 @@ void Player::move(int t_directon)
 		m_hitbox.min.x -= m_speed;
 		m_hitbox.max.x -= m_speed;
 	}
-	updateModelRotate();
 	//updateHitBox();
 }
 
@@ -76,9 +78,12 @@ void Player::updateZPos(float newXPos)
 	m_position.z = newXPos;
 }
 
-void Player::updateModelRotate()
+void Player::rotate(int t_direction)
 {
-	//m_body.transform = MatrixRotateXYZ({ DEG2RAD * 40.0f, DEG2RAD * 90.0f, DEG2RAD* 70.0f });
+	float pitch = 0.0f;
+	float roll = 0.0f;
+	float yaw = 0.0f;
+	//m_body.transform = MatrixRotateXYZ({ DEG2RAD * , DEG2RAD * 90.0f, DEG2RAD * 70.0f });
 }
 
 void Player::update()

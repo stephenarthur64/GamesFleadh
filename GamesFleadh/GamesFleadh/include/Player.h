@@ -21,7 +21,7 @@ public:
 	void updateHitBox(float t_x);
 	void collision(bool collide);
 	void updateZPos(float newXPos);
-	void updateModelRotate();
+	virtual void rotate(int t_direction) override;
 
 	void update();
 

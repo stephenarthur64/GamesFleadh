@@ -29,3 +29,16 @@ State* IdleState::handleInput(Event t_event)
 
 	return nullptr;
 }
+
+void IdleState::update(GameObject* obj)
+{
+	obj->animation(4);
+}
+
+void IdleState::enter(GameObject* obj)
+{
+}
+
+void IdleState::exit(GameObject* obj)
+{
+}

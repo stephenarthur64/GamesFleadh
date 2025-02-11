@@ -50,3 +50,11 @@ void GameObject::handleInput(Event t_event)
 		currentState->enter(this);
 	}
 }
+
+void GameObject::animation(int index)
+{
+	animIndex = index;
+	ModelAnimation anim = modelAnimations[animIndex];
+	animCurrentFrame = (animCurrentFrame + 1) % anim.frameCount;
+	UpdateModelAnimation(m_body, anim, animCurrentFrame);
+}

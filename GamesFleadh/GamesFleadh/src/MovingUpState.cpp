@@ -16,6 +16,7 @@ State* MovingUpState::handleInput(Event t_event)
 
 void MovingUpState::update(GameObject* obj)
 {
+    obj->animation(3);
 }
 
 void MovingUpState::enter(GameObject* obj)
