@@ -9,9 +9,9 @@ Player::Player() : m_speed(0.3f),  bulletCount(0), m_roll(0.0f), m_pitch(0.0f)
 	modelAnimations = LoadModelAnimations("ASSETS/RS/animTest.glb", &animsCount);
 }
 
-void Player::move(int t_directon)
+void Player::move(Vector3 t_velocity)
 {
-	if (t_directon == NORTH)
+	/*if (t_directon == NORTH)
 	{
 		m_pitch += 1.0f;
 		m_position.y += m_speed;
@@ -38,8 +38,12 @@ void Player::move(int t_directon)
 		m_position.x -= m_speed;
 		m_hitbox.min.x -= m_speed;
 		m_hitbox.max.x -= m_speed;
-	}
-	//updateHitBox();
+	}*/
+
+	t_velocity *= {m_speed, -m_speed, m_speed};
+	m_position += t_velocity;
+	m_hitbox.min += t_velocity;
+	m_hitbox.max += t_velocity;
 }
 
 void Player::setHitBox()

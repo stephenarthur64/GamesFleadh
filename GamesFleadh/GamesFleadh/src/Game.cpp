@@ -157,7 +157,7 @@ void Game::loadAssets()
 
     
 
-    *player.getModel() = LoadModel("ASSETS/RS/animTest.glb");
+    *player.getModel() = LoadModel("ASSETS/RS/bumblebee.glb");
     *enemy.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
     enemy.getModel()->transform = MatrixRotateXYZ({ 0, DEG2RAD * 90.0f, 0 });
     for (int i = 0; i < player.getBulletMax(); i++)
@@ -205,27 +205,31 @@ void Game::inputControl()
         command->execute(&player);
     }
 
-    if (IsKeyDown(KEY_UP) || rightStickY < 0)
+    if (IsKeyDown(KEY_UP))
     {
-        player.move(NORTH);
+        player.move({0, -1, 0});
         camPos.y += 0.1f;
     }
-    if (IsKeyDown(KEY_DOWN) || rightStickY > 0)
+    if (IsKeyDown(KEY_DOWN))
     {
-        player.move(SOUTH);
+        player.move({0,1,0});
         camPos.y -= 0.1f;
     }
-    if (IsKeyDown(KEY_LEFT) || rightStickX < 0)
+    if (IsKeyDown(KEY_LEFT))
     {
-        player.move(WEST);
+        player.move({-1,0,0});
         camPos.x -= 0.1f;
     }
-    if (IsKeyDown(KEY_RIGHT) || rightStickX > 0)
+    if (IsKeyDown(KEY_RIGHT))
     {
-        player.move(EAST);
+        player.move({1,0,0});
         camPos.x += 0.1f;
     }
-    
+
+    Vector3 normVelocity = Vector3Normalize({ rightStickX, rightStickY, 0 });
+
+    player.move(normVelocity);
+    camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
 
     if (IsKeyPressed(KEY_ENTER))
     {

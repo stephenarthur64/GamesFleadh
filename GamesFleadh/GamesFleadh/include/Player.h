@@ -11,7 +11,7 @@ class Player : public GameObject
 {
 public:
 	Player();
-	void move(int t_directon);
+	void move(Vector3 t_velocity);
 	Model* getBulletModel(int count) { return bullet[count].getModel(); }
 	Vector3 getBulletPositon(int count) { return bullet[count].getPositon(); }
 	BoundingBox getBulletHitBox(int count) { return bullet[count].getHitbox(); }
