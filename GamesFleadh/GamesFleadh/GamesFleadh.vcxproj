@@ -29,7 +29,10 @@
     <ClInclude Include="include\Globals.h" />
     <ClInclude Include="include\IdleState.h" />
     <ClInclude Include="include\Input.h" />
-    <ClInclude Include="include\MovingState.h" />
+    <ClInclude Include="include\MovingDownState.h" />
+    <ClInclude Include="include\MovingLeftState.h" />
+    <ClInclude Include="include\MovingRightState.h" />
+    <ClInclude Include="include\MovingUpState.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\State.h" />
   </ItemGroup>
@@ -42,7 +45,10 @@
     <ClCompile Include="src\IdleState.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MovingState.cpp" />
+    <ClCompile Include="src\MovingDownState.cpp" />
+    <ClCompile Include="src\MovingLeftState.cpp" />
+    <ClCompile Include="src\MovingRightState.cpp" />
+    <ClCompile Include="src\MovingUpState.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\State.cpp" />
   </ItemGroup>

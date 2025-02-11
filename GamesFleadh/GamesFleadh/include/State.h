@@ -3,7 +3,7 @@
 #include "events.h"
 
 class GameObject;
-class MovingState;
+class MovingUpState;
 
 class State {
 public:

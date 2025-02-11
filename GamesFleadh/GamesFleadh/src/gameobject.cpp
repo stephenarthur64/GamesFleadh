@@ -29,7 +29,7 @@
 //    free(obj);
 //}
 
-GameObject::GameObject() : m_position({ 7.0f, 0.0f, 0.0f }), m_colour(WHITE), currentState(nullptr)
+GameObject::GameObject() : m_position({ 7.0f, 0.0f, 0.0f }), m_colour(WHITE)
 {
 }
 

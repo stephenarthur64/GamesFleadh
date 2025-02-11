@@ -18,18 +18,22 @@ Command* Input::handleInput()
 {
     if (IsKeyDown(KEY_UP))
     {
-        return new MovingCommand();
+        return new MovingUpCommand();
     }
-    if (IsKeyDown(KEY_DOWN))
+    else if (IsKeyDown(KEY_DOWN))
     {
-        return new MovingCommand();
+        return new MovingDownCommand();
     }
-    if (IsKeyDown(KEY_LEFT))
+    else if (IsKeyDown(KEY_LEFT))
     {
-        return new MovingCommand();
+        return new MovingLeftCommand();
     }
-    if (IsKeyDown(KEY_RIGHT))
+    else if (IsKeyDown(KEY_RIGHT))
     {
-        return new MovingCommand();
+        return new MovingRightCommand();
+    }
+    else
+    {
+        return new IdleCommand();
     }
 }

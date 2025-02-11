@@ -5,6 +5,7 @@
 #include "raymath.h"
 #include "gameobject.h"
 #include "State.h"
+#include "IdleState.h"
 
 class Player : public GameObject
 {
@@ -21,6 +22,8 @@ public:
 	void collision(bool collide);
 	void updateZPos(float newXPos);
 	void updateModelRotate();
+
+	void update();
 
 	void resetToOrigin();
 

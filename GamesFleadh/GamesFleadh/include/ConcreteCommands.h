@@ -11,11 +11,38 @@ class IdleCommand : public Command
 	}
 };
 
-class MovingCommand : public Command
+class MovingUpCommand : public Command
 {
 	virtual void execute(GameObject* obj) override
 	{
-		Event event = EVENT_MOVE;
+		Event event = EVENT_MOVE_UP;
+		obj->handleInput(event);
+	}
+};
+
+class MovingDownCommand : public Command
+{
+	virtual void execute(GameObject* obj) override
+	{
+		Event event = EVENT_MOVE_DOWN;
+		obj->handleInput(event);
+	}
+};
+
+class MovingLeftCommand : public Command
+{
+	virtual void execute(GameObject* obj) override
+	{
+		Event event = EVENT_MOVE_LEFT;
+		obj->handleInput(event);
+	}
+};
+
+class MovingRightCommand : public Command
+{
+	virtual void execute(GameObject* obj) override
+	{
+		Event event = EVENT_MOVE_RIGHT;
 		obj->handleInput(event);
 	}
 };

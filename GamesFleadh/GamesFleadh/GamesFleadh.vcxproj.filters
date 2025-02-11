@@ -63,7 +63,16 @@
     <ClInclude Include="include\IdleState.h">
       <Filter>Header Files\FSM</Filter>
     </ClInclude>
-    <ClInclude Include="include\MovingState.h">
+    <ClInclude Include="include\MovingUpState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MovingDownState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MovingLeftState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MovingRightState.h">
       <Filter>Header Files\FSM</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,7 +107,16 @@
     <ClCompile Include="src\IdleState.cpp">
       <Filter>Source Files\FSM</Filter>
     </ClCompile>
-    <ClCompile Include="src\MovingState.cpp">
+    <ClCompile Include="src\MovingUpState.cpp">
+      <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovingLeftState.cpp">
+      <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovingRightState.cpp">
+      <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovingDownState.cpp">
       <Filter>Source Files\FSM</Filter>
     </ClCompile>
   </ItemGroup>

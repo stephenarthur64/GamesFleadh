@@ -52,7 +52,7 @@ void Game::init()
     camera.up = { 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
     camera.fovy = 90.0f;                                    // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
-    
+
     loadAssets();
     gamepadInit();
 
@@ -103,6 +103,7 @@ void Game::update()
     gamepadUpdate();
     inputControl();
     player.updateZPos(camPos.z - 5.0f);
+    player.update();
     mapMove(); // Repos terrain meshes based on camera X (distance/z) pos
 
     // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE

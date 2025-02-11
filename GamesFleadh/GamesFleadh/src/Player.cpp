@@ -3,6 +3,7 @@
 
 Player::Player() : m_speed(0.3f),  bulletCount(0), m_roll(0.0f), m_pitch(0.0f)
 {
+	currentState = new IdleState;
 }
 
 void Player::move(int t_directon)
@@ -78,6 +79,11 @@ void Player::updateZPos(float newXPos)
 void Player::updateModelRotate()
 {
 	//m_body.transform = MatrixRotateXYZ({ DEG2RAD * 40.0f, DEG2RAD * 90.0f, DEG2RAD* 70.0f });
+}
+
+void Player::update()
+{
+	currentState->update(this);
 }
 
 void Player::resetToOrigin()
