@@ -6,7 +6,7 @@ Player::Player() : m_speed(0.3f),  bulletCount(0), m_roll(0.0f), m_pitch(0.0f)
 	currentState = new IdleState;
 	animsCount = 0;
 	animCurrentFrame = 0;
-	modelAnimations = LoadModelAnimations("ASSETS/RS/animTest.glb", &animsCount);
+	modelAnimations = LoadModelAnimations("ASSETS/RS/robotRS01.glb", &animsCount);
 }
 
 void Player::move(Vector3 t_velocity)
@@ -48,7 +48,7 @@ void Player::move(Vector3 t_velocity)
 
 void Player::setHitBox()
 {
-	m_hitbox = GetMeshBoundingBox(m_body.meshes[0]);
+	//m_hitbox = GetMeshBoundingBox(m_body.meshes[0]);
 	m_hitbox.min.x = m_position.x - hitboxOffsetMin;
 	m_hitbox.max.x = m_position.x - hitboxOffsetMax;
 
@@ -73,7 +73,7 @@ void Player::collision(bool collide)
 	}
 	else
 	{
-		m_colour = WHITE;
+		m_colour = GREEN;
 	}
 }
 
@@ -87,7 +87,7 @@ void Player::rotate(int t_direction)
 	float pitch = 0.0f;
 	float roll = 0.0f;
 	float yaw = 0.0f;
-	//m_body.transform = MatrixRotateXYZ({ DEG2RAD * , DEG2RAD * 90.0f, DEG2RAD * 70.0f });
+	
 }
 
 void Player::update()

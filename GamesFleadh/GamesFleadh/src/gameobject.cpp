@@ -1,4 +1,5 @@
 #include "../include/gameobject.h"
+#include <raymath.h>
 
 //// Initializes a GameObject with default values and assigns a name
 //void InitGameObject(GameObject *obj, const char *name)
@@ -54,7 +55,8 @@ void GameObject::handleInput(Event t_event)
 void GameObject::animation(int index)
 {
 	animIndex = index;
-	ModelAnimation anim = modelAnimations[animIndex];
+	ModelAnimation anim = modelAnimations[3];
 	animCurrentFrame = (animCurrentFrame + 1) % anim.frameCount;
-	//UpdateModelAnimation(m_body, anim, animCurrentFrame);
+	bool fuckk = IsModelAnimationValid(m_body, anim);
+	UpdateModelAnimation(m_body, anim, animCurrentFrame);
 }

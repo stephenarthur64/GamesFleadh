@@ -159,7 +159,7 @@ void Game::loadAssets()
 
     
 
-    *player.getModel() = LoadModel("ASSETS/RS/bumblebee.glb");
+    *player.getModel() = LoadModel("ASSETS/RS/robotRS01.glb");
     *enemy.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
     enemy.getModel()->transform = MatrixRotateXYZ({ 0, DEG2RAD * 90.0f, 0 });
     for (int i = 0; i < player.getBulletMax(); i++)
