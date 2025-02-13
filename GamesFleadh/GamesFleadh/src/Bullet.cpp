@@ -27,6 +27,6 @@ void Bullet::move()
 {
 	if (m_active)
 	{
-		m_position.x += m_speed;
+		m_position.z += m_speed;
 	}
 }

@@ -59,6 +59,34 @@ void Game::init()
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 }
 
+void Game::loadAssets()
+{
+    heightmapImage = LoadImage("ASSETS/heightmapWider.png");     // Load heightmap image (RAM)
+    heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
+
+
+    heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
+    heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
+    heightmapModel.transform = MatrixRotateXYZ({ DEG2RAD * 270.0f, DEG2RAD * 270.0f, DEG2RAD * 270.0f });
+
+    heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
+    mapPosition = { 35.0f, 0.0f, -70.0f };           // Define model position
+    mapPosition2 = { 35.0f, 0.0f, -130.0f };
+
+
+
+    *player.getModel() = LoadModel("ASSETS/RS/flying_flinch.blend.glb");
+    *enemy.getModel() = LoadModel("ASSETS/RS/cube.glb");
+    enemy.getModel()->transform = MatrixRotateXYZ({ 0, DEG2RAD * 90.0f, 0 });
+    for (int i = 0; i < player.getBulletMax(); i++)
+    {
+        *player.getBulletModel(i) = LoadModel("ASSETS/RS/bulletProto.glb");
+    }
+
+    player.setHitBox();
+    enemy.setHitBox();
+}
+
 void Game::render()
 {
     BeginDrawing();
@@ -69,7 +97,7 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 4.0f, GREEN);
-    DrawModel(*player.getModel(), player.getPositon(), 2.0f, player.getColour());
+    DrawModel(*player.getModel(), player.getPositon(), 1.5f, player.getColour());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
     for (int i = 0; i < player.getBulletMax(); i++)
     {
@@ -141,34 +169,6 @@ void Game::update()
     checkCollisions(player.getHitbox(), enemy.getHitbox());
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
-}
-
-void Game::loadAssets()
-{
-    heightmapImage = LoadImage("ASSETS/heightmapWider.png");     // Load heightmap image (RAM)
-    heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
-
-    
-    heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
-    heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
-    heightmapModel.transform = MatrixRotateXYZ({ DEG2RAD * 270.0f, DEG2RAD * 270.0f, DEG2RAD * 270.0f });
-
-    heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
-    mapPosition = { 35.0f, 0.0f, -70.0f };           // Define model position
-    mapPosition2 = { 35.0f, 0.0f, -130.0f };
-
-    
-
-    *player.getModel() = LoadModel("ASSETS/RS/flying_flinch.blend.glb");
-    *enemy.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
-    enemy.getModel()->transform = MatrixRotateXYZ({ 0, DEG2RAD * 90.0f, 0 });
-    for (int i = 0; i < player.getBulletMax(); i++)
-    {
-        *player.getBulletModel(i) = LoadModel("ASSETS/RS/bulletProto.glb");
-    }
-
-    player.setHitBox();
-    enemy.setHitBox();
 }
 
 void Game::inputControl()

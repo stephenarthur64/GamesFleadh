@@ -9,7 +9,7 @@ public:
 
 	void setHitBox();
 	void updateHitBox();
-
+	void spawn();
 	void collision(bool t_collision);
 
 	virtual void rotate(int t_direction) override;
@@ -17,7 +17,7 @@ public:
 private:
 
 
-	float hitboxOffsetMin = 5.0f;
-	float hitboxOffsetMax = 1.0f;
+	float hitboxOffsetMin = 9.0f;
+	float hitboxOffsetMax = 11.0f;
 };
 
