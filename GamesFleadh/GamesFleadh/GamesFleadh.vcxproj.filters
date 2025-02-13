@@ -75,6 +75,9 @@
     <ClInclude Include="include\MovingRightState.h">
       <Filter>Header Files\FSM</Filter>
     </ClInclude>
+    <ClInclude Include="include\Mushroom.h">
+      <Filter>Header Files\GO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="src\MovingDownState.cpp">
       <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mushroom.cpp">
+      <Filter>Source Files\GO</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

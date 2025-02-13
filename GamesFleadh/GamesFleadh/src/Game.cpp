@@ -72,19 +72,9 @@ void Game::loadAssets()
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
     mapPosition = { 35.0f, 0.0f, -70.0f };           // Define model position
     mapPosition2 = { 35.0f, 0.0f, -130.0f };
-
-
-
-    *player.getModel() = LoadModel("ASSETS/RS/flying_flinch.blend.glb");
-    *enemy.getModel() = LoadModel("ASSETS/RS/cube.glb");
-    enemy.getModel()->transform = MatrixRotateXYZ({ 0, DEG2RAD * 90.0f, 0 });
-    for (int i = 0; i < player.getBulletMax(); i++)
-    {
-        *player.getBulletModel(i) = LoadModel("ASSETS/RS/bulletProto.glb");
-    }
-
-    player.setHitBox();
-    enemy.setHitBox();
+    
+    player.init();
+    mushroom.init();
 }
 
 void Game::render()
@@ -97,16 +87,13 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 4.0f, GREEN);
-    DrawModel(*player.getModel(), player.getPositon(), 1.5f, player.getColour());
-    DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
+    
+    player.render();
+    mushroom.render();
     for (int i = 0; i < player.getBulletMax(); i++)
     {
-        DrawModel(*player.getBulletModel(i), player.getBulletPositon(i), 0.5f, BLUE);
-        DrawBoundingBox(player.getBulletHitBox(i), RED);
+        
     }
-    //DrawBoundingBox(player.getHitbox(), RED);
-    DrawBoundingBox(enemy.getHitbox(), GREEN);
-    
 
 
     DrawGrid(20, 1.0f);
@@ -166,7 +153,7 @@ void Game::update()
 
     player.updateBullet();
     camera.position = camPos;
-    checkCollisions(player.getHitbox(), enemy.getHitbox());
+    checkCollisions(player.getHitbox(), mushroom.getEnemyHitbox());
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
 }
@@ -283,10 +270,10 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
     for (int i = 0; i < player.getBulletMax(); i++)
     {
-        if (CheckCollisionBoxSphere(enemy.getHitbox(), player.getBulletPositon(i), 1.0f))
+        if (CheckCollisionBoxSphere(mushroom.getEnemyHitbox(), player.getBulletPositon(i), 1.0f))
         {
             collide = 1;
-            enemy.collision(true);
+            mushroom.setCollisions(true);
             player.despawnBullet(i);
             score += 10;
         }
@@ -294,7 +281,7 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
     if (collide != 1)
     {
-        enemy.collision(false);
+        mushroom.setCollisions(false);
     }
 }
 

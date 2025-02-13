@@ -41,6 +41,18 @@ void Enemy::collision(bool t_collision)
 	}
 }
 
+void Enemy::init()
+{
+	m_body = LoadModel("ASSETS/RS/cube.glb");
+	setHitBox();
+}
+
+void Enemy::render()
+{
+	DrawModel(m_body, m_position, 1.0f, m_colour);
+	DrawBoundingBox(m_hitbox, GREEN);
+}
+
 void Enemy::rotate(int t_direction)
 {
 }

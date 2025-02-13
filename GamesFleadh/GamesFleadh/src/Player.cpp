@@ -90,6 +90,28 @@ void Player::rotate(int t_direction)
 	
 }
 
+void Player::init()
+{
+	m_body = LoadModel("ASSETS/RS/flying_flinch.blend.glb");
+	setHitBox();
+
+	for (int i = 0; i < getBulletMax(); i++)
+	{
+		bullet[i].init();
+	}
+}
+
+void Player::render()
+{
+	DrawModel(m_body, m_position, 1.5f, m_colour);
+	DrawBoundingBox(m_hitbox, RED);
+
+	for (int i = 0; i < getBulletMax(); i++)
+	{
+		bullet[i].render();
+	}
+}
+
 void Player::update()
 {
 	currentState->update(this);

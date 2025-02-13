@@ -18,6 +18,8 @@ public:
     Color getColour() { return m_colour; }
 	virtual void handleInput(Event t_event);
 	virtual void rotate(int t_direction) = 0;
+	virtual void init() = 0;
+	virtual void render() = 0;
 	void animation(int index);
 	void rotateYaw(int t_direction);
 

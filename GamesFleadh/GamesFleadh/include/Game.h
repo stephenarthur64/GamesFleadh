@@ -7,7 +7,7 @@
 #include "Command.h"
 #include "Globals.h"
 #include "Player.h"
-#include "Enemy.h"
+#include "Mushroom.h"
 
 class Game
 {
@@ -60,6 +60,6 @@ private:
 	int activeMap;
 
 	Player player;
-	Enemy enemy;
+	Mushroom mushroom;
 };
 

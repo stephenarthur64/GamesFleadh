@@ -22,7 +22,8 @@ public:
 	void collision(bool collide);
 	void updateZPos(float newXPos);
 	virtual void rotate(int t_direction) override;
-
+	virtual void init() override;
+	virtual void render() override;
 	void update();
 
 	void resetToOrigin();

@@ -11,6 +11,8 @@ public:
 	void updateHitBox();
 	void spawn();
 	void collision(bool t_collision);
+	virtual void init() override;
+	virtual void render() override;
 
 	virtual void rotate(int t_direction) override;
 

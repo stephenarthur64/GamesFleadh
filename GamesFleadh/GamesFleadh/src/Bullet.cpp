@@ -30,3 +30,18 @@ void Bullet::move()
 		m_position.z += m_speed;
 	}
 }
+
+void Bullet::init()
+{
+	m_body = LoadModel("ASSETS/RS/bulletProto.glb");
+}
+
+void Bullet::render()
+{
+	DrawModel(m_body, m_position, 0.5f, BLUE);
+	DrawBoundingBox(m_hitbox, RED);
+}
+
+void Bullet::rotate(int t_direction)
+{
+}
