@@ -17,6 +17,7 @@ State* MovingRightState::handleInput(Event t_event)
 void MovingRightState::update(GameObject* obj)
 {
     obj->animation(5);
+    obj->rotateYaw(1);
 }
 
 void MovingRightState::enter(GameObject* obj)

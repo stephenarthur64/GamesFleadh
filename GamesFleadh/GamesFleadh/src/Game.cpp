@@ -69,7 +69,7 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 4.0f, GREEN);
-    DrawModel(*player.getModel(), player.getPositon(), 1.0f, player.getColour());
+    DrawModel(*player.getModel(), player.getPositon(), 2.0f, player.getColour());
     DrawModel(*enemy.getModel(), enemy.getPositon(), 1.0f, enemy.getColour());
     for (int i = 0; i < player.getBulletMax(); i++)
     {
@@ -87,7 +87,7 @@ void Game::render()
 
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPositon().z), 10, 430, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
-    DrawFPS(10, 10);
+    DrawFPS(10, 30);
 
     //DrawText((TextFormat("XPos: %f, YPos: %f, ZPos: %f", player.getPositon().x, player.getPositon().y, player.getPositon().z)), 10, 10, 32, GREEN);
     //DrawText((TextFormat("NormalX: %f, NormalZ: %f", worldNormalX, worldNormalZ)), 10, 45, 32, ORANGE);
@@ -159,7 +159,7 @@ void Game::loadAssets()
 
     
 
-    *player.getModel() = LoadModel("ASSETS/RS/robotRS01.glb");
+    *player.getModel() = LoadModel("ASSETS/RS/flying_flinch.blend.glb");
     *enemy.getModel() = LoadModel("ASSETS/RS/bugProto01.glb");
     enemy.getModel()->transform = MatrixRotateXYZ({ 0, DEG2RAD * 90.0f, 0 });
     for (int i = 0; i < player.getBulletMax(); i++)

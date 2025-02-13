@@ -19,6 +19,7 @@ public:
 	virtual void handleInput(Event t_event);
 	virtual void rotate(int t_direction) = 0;
 	void animation(int index);
+	void rotateYaw(int t_direction);
 
 protected:
 	Model m_body;
@@ -26,6 +27,10 @@ protected:
 	BoundingBox m_hitbox;
 	Color m_colour;
 	State* currentState;
+
+	float m_roll;
+	float m_pitch;
+	float m_yaw;
 
 	int animsCount;
 	unsigned int animIndex;

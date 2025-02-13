@@ -1,12 +1,12 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.3f),  bulletCount(0), m_roll(0.0f), m_pitch(0.0f)
+Player::Player() : m_speed(0.3f),  bulletCount(0)
 {
 	currentState = new IdleState;
 	animsCount = 0;
 	animCurrentFrame = 0;
-	modelAnimations = LoadModelAnimations("ASSETS/RS/robotRS01.glb", &animsCount);
+	modelAnimations = LoadModelAnimations("ASSETS/RS/flying_flinch.blend.glb", &animsCount);
 }
 
 void Player::move(Vector3 t_velocity)
@@ -73,7 +73,7 @@ void Player::collision(bool collide)
 	}
 	else
 	{
-		m_colour = GREEN;
+		m_colour = WHITE;
 	}
 }
 

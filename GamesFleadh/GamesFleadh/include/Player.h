@@ -33,9 +33,6 @@ public:
 
 private:
 	float m_speed;
-	float m_roll;
-	float m_pitch;
-
 	float hitboxOffsetMin = 1.0f;
 	float hitboxOffsetMax = 3.0f;
 

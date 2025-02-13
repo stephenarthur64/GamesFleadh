@@ -30,7 +30,7 @@
 //    free(obj);
 //}
 
-GameObject::GameObject() : m_position({ 7.0f, 0.0f, 0.0f }), m_colour(WHITE)
+GameObject::GameObject() : m_position({ 7.0f, 0.0f, 0.0f }), m_colour(WHITE), m_pitch(0.0f), m_roll(0.0f), m_yaw(90.0f)
 {
 }
 
@@ -54,9 +54,27 @@ void GameObject::handleInput(Event t_event)
 
 void GameObject::animation(int index)
 {
+	m_body.transform = MatrixRotateXYZ({ DEG2RAD* m_pitch, DEG2RAD* m_yaw, DEG2RAD* m_roll });
 	animIndex = index;
-	ModelAnimation anim = modelAnimations[3];
+	ModelAnimation anim = modelAnimations[0];
 	animCurrentFrame = (animCurrentFrame + 1) % anim.frameCount;
 	bool fuckk = IsModelAnimationValid(m_body, anim);
 	UpdateModelAnimation(m_body, anim, animCurrentFrame);
+}
+
+void GameObject::rotateYaw(int t_direction)
+{
+	int speed = 5;
+
+	speed *= t_direction;
+
+	if (m_yaw >= 60.0f && t_direction == -1)
+	{
+		m_yaw += speed;
+	}
+
+	if (m_yaw <= 130.0f && t_direction == 1)
+	{
+		m_yaw += speed;
+	}
 }
