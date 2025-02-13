@@ -32,7 +32,7 @@ State* IdleState::handleInput(Event t_event)
 
 void IdleState::update(GameObject* obj)
 {
-	obj->animation(4);
+	obj->animation(4);	
 }
 
 void IdleState::enter(GameObject* obj)

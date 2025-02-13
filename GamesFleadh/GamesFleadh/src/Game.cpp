@@ -56,6 +56,12 @@ void Game::init()
     loadAssets();
     gamepadInit();
 
+    Command* command = new IdleCommand;
+    if (command)
+    {
+        command->execute(mushroom.getEnemy());
+    }
+
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 }
 
@@ -116,6 +122,7 @@ void Game::update()
     inputControl();
     player.updateZPos(camPos.z - 5.0f);
     player.update();
+    mushroom.update();
     mapMove(); // Repos terrain meshes based on camera X (distance/z) pos
     /*camPos.z -= 6;
     camPos.y = 10;*/

@@ -2,8 +2,12 @@
 
 Enemy::Enemy()
 {
+	currentState = new IdleState;
 	m_position = { 2.0f, 2.0f, -10.0f };
 	m_colour = RED;
+	animsCount = 0;
+	animCurrentFrame = 0;
+	modelAnimations = LoadModelAnimations("ASSETS/RS/animTest.glb", &animsCount);// <------------ Here for Animation of Feeder
 }
 
 void Enemy::setHitBox()
@@ -49,13 +53,13 @@ void Enemy::collision(bool t_collision)
 	}
 	else
 	{
-		m_colour = RED;
+		m_colour = WHITE;
 	}
 }
 
 void Enemy::init()
 {
-	m_body = LoadModel("ASSETS/RS/cube.glb");
+	m_body = LoadModel("ASSETS/RS/animTest.glb"); //<---------- Here for model change of Feeder
 	setHitBox();
 }
 
@@ -63,6 +67,11 @@ void Enemy::render()
 {
 	DrawModel(m_body, m_position, 1.0f, m_colour);
 	DrawBoundingBox(m_hitbox, GREEN);
+}
+
+void Enemy::update()
+{
+	currentState->update(this);
 }
 
 void Enemy::rotate(int t_direction)
