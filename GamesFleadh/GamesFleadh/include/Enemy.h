@@ -9,7 +9,7 @@ public:
 
 	void setHitBox();
 	void updateHitBox();
-	void spawn();
+	void spawn(Vector3 t_position);
 	void collision(bool t_collision);
 	virtual void init() override;
 	virtual void render() override;

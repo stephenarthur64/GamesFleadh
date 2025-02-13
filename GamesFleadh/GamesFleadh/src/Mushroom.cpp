@@ -22,3 +22,8 @@ void Mushroom::render()
 	DrawModel(m_body, m_position, 2.0f, m_colour);
 	enemy.render();
 }
+
+void Mushroom::spawnEnemy()
+{
+	enemy.spawn(m_position);
+}

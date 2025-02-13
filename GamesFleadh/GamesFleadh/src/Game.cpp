@@ -75,6 +75,8 @@ void Game::loadAssets()
     
     player.init();
     mushroom.init();
+
+    mushroom.spawnEnemy();
 }
 
 void Game::render()
@@ -90,11 +92,6 @@ void Game::render()
     
     player.render();
     mushroom.render();
-    for (int i = 0; i < player.getBulletMax(); i++)
-    {
-        
-    }
-
 
     DrawGrid(20, 1.0f);
 

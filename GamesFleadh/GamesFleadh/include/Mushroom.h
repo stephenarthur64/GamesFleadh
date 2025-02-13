@@ -13,6 +13,8 @@ public:
 	BoundingBox getEnemyHitbox() { return enemy.getHitbox(); }
 	void setCollisions(bool t_collide) { enemy.collision(t_collide); }
 
+	void spawnEnemy();
+
 private:
 	Enemy enemy;
 };
