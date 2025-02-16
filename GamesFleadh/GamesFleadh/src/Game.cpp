@@ -121,6 +121,7 @@ void Game::loadAssets()
         }
         mushroom[i].spawnEnemy();
     }
+    mushroom[0].playerDetected(true);
 }
 
 void Game::render()
@@ -358,10 +359,11 @@ void Game::mapMove()
         mushroomOnMap = 0;
         mushroom[0].spawn({2.0f, 1.0f, -30.0f});
         mushroom[0].spawnEnemy();
-
+        mushroom[0].playerDetected(true);
 
         mushroom[1].spawn({ 2.0f, 1.0f, -90.0f });
         mushroom[1].spawnEnemy();
+        mushroom[1].playerDetected(false);
     }
 
     if (player.getPositon().z < -74.0f && activeMap == 2)
@@ -375,9 +377,11 @@ void Game::mapMove()
 
         mushroom[1].spawn({ 2.0f, 1.0f, -30.0f });
         mushroom[1].spawnEnemy();
+        mushroom[1].playerDetected(true);
 
         mushroom[0].spawn({ 2.0f, 1.0f, -90.0f });
         mushroom[0].spawnEnemy();
+        mushroom[0].playerDetected(false);
     }
 
     

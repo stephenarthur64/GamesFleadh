@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include "gameobject.h"
 #include "IdleState.h"
+#include "Bullet.h"
 
 class Enemy : public GameObject
 {
@@ -15,6 +16,14 @@ public:
 	virtual void init() override;
 	virtual void render() override;
 
+	Model* getBulletModel(int count) { return m_mudBomb.getModel(); }
+	Vector3 getBulletPositon(int count) { return m_mudBomb.getPositon(); }
+	BoundingBox getBulletHitBox(int count) { return m_mudBomb.getHitbox(); }
+
+	void shootBullet();
+	void despawnBullet();
+	void disableShooting();
+
 	void kill();
 
 	void update();
@@ -22,9 +31,11 @@ public:
 	virtual void rotate(int t_direction) override;
 
 private:
-
+	Bullet m_mudBomb;
 
 	float hitboxOffsetMin = 9.0f;
 	float hitboxOffsetMax = 11.0f;
+
+	int bulletTick = -1;
 };
 

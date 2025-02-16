@@ -14,6 +14,8 @@ public:
 	void setCollisions(bool t_collide) { enemy.collision(t_collide); }
 	GameObject* getEnemy() { return &enemy; }
 
+	void playerDetected(bool t_spotted);
+
 	void update();
 
 	void spawn(Vector3 t_pos);

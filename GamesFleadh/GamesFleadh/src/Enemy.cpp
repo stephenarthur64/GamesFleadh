@@ -71,12 +71,30 @@ void Enemy::init()
 	m_body = LoadModel("ASSETS/3D/Enemy/Feeder/Feeder.glb"); //<---------- Here for model change of Feeder
 	//m_body = LoadModel("ASSETS/RS/animTest.glb");
 	setHitBox();
+	m_mudBomb.init();
 }
 
 void Enemy::render()
 {
 	DrawModel(m_body, m_position, 0.8f, m_colour);
 	DrawBoundingBox(m_hitbox, GREEN);
+	m_mudBomb.render();
+}
+
+void Enemy::shootBullet()
+{
+	bulletTick = 0;
+	m_mudBomb.spawn(m_position, 0.3f);
+}
+
+void Enemy::despawnBullet()
+{
+	m_mudBomb.despawn();
+}
+
+void Enemy::disableShooting()
+{
+	bulletTick = -1;
 }
 
 void Enemy::kill()
@@ -87,6 +105,17 @@ void Enemy::kill()
 void Enemy::update()
 {
 	currentState->update(this);
+	m_mudBomb.move();
+
+	if (bulletTick >= 180)
+	{
+		bulletTick = 0;
+		shootBullet();
+	}
+	else if (bulletTick > -1)
+	{
+		bulletTick++;
+	}
 }
 
 void Enemy::rotate(int t_direction)

@@ -23,6 +23,18 @@ void Mushroom::render()
 	enemy.render();
 }
 
+void Mushroom::playerDetected(bool t_spotted)
+{
+	if (t_spotted)
+	{
+		enemy.shootBullet();
+	}
+	else
+	{
+		enemy.disableShooting();
+	}
+}
+
 void Mushroom::update()
 {
 	enemy.update();
