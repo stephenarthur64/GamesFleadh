@@ -28,6 +28,11 @@ void Mushroom::update()
 	enemy.update();
 }
 
+void Mushroom::spawn(Vector3 t_pos)
+{
+	m_position = t_pos;
+}
+
 void Mushroom::spawnEnemy()
 {
 	enemy.spawn(m_position);

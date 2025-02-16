@@ -15,6 +15,8 @@ public:
 	virtual void init() override;
 	virtual void render() override;
 
+	void kill();
+
 	void update();
 
 	virtual void rotate(int t_direction) override;

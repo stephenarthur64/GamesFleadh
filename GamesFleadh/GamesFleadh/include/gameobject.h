@@ -34,6 +34,8 @@ protected:
 	float m_pitch;
 	float m_yaw;
 
+	int m_health;
+
 	int animsCount;
 	unsigned int animIndex;
 	unsigned int animCurrentFrame;

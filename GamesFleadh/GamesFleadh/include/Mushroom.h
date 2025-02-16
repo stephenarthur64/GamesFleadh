@@ -16,6 +16,7 @@ public:
 
 	void update();
 
+	void spawn(Vector3 t_pos);
 	void spawnEnemy();
 
 private:

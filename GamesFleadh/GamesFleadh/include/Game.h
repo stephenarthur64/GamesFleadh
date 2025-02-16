@@ -69,6 +69,9 @@ private:
 	int activeMap;
 
 	Player player;
-	Mushroom mushroom;
+	Mushroom mushroom[2];
+
+	const int MAX_MUSHROOMS = 2;
+	int mushroomOnMap = 0;
 };
 

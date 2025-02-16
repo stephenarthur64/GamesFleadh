@@ -65,12 +65,6 @@ void Game::init()
     loadAssets();
     gamepadInit();
 
-    Command* command = new IdleCommand;
-    if (command)
-    {
-        command->execute(mushroom.getEnemy());
-    }
-
     // BEGIN SKYBOX INIT ----------------------------------------------------------------------------------
     // RS: Should most of the following be in loadAssets()?
     // Load skybox model
@@ -117,9 +111,16 @@ void Game::loadAssets()
     mapPosition2 = { 35.0f, 0.0f, -130.0f };
     
     player.init();
-    mushroom.init();
 
-    mushroom.spawnEnemy();
+    for (int i = 0; i < MAX_MUSHROOMS; i++)
+    {
+        mushroom[i].init();
+        if (i != mushroomOnMap)
+        {
+            mushroom[i].spawn({ 2.0f, 1.0f, -90.0f });
+        }
+        mushroom[i].spawnEnemy();
+    }
 }
 
 void Game::render()
@@ -143,7 +144,10 @@ void Game::render()
     DrawModel(heightmapModel, mapPosition2, 4.0f, { 147, 204, 147, 255 });
     
     player.render();
-    mushroom.render();
+    for (int i = 0; i < MAX_MUSHROOMS; i++)
+    {
+        mushroom[i].render();
+    }
 
     DrawGrid(20, 1.0f);
 
@@ -168,7 +172,10 @@ void Game::update()
     inputControl();
     player.updateZPos(camPos.z - 5.0f);
     player.update();
-    mushroom.update();
+    for (int i = 0; i < MAX_MUSHROOMS; i++)
+    {
+        mushroom[i].update();
+    }
     mapMove(); // Repos terrain meshes based on camera X (distance/z) pos
     /*camPos.z -= 6;
     camPos.y = 10;*/
@@ -203,7 +210,7 @@ void Game::update()
 
     player.updateBullet();
     camera.position = camPos;
-    checkCollisions(player.getHitbox(), mushroom.getEnemyHitbox());
+    checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
 }
@@ -320,10 +327,10 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
     for (int i = 0; i < player.getBulletMax(); i++)
     {
-        if (CheckCollisionBoxSphere(mushroom.getEnemyHitbox(), player.getBulletPositon(i), 1.0f))
+        if (CheckCollisionBoxSphere(mushroom[mushroomOnMap].getEnemyHitbox(), player.getBulletPositon(i), 1.0f))
         {
             collide = 1;
-            mushroom.setCollisions(true);
+            mushroom[mushroomOnMap].setCollisions(true);
             player.despawnBullet(i);
             score += 10;
         }
@@ -331,7 +338,7 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
     if (collide != 1)
     {
-        mushroom.setCollisions(false);
+        mushroom[mushroomOnMap].setCollisions(false);
     }
 }
 
@@ -348,6 +355,13 @@ void Game::mapMove()
         activeMap = 2;
         camPos.z = -9.2f;
         player.resetToOrigin();
+        mushroomOnMap = 0;
+        mushroom[0].spawn({2.0f, 1.0f, -30.0f});
+        mushroom[0].spawnEnemy();
+
+
+        mushroom[1].spawn({ 2.0f, 1.0f, -90.0f });
+        mushroom[1].spawnEnemy();
     }
 
     if (player.getPositon().z < -74.0f && activeMap == 2)
@@ -357,6 +371,13 @@ void Game::mapMove()
         activeMap = 1;
         camPos.z = -9.2f;
         player.resetToOrigin();
+        mushroomOnMap = 1;
+
+        mushroom[1].spawn({ 2.0f, 1.0f, -30.0f });
+        mushroom[1].spawnEnemy();
+
+        mushroom[0].spawn({ 2.0f, 1.0f, -90.0f });
+        mushroom[0].spawnEnemy();
     }
 
     

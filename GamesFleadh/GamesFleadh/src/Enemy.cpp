@@ -3,6 +3,7 @@
 Enemy::Enemy()
 {
 	currentState = new IdleState;
+	m_health = 3;
 	m_position = { 2.0f, 2.0f, -10.0f };
 	m_colour = RED;
 	animsCount = 0;
@@ -32,6 +33,8 @@ void Enemy::updateHitBox()
 
 void Enemy::spawn(Vector3 t_position)
 {
+	m_health = 3;
+
 	m_position.x = t_position.x - 1.0f;
 	m_position.y = t_position.y + 5.0f;
 	m_position.z = t_position.z + 1.0f;
@@ -51,6 +54,11 @@ void Enemy::collision(bool t_collision)
 	if (t_collision)
 	{
 		m_colour = BLUE;
+		m_health--;
+		if (m_health < 0)
+		{
+			kill();
+		}
 	}
 	else
 	{
@@ -69,6 +77,11 @@ void Enemy::render()
 {
 	DrawModel(m_body, m_position, 0.8f, m_colour);
 	DrawBoundingBox(m_hitbox, GREEN);
+}
+
+void Enemy::kill()
+{
+	m_position.x = 1000.0f;
 }
 
 void Enemy::update()
