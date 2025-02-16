@@ -3,6 +3,7 @@
 #include "gameobject.h"
 #include "IdleState.h"
 #include "Bullet.h"
+#include <raymath.h>
 
 class Enemy : public GameObject
 {

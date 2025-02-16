@@ -69,6 +69,7 @@ void Enemy::collision(bool t_collision)
 void Enemy::init()
 {
 	m_body = LoadModel("ASSETS/3D/Enemy/Feeder/Feeder.glb"); //<---------- Here for model change of Feeder
+	m_yaw = 200.0f;
 	//m_body = LoadModel("ASSETS/RS/animTest.glb");
 	setHitBox();
 	m_mudBomb.init();

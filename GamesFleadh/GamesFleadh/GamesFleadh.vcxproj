@@ -22,6 +22,7 @@
     <ClInclude Include="include\Bullet.h" />
     <ClInclude Include="include\Command.h" />
     <ClInclude Include="include\ConcreteCommands.h" />
+    <ClInclude Include="include\DamageState.h" />
     <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\events.h" />
     <ClInclude Include="include\Game.h" />
@@ -40,6 +41,7 @@
   <ItemGroup>
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\DamageState.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\gameobject.cpp" />

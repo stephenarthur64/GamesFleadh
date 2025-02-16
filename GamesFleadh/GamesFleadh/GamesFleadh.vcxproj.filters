@@ -78,6 +78,9 @@
     <ClInclude Include="include\Mushroom.h">
       <Filter>Header Files\GO</Filter>
     </ClInclude>
+    <ClInclude Include="include\DamageState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="src\Mushroom.cpp">
       <Filter>Source Files\GO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DamageState.cpp">
+      <Filter>Source Files\FSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
