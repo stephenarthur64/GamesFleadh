@@ -6,7 +6,7 @@ Player::Player() : m_speed(0.3f),  bulletCount(0)
 	currentState = new IdleState;
 	animsCount = 0;
 	animCurrentFrame = 0;
-	modelAnimations = LoadModelAnimations("ASSETS/RS/flying_flinch.blend.glb", &animsCount);
+	modelAnimations = LoadModelAnimations("ASSETS/3D/Player/Buzzz/Buzz.glb", &animsCount);
 }
 
 void Player::move(Vector3 t_velocity)
@@ -92,7 +92,7 @@ void Player::rotate(int t_direction)
 
 void Player::init()
 {
-	m_body = LoadModel("ASSETS/RS/flying_flinch.blend.glb");
+	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
 	for (int i = 0; i < getBulletMax(); i++)
@@ -103,8 +103,8 @@ void Player::init()
 
 void Player::render()
 {
-	DrawModel(m_body, m_position, 1.5f, m_colour);
-	DrawBoundingBox(m_hitbox, RED);
+	DrawModel(m_body, m_position, 2.0f, m_colour);
+	//DrawBoundingBox(m_hitbox, RED);
 
 	for (int i = 0; i < getBulletMax(); i++)
 	{

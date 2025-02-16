@@ -33,9 +33,9 @@ Game::~Game()
     UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
 
     // Skybox memory management
-    UnloadShader(skybox.materials[0].shader);
-    UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
-    UnloadModel(skybox);        // Unload skybox model
+    //UnloadShader(skybox.materials[0].shader);
+    //UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
+    ///UnloadModel(skybox);        // Unload skybox model
 }
 
 void Game::run()
@@ -126,7 +126,7 @@ void Game::render()
 {
     BeginDrawing();
 
-    ClearBackground(RAYWHITE);
+    ClearBackground({ 22, 22, 31, 255 });
 
     BeginMode3D(camera);
 
@@ -139,8 +139,8 @@ void Game::render()
     rlEnableDepthMask();
     // SKYBOX STUFF ENDS
 
-    DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
-    DrawModel(heightmapModel, mapPosition2, 4.0f, GREEN);
+    DrawModel(heightmapModel, mapPosition, 4.0f, { 147, 204, 147, 255 });
+    DrawModel(heightmapModel, mapPosition2, 4.0f, { 147, 204, 147, 255 });
     
     player.render();
     mushroom.render();
