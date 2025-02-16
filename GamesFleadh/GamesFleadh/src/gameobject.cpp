@@ -27,7 +27,7 @@ void GameObject::animation(int index)
 {
 	m_body.transform = MatrixRotateXYZ({ DEG2RAD* m_pitch, DEG2RAD* m_yaw, DEG2RAD* m_roll });
 	animIndex = index;
-	ModelAnimation anim = modelAnimations[1]; // if index must be changed, go here (not over 1, breaks Buzzz)
+	ModelAnimation anim = modelAnimations[0]; // if index must be changed, go here (not over 1, breaks Buzzz)
 	animCurrentFrame = (animCurrentFrame + 1) % anim.frameCount;
 	UpdateModelAnimation(m_body, anim, animCurrentFrame);
 }

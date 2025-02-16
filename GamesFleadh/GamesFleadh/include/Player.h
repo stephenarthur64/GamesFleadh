@@ -6,6 +6,7 @@
 #include "gameobject.h"
 #include "State.h"
 #include "IdleState.h"
+#include "Weapon.h"
 
 class Player : public GameObject
 {
@@ -33,6 +34,8 @@ public:
 	void despawnBullet(int bulletNum);
 
 private:
+	Weapon m_weapon;
+
 	float m_speed;
 	float hitboxOffsetMin = 1.0f;
 	float hitboxOffsetMax = 3.0f;

@@ -11,35 +11,6 @@ Player::Player() : m_speed(0.3f),  bulletCount(0)
 
 void Player::move(Vector3 t_velocity)
 {
-	/*if (t_directon == NORTH)
-	{
-		m_pitch += 1.0f;
-		m_position.y += m_speed;
-		m_hitbox.min.y += m_speed;
-		m_hitbox.max.y += m_speed;
-	}
-	if (t_directon == SOUTH)
-	{
-		m_pitch -= 1.0f;
-		m_position.y -= m_speed;
-		m_hitbox.min.y -= m_speed;
-		m_hitbox.max.y -= m_speed;
-	}
-	if (t_directon == EAST)
-	{
-		m_roll += 1.0f;
-		m_position.x += m_speed;
-		m_hitbox.min.x += m_speed;
-		m_hitbox.max.x += m_speed;
-	}
-	if (t_directon == WEST)
-	{
-		m_roll -= 1.0f;
-		m_position.x -= m_speed;
-		m_hitbox.min.x -= m_speed;
-		m_hitbox.max.x -= m_speed;
-	}*/
-
 	t_velocity *= {m_speed, -m_speed, m_speed};
 	m_position += t_velocity;
 	m_hitbox.min += t_velocity;
@@ -48,7 +19,6 @@ void Player::move(Vector3 t_velocity)
 
 void Player::setHitBox()
 {
-	//m_hitbox = GetMeshBoundingBox(m_body.meshes[0]);
 	m_hitbox.min.x = m_position.x - hitboxOffsetMin;
 	m_hitbox.max.x = m_position.x - hitboxOffsetMax;
 
@@ -95,6 +65,7 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
+	m_weapon.init();
 	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].init();
@@ -106,6 +77,8 @@ void Player::render()
 	DrawModel(m_body, m_position, 2.0f, m_colour);
 	//DrawBoundingBox(m_hitbox, RED);
 
+	m_weapon.render();
+
 	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].render();
@@ -115,6 +88,7 @@ void Player::render()
 void Player::update()
 {
 	currentState->update(this);
+	m_weapon.update(m_position);
 }
 
 void Player::resetToOrigin()
