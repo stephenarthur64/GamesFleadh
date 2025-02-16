@@ -12,6 +12,10 @@ Color colorFromPosition;
 float worldYNormalFromCol;
 float worldYPos;
 
+// Bunch of variables RoB has made global in order to get skybox in quickly - can probably throw this in header!
+Mesh cube;
+Model skybox;
+
 Game::Game() : score(0), activeMap(1)
 {
     leftStickX = 0.0f;
@@ -27,6 +31,11 @@ Game::~Game()
     UnloadTexture(heightmapTexture);     // Unload texture
     UnloadModel(heightmapModel);         // Unload model
     UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
+
+    // Skybox memory management
+    UnloadShader(skybox.materials[0].shader);
+    UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
+    UnloadModel(skybox);        // Unload skybox model
 }
 
 void Game::run()
@@ -62,6 +71,34 @@ void Game::init()
         command->execute(mushroom.getEnemy());
     }
 
+    // BEGIN SKYBOX INIT ----------------------------------------------------------------------------------
+    // RS: Should most of the following be in loadAssets()?
+    // Load skybox model
+    Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
+    Model skybox = LoadModelFromMesh(cube);
+
+    // Load skybox shader and set required locations
+    // NOTE: Some locations are automatically set at shader loading
+    skybox.materials[0].shader = LoadShader(TextFormat("ASSETS/shaders/glsl%i/skybox.vs", GLSL_VERSION),
+        TextFormat("ASSETS/shaders/glsl%i/skybox.fs", GLSL_VERSION));
+
+    int cubeMapMat = MATERIAL_MAP_CUBEMAP;
+    SetShaderValue(skybox.materials[0].shader, GetShaderLocation(skybox.materials[0].shader, "environmentMap"), &cubeMapMat, SHADER_UNIFORM_INT);
+
+    // Load cubemap shader and setup required shader locations
+    Shader shdrCubemap = LoadShader(TextFormat("ASSETS/shaders/glsl%i/cubemap.vs", GLSL_VERSION),
+        TextFormat("ASSETS/shaders/glsl%i/cubemap.fs", GLSL_VERSION));
+
+    int cubeMapVal = 0;
+    SetShaderValue(shdrCubemap, GetShaderLocation(shdrCubemap, "equirectangularMap"), &cubeMapVal, SHADER_UNIFORM_INT);
+
+    char skyboxFileName[256] = { 0 };
+
+    Image skyboxImage = LoadImage("ASSETS/3D/Skybox/Skybox_example.png");
+    skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = LoadTextureCubemap(skyboxImage, CUBEMAP_LAYOUT_AUTO_DETECT);    // CUBEMAP_LAYOUT_PANORAMA
+    UnloadImage(skyboxImage);
+    // CONCLUDE SKYBOX INIT -----------------------------------------------------------------------------
+
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 }
 
@@ -92,6 +129,15 @@ void Game::render()
     ClearBackground(RAYWHITE);
 
     BeginMode3D(camera);
+
+    // SKYBOX STUFF STARTS
+    // We are inside the cube, we need to disable backface culling!
+    rlDisableBackfaceCulling();
+    rlDisableDepthMask();
+    DrawModel(skybox, Vector3{ 0, 0, 0 }, 1.0f, WHITE);
+    rlEnableBackfaceCulling();
+    rlEnableDepthMask();
+    // SKYBOX STUFF ENDS
 
     DrawModel(heightmapModel, mapPosition, 4.0f, WHITE);
     DrawModel(heightmapModel, mapPosition2, 4.0f, GREEN);
@@ -313,5 +359,6 @@ void Game::mapMove()
         player.resetToOrigin();
     }
 
+    
     
 }

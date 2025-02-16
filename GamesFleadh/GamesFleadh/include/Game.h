@@ -1,6 +1,15 @@
 #pragma once
 #include <raylib.h>
 #include "raymath.h"
+#include "rlgl.h" // RS: Added for skybox
+
+// RS: Again, added for skybox - shader for skybox depends on platform.
+#if defined(PLATFORM_DESKTOP)
+#define GLSL_VERSION            330
+#else   // PLATFORM_ANDROID, PLATFORM_WEB
+#define GLSL_VERSION            100
+#endif
+
 #define PS_ALIAS     "playstation"
 
 #include "Input.h"
