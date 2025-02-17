@@ -37,6 +37,7 @@
     <ClInclude Include="include\MovingUpState.h" />
     <ClInclude Include="include\Mushroom.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\ShootState.h" />
     <ClInclude Include="include\State.h" />
     <ClInclude Include="include\Weapon.h" />
   </ItemGroup>
@@ -57,6 +58,7 @@
     <ClCompile Include="src\MovingUpState.cpp" />
     <ClCompile Include="src\Mushroom.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\ShootState.cpp" />
     <ClCompile Include="src\State.cpp" />
     <ClCompile Include="src\Weapon.cpp" />
   </ItemGroup>

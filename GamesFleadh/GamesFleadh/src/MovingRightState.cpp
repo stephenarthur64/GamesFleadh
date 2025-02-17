@@ -4,12 +4,18 @@
 #include "MovingLeftState.h"
 #include "MovingRightState.h"
 #include "DamageState.h"
+#include "ShootState.h"
 
 State* MovingRightState::handleInput(Event t_event)
 {
     if (t_event == EVENT_NONE)
     {
         return new IdleState;
+    }
+
+    if (t_event == EVENT_SHOOT)
+    {
+        return new ShootState;
     }
 
     if (t_event == Event::EVENT_DAMAGE)
@@ -22,7 +28,7 @@ State* MovingRightState::handleInput(Event t_event)
 
 void MovingRightState::update(GameObject* obj)
 {
-    obj->animation(5);
+    obj->animation(0);
     obj->rotateYaw(1);
 }
 

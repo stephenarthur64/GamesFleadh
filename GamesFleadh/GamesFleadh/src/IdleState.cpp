@@ -4,6 +4,7 @@
 #include "MovingLeftState.h"
 #include "MovingRightState.h"
 #include "DamageState.h"
+#include "ShootState.h"
 
 State* IdleState::handleInput(Event t_event)
 {
@@ -22,6 +23,11 @@ State* IdleState::handleInput(Event t_event)
 	if (t_event == Event::EVENT_MOVE_RIGHT)
 	{
 		return new MovingRightState;
+	}
+
+	if (t_event == EVENT_SHOOT)
+	{
+		return new ShootState;
 	}
 	
 	if (t_event == Event::EVENT_DAMAGE)

@@ -32,6 +32,10 @@ Command* Input::handleInput()
     {
         return new MovingRightCommand();
     }
+    else if (IsKeyDown(KEY_ENTER))
+    {
+        return new ShootCommand();
+    }
     else
     {
         return new IdleCommand();

@@ -5,6 +5,7 @@
 #include "MovingDownState.h"
 #include "MovingLeftState.h"
 #include "MovingRightState.h"
+#include "ShootState.h"
 
 
 State* DeathState::handleInput(Event t_event)

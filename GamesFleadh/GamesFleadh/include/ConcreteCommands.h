@@ -46,3 +46,12 @@ class MovingRightCommand : public Command
 		obj->handleInput(event);
 	}
 };
+
+class ShootCommand : public Command
+{
+	virtual void execute(GameObject* obj) override
+	{
+		Event event = EVENT_SHOOT;
+		obj->handleInput(event);
+	}
+};
