@@ -35,6 +35,7 @@ public:
 	void checkCollisions(BoundingBox t_a, BoundingBox t_b);
 
 	void mapMove();
+	void cameraMove();
 
 private:
 	Camera camera;
@@ -70,6 +71,9 @@ private:
 
 	Player player;
 	Mushroom mushroom[2];
+
+	Vector2 lowerLimit = { 4.0f, 0.0f };
+	Vector2 upperLimit = { 8.0f, 3.0f };
 
 	const int MAX_MUSHROOMS = 2;
 	int mushroomOnMap = 0;

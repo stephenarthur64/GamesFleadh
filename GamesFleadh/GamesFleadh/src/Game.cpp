@@ -155,6 +155,8 @@ void Game::render()
     EndMode3D();
 
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPositon().z), 10, 430, 10, RED);
+    DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPositon().y), 10, 440, 10, RED);
+    DrawText(TextFormat("PLAYER X POSITION: %f", player.getPositon().x), 10, 450, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
     DrawFPS(10, 30);
 
@@ -173,6 +175,7 @@ void Game::update()
     inputControl();
     player.updateZPos(camPos.z - 5.0f);
     player.update();
+    cameraMove();
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         mushroom[i].update();
@@ -255,22 +258,18 @@ void Game::inputControl()
     if (IsKeyDown(KEY_UP))
     {
         player.move({0, -1, 0});
-        camPos.y += 0.1f;
     }
     if (IsKeyDown(KEY_DOWN))
     {
         player.move({0,1,0});
-        camPos.y -= 0.1f;
     }
     if (IsKeyDown(KEY_LEFT))
     {
         player.move({-1,0,0});
-        camPos.x -= 0.1f;
     }
     if (IsKeyDown(KEY_RIGHT))
     {
         player.move({1,0,0});
-        camPos.x += 0.1f;
     }
 
     Vector3 normVelocity = Vector3Normalize({ rightStickX, rightStickY, 0 });
@@ -386,4 +385,36 @@ void Game::mapMove()
 
     
     
+}
+
+void Game::cameraMove()
+{
+    float speed = 0.3f;
+
+    if (player.getPositon().x < lowerLimit.x && camPos.x > player.getPositon().x)
+    {
+        camPos.x -= speed;
+        lowerLimit.x -= speed;
+        upperLimit.x -= speed;
+    }
+    if (player.getPositon().y < lowerLimit.y && camPos.y > player.getPositon().y)
+    {
+        camPos.y -= speed;
+        lowerLimit.y -= speed;
+        upperLimit.y -= speed;
+    }
+
+    if (player.getPositon().x > upperLimit.x && camPos.x < player.getPositon().x)
+    {
+        camPos.x += speed;
+        upperLimit.x += speed;
+        lowerLimit.x += speed;
+    }
+    if (player.getPositon().y > upperLimit.y && camPos.y < player.getPositon().y)
+    {
+        camPos.y += speed;
+        upperLimit.y += speed;
+        lowerLimit.y += speed;
+    }
+
 }
