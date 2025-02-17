@@ -53,8 +53,12 @@ void Enemy::collision(bool t_collision)
 {
 	if (t_collision)
 	{
-		m_colour = BLUE;
+		damageTick = 0;
+
+		//m_colour = BLUE;
 		m_health--;
+		handleInput(Event::EVENT_DAMAGE);
+
 		if (m_health < 0)
 		{
 			kill();
@@ -116,6 +120,15 @@ void Enemy::update()
 	else if (bulletTick > -1)
 	{
 		bulletTick++;
+	}
+
+	if (damageTick >= 60)
+	{
+		handleInput(Event::EVENT_NONE);
+	}
+	else if (damageTick > -1)
+	{
+		damageTick++;
 	}
 }
 

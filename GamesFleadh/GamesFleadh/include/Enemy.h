@@ -38,5 +38,6 @@ private:
 	float hitboxOffsetMax = 11.0f;
 
 	int bulletTick = -1;
+	int damageTick = -1;
 };
 

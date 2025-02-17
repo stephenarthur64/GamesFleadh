@@ -3,6 +3,7 @@
 #include "MovingDownState.h"
 #include "MovingLeftState.h"
 #include "MovingRightState.h"
+#include "DamageState.h"
 
 State* IdleState::handleInput(Event t_event)
 {
@@ -22,9 +23,10 @@ State* IdleState::handleInput(Event t_event)
 	{
 		return new MovingRightState;
 	}
-	if (t_event == Event::EVENT_MOVE_DOWN)
+	
+	if (t_event == Event::EVENT_DAMAGE)
 	{
-		//return new MovingUDownState;
+		return new DamageState;
 	}
 
 	return nullptr;
@@ -32,7 +34,7 @@ State* IdleState::handleInput(Event t_event)
 
 void IdleState::update(GameObject* obj)
 {
-	obj->animation(4);	
+	obj->animation(0);	
 }
 
 void IdleState::enter(GameObject* obj)

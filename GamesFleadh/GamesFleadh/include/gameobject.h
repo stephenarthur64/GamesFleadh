@@ -23,6 +23,8 @@ public:
 	void animation(int index);
 	void rotateYaw(int t_direction);
 
+	void resetAnimation();
+
 protected:
 	Model m_body;
 	Vector3 m_position;

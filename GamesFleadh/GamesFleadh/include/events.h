@@ -12,6 +12,7 @@ typedef enum
     EVENT_MOVE_UPLEFT,
     EVENT_MOVE_DOWNRIGHT,
     EVENT_MOVE_DOWNLEFT,
+    EVENT_DAMAGE,
     EVENT_DIE,    // Represents a die event
     EVENT_RESPAWN,// Represents a respawn event
     EVENT_COUNT   // Represents the total number of events (for counting purposes)
