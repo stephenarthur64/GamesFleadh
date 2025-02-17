@@ -98,7 +98,8 @@ void Game::init()
 
 void Game::loadAssets()
 {
-    heightmapImage = LoadImage("ASSETS/heightmapWider.png");     // Load heightmap image (RAM)
+    // heightmapImage = LoadImage("ASSETS/heightmapWider.png");     // Load heightmap image (RAM)
+    heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
 
@@ -107,8 +108,8 @@ void Game::loadAssets()
     heightmapModel.transform = MatrixRotateXYZ({ DEG2RAD * 270.0f, DEG2RAD * 270.0f, DEG2RAD * 270.0f });
 
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
-    mapPosition = { 35.0f, 0.0f, -70.0f };           // Define model position
-    mapPosition2 = { 35.0f, 0.0f, -130.0f };
+    mapPosition = { 35.0f, -0.0f, -70.0f };           // Define model position
+    mapPosition2 = { 35.0f, -0.0f, -130.0f };
     
     player.init();
 
