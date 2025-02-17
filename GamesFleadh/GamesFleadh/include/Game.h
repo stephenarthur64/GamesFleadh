@@ -90,6 +90,6 @@ private:
 	Vector3 billPositionRotating = { 1.0f, 2.0f, 1.0f };
 	Vector2 size;
 	Vector2 origin;
-	float billSpeed = 3.0f;
+	float billSpeed = 0.0f;
 };
 
