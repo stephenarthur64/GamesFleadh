@@ -118,7 +118,7 @@ void Game::loadAssets()
         mushroom[i].init();
         if (i != mushroomOnMap)
         {
-            mushroom[i].spawn({ 2.0f, 1.0f, -90.0f });
+            mushroom[i].spawn({ -1.0f, 2.0f, -90.0f });
         }
         mushroom[i].spawnEnemy();
     }
@@ -273,14 +273,24 @@ void Game::inputControl()
         player.move({1,0,0});
     }
 
+    if (IsKeyDown(KEY_SPACE))
+    {
+        autoScroll = true;
+    }
+
+    if (IsKeyPressed(KEY_ENTER))
+    {
+        player.shootBullet();
+    }
+
     Vector3 normVelocity = Vector3Normalize({ rightStickX, rightStickY, 0 });
 
     player.move(normVelocity);
     camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
 
-    if (IsKeyPressed(KEY_ENTER))
+    if (autoScroll)
     {
-        player.shootBullet();
+        camPos.z += -0.1f;
     }
 }
 
@@ -357,11 +367,11 @@ void Game::mapMove()
         camPos.z = -9.2f;
         player.resetToOrigin();
         mushroomOnMap = 0;
-        mushroom[0].spawn({2.0f, 1.0f, -30.0f});
+        mushroom[0].spawn({-1.0f, 2.0f, -30.0f});
         mushroom[0].spawnEnemy();
         mushroom[0].playerDetected(true);
 
-        mushroom[1].spawn({ 2.0f, 1.0f, -90.0f });
+        mushroom[1].spawn({ -1.0f, 2.0f, -90.0f });
         mushroom[1].spawnEnemy();
         mushroom[1].playerDetected(false);
     }
@@ -375,11 +385,11 @@ void Game::mapMove()
         player.resetToOrigin();
         mushroomOnMap = 1;
 
-        mushroom[1].spawn({ 2.0f, 1.0f, -30.0f });
+        mushroom[1].spawn({ -1.0f, 2.0f, -30.0f });
         mushroom[1].spawnEnemy();
         mushroom[1].playerDetected(true);
 
-        mushroom[0].spawn({ 2.0f, 1.0f, -90.0f });
+        mushroom[0].spawn({ -1.0f, 2.0f, -90.0f });
         mushroom[0].spawnEnemy();
         mushroom[0].playerDetected(false);
     }

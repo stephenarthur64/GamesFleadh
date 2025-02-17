@@ -47,7 +47,7 @@ private:
 	Vector3 mapPosition2;
 	Vector3 camPos;
 	
-	float camSpeed = 0.1f;
+	float camSpeed = 0.2f;
 	float camDirection;
 
 	int gamepad = 0;
@@ -68,6 +68,8 @@ private:
 
 	int score;
 	int activeMap;
+
+	bool autoScroll{ false };
 
 	Player player;
 	Mushroom mushroom[2];

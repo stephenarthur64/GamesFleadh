@@ -3,7 +3,7 @@
 Enemy::Enemy()
 {
 	currentState = new IdleState;
-	m_health = 3;
+	m_health = 1;
 	m_position = { 2.0f, 2.0f, -10.0f };
 	m_colour = RED;
 	animsCount = 0;
@@ -33,7 +33,7 @@ void Enemy::updateHitBox()
 
 void Enemy::spawn(Vector3 t_position)
 {
-	m_health = 3;
+	m_health = 2;
 
 	m_position.x = t_position.x - 1.0f;
 	m_position.y = t_position.y + 5.0f;
@@ -59,7 +59,7 @@ void Enemy::collision(bool t_collision)
 		m_health--;
 		handleInput(Event::EVENT_DAMAGE);
 
-		if (m_health < 0)
+		if (m_health <= 0)
 		{
 			kill();
 		}
