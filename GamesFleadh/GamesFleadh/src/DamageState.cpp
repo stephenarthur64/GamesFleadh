@@ -4,12 +4,17 @@
 #include "MovingDownState.h"
 #include "MovingLeftState.h"
 #include "MovingRightState.h"
+#include "DeathState.h"
 
 State* DamageState::handleInput(Event t_event)
 {
     if (t_event == EVENT_NONE)
     {
         return new IdleState;
+    }
+    if (t_event == EVENT_DIE)
+    {
+        return new DeathState;
     }
 
     return nullptr;

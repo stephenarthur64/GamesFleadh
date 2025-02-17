@@ -104,7 +104,11 @@ void Enemy::disableShooting()
 
 void Enemy::kill()
 {
-	m_position.x = 1000.0f;
+	m_hitbox.min.x = 1000.0f;
+	m_hitbox.max.x = 1001.0f;
+	disableShooting();
+
+	//m_position.x = 1000.0f;
 }
 
 void Enemy::update()
@@ -124,7 +128,14 @@ void Enemy::update()
 
 	if (damageTick >= 60)
 	{
-		handleInput(Event::EVENT_NONE);
+		if (m_health > 0)
+		{
+			handleInput(Event::EVENT_NONE);
+		}
+		else
+		{
+			handleInput(Event::EVENT_DIE);
+		}
 	}
 	else if (damageTick > -1)
 	{
