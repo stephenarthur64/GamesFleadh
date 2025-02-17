@@ -65,7 +65,7 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
-	m_weapon.init();
+	//m_weapon.init();
 	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].init();
@@ -77,7 +77,7 @@ void Player::render()
 	DrawModel(m_body, m_position, 2.0f, m_colour);
 	//DrawBoundingBox(m_hitbox, RED);
 
-	m_weapon.render();
+	//m_weapon.render();
 
 	for (int i = 0; i < getBulletMax(); i++)
 	{
@@ -88,7 +88,7 @@ void Player::render()
 void Player::update()
 {
 	currentState->update(this);
-	m_weapon.update(m_position);
+	//m_weapon.update(m_position);
 }
 
 void Player::resetToOrigin()
