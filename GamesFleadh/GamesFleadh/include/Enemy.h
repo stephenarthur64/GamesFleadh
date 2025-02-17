@@ -18,7 +18,7 @@ public:
 	virtual void render() override;
 
 	Model* getBulletModel(int count) { return m_mudBomb.getModel(); }
-	Vector3 getBulletPositon(int count) { return m_mudBomb.getPositon(); }
+	Vector3 getBulletPositon(int count) { return m_mudBomb.getPosition(); }
 	BoundingBox getBulletHitBox(int count) { return m_mudBomb.getHitbox(); }
 
 	void shootBullet();

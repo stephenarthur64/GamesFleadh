@@ -79,5 +79,17 @@ private:
 
 	const int MAX_MUSHROOMS = 2;
 	int mushroomOnMap = 0;
+
+	Texture2D bill;
+	Vector3 billPositionStatic;
+	Rectangle source;
+	Vector3 billUp;
+	float distanceStatic;
+	float distanceRotating;
+	float rotation = 0.0f;
+	Vector3 billPositionRotating = { 1.0f, 2.0f, 1.0f };
+	Vector2 size;
+	Vector2 origin;
+	float billSpeed = 3.0f;
 };
 

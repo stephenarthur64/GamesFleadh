@@ -102,6 +102,11 @@ void Game::loadAssets()
     heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
+    bill = LoadTexture("ASSETS/billboard.png");
+    source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
+    billUp = { 0.0f, 1.0f, 0.0f };
+    size = { source.width / source.height, 1.0f };
+    origin = Vector2Scale(size, 0.5f);
 
     heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
     heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
@@ -112,6 +117,7 @@ void Game::loadAssets()
     mapPosition2 = { 35.0f, -0.0f, -130.0f };
     
     player.init();
+    billPositionStatic = { 2.0f,2.0f,0.0f };
 
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
@@ -152,12 +158,13 @@ void Game::render()
     }
 
     DrawGrid(20, 1.0f);
+    DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
 
     EndMode3D();
 
-    DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPositon().z), 10, 430, 10, RED);
-    DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPositon().y), 10, 440, 10, RED);
-    DrawText(TextFormat("PLAYER X POSITION: %f", player.getPositon().x), 10, 450, 10, RED);
+    DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
+    DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
+    DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
     DrawFPS(10, 30);
 
@@ -177,6 +184,9 @@ void Game::update()
     player.updateZPos(camPos.z - 5.0f);
     player.update();
     cameraMove();
+
+    distanceStatic = Vector3Distance(camera.position, billPositionStatic);
+    distanceRotating = Vector3Distance(camera.position, billPositionRotating);
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         mushroom[i].update();
@@ -187,8 +197,8 @@ void Game::update()
 
     // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE
     // Get Normalised Coord
-     worldNormalX = (player.getPositon().x + abs(mapPosition.x)) / mapSize.x;
-     worldNormalZ = (player.getPositon().z + abs(mapPosition.z)) / mapSize.z;
+     worldNormalX = (player.getPosition().x + abs(mapPosition.x)) / mapSize.x;
+     worldNormalZ = (player.getPosition().z + abs(mapPosition.z)) / mapSize.z;
      texUcoord = worldNormalX * heightmapImage.width;
      texVcoord = worldNormalZ * heightmapImage.height;
 
@@ -203,7 +213,7 @@ void Game::update()
      worldYNormalFromCol = colorFromPosition.r / 255.0f;
      worldYPos = worldYNormalFromCol * mapSize.y;
 
-    if (player.getPositon().y <= worldYPos)
+    if (player.getPosition().y <= worldYPos)
     {
         player.collision(true);
     }
@@ -258,18 +268,26 @@ void Game::inputControl()
 
     if (IsKeyDown(KEY_UP))
     {
+        billPositionRotating.x = player.getPosition().x;
+        billPositionRotating.y = player.getPosition().y + billSpeed;
         player.move({0, -1, 0});
     }
     if (IsKeyDown(KEY_DOWN))
     {
+        billPositionRotating.x = player.getPosition().x;
+        billPositionRotating.y = player.getPosition().y - billSpeed;
         player.move({0,1,0});
     }
     if (IsKeyDown(KEY_LEFT))
     {
+        billPositionRotating.y = player.getPosition().y;
+        billPositionRotating.x = player.getPosition().x - billSpeed;
         player.move({-1,0,0});
     }
     if (IsKeyDown(KEY_RIGHT))
     {
+        billPositionRotating.y = player.getPosition().y;
+        billPositionRotating.x = player.getPosition().x + billSpeed;
         player.move({1,0,0});
     }
 
@@ -287,6 +305,8 @@ void Game::inputControl()
 
     player.move(normVelocity);
     camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
+
+    billPositionRotating.z = player.getPosition().z - 1.0f;
 
     if (autoScroll)
     {
@@ -359,7 +379,7 @@ void Game::mapMove()
     float newMapX = mapPosition.x;
     float newMapX2 = mapPosition2.x;
 
-    if (player.getPositon().z < -74.0f && activeMap == 1)
+    if (player.getPosition().z < -74.0f && activeMap == 1)
     {
         mapPosition2 = { 35.0f, 0.0f, -70.0f };
         mapPosition = { 35.0f, 0.0f, -130.0f };
@@ -376,7 +396,7 @@ void Game::mapMove()
         mushroom[1].playerDetected(false);
     }
 
-    if (player.getPositon().z < -74.0f && activeMap == 2)
+    if (player.getPosition().z < -74.0f && activeMap == 2)
     {
         mapPosition = { 35.0f, 0.0f, -70.0f };
         mapPosition2 = { 35.0f, 0.0f, -130.0f }; 
@@ -402,26 +422,26 @@ void Game::cameraMove()
 {
     float speed = 0.3f;
 
-    if (player.getPositon().x < lowerLimit.x && camPos.x > player.getPositon().x)
+    if (player.getPosition().x < lowerLimit.x && camPos.x > player.getPosition().x)
     {
         camPos.x -= speed;
         lowerLimit.x -= speed;
         upperLimit.x -= speed;
     }
-    if (player.getPositon().y < lowerLimit.y && camPos.y > player.getPositon().y)
+    if (player.getPosition().y < lowerLimit.y && camPos.y > player.getPosition().y)
     {
         camPos.y -= speed;
         lowerLimit.y -= speed;
         upperLimit.y -= speed;
     }
 
-    if (player.getPositon().x > upperLimit.x && camPos.x < player.getPositon().x)
+    if (player.getPosition().x > upperLimit.x && camPos.x < player.getPosition().x)
     {
         camPos.x += speed;
         upperLimit.x += speed;
         lowerLimit.x += speed;
     }
-    if (player.getPositon().y > upperLimit.y && camPos.y < player.getPositon().y)
+    if (player.getPosition().y > upperLimit.y && camPos.y < player.getPosition().y)
     {
         camPos.y += speed;
         upperLimit.y += speed;

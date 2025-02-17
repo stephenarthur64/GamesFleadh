@@ -14,7 +14,7 @@ public:
 	Player();
 	void move(Vector3 t_velocity);
 	Model* getBulletModel(int count) { return bullet[count].getModel(); }
-	Vector3 getBulletPositon(int count) { return bullet[count].getPositon(); }
+	Vector3 getBulletPositon(int count) { return bullet[count].getPosition(); }
 	BoundingBox getBulletHitBox(int count) { return bullet[count].getHitbox(); }
 	const int getBulletMax() { return MAX_BULLETS; }
 	int currentBullet() { return bulletCount; }
