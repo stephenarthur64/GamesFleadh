@@ -68,8 +68,8 @@ void Game::init()
     // BEGIN SKYBOX INIT ----------------------------------------------------------------------------------
     // RS: Should most of the following be in loadAssets()?
     // Load skybox model
-    Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
-    Model skybox = LoadModelFromMesh(cube);
+    cube = GenMeshCube(1.0f, 1.0f, 1.0f);
+    skybox = LoadModelFromMesh(cube);
 
     // Load skybox shader and set required locations
     // NOTE: Some locations are automatically set at shader loading
