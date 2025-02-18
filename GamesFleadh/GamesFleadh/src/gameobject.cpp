@@ -1,7 +1,11 @@
 #include "../include/gameobject.h"
 #include <raymath.h>
 
-GameObject::GameObject() : m_position({ 7.0f, 0.0f, 0.0f }), m_colour(WHITE), m_pitch(0.0f), m_roll(0.0f), m_yaw(90.0f)
+//GameObject::GameObject() : m_position({ 7.0f, 0.0f, 0.0f }), m_colour(WHITE), m_pitch(0.0f), m_roll(0.0f), m_yaw(90.0f)
+//{
+//}
+
+GameObject::GameObject() : m_position({ 0.0f, 0.0f, 0.0f }), m_colour(WHITE), m_pitch(0.0f), m_roll(0.0f), m_yaw(90.0f)
 {
 }
 

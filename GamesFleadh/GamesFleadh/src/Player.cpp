@@ -94,6 +94,7 @@ void Player::update()
 void Player::resetToOrigin()
 {
 	m_position.z = -9.0f;
+	//m_position = { 0.0f, 0.0f, 0.0f };
 	setHitBox();
 }
 

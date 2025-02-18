@@ -28,6 +28,7 @@ public:
 	void render();
 	void update();
 	void loadAssets();
+	void setupSkybox();
 
 	void inputControl();
 	void gamepadInit();
@@ -39,6 +40,7 @@ public:
 
 private:
 	Camera camera;
+	Camera camTopDown;
 	Image heightmapImage;
 	Texture2D heightmapTexture;
 	Mesh heightmapMesh;
@@ -46,6 +48,7 @@ private:
 	Vector3 mapPosition;
 	Vector3 mapPosition2;
 	Vector3 camPos;
+	Vector3 camTopDownPos;
 	
 	float camSpeed = 0.2f;
 	float camDirection;
