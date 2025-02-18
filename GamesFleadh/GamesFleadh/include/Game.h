@@ -123,5 +123,7 @@ private:
 	float worldYPos;
 
 	BoundingBox heightMapBounds;
+
+	Music bgm;
 };
 

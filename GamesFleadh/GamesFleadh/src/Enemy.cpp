@@ -78,6 +78,7 @@ void Enemy::init()
 	setHitBox();
 	m_mudBomb.init();
 	fxBoom = LoadSound("ASSETS/boom.wav");
+	SetSoundVolume(fxBoom, 0.3);
 	explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
 	frameHeight = (float)(explosion.height / NUM_LINES);           // Sprite one frame rectangle height
@@ -153,7 +154,7 @@ void Enemy::kill()
 	position.x = m_position.x;
 	position.y = m_position.y;
 
-	//PlaySound(fxBoom);
+	PlaySound(fxBoom);
 
 	//m_position.x = 1000.0f;
 }

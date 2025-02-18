@@ -20,6 +20,7 @@ Game::~Game()
     UnloadShader(skybox.materials[0].shader);// Skybox memory management
     UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
     UnloadModel(skybox);
+    UnloadMusicStream(bgm);
     CloseAudioDevice();
 }
 
@@ -91,6 +92,10 @@ void Game::loadAssets()
         mushroom[i].spawnEnemy();
     }
     mushroom[0].playerDetected(true);
+
+    bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
+    SetMusicVolume(bgm, 0.2);
+    PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -195,6 +200,7 @@ void Game::render()
 
 void Game::update()
 {
+    UpdateMusicStream(bgm);
     gamepadUpdate();
     inputControl();
     player.updateZPos(camPos.z - playerZOffsetFromCamera);
