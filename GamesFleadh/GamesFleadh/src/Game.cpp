@@ -55,6 +55,11 @@ void Game::init()
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 }
 
+void Game::placeObjectsFromImage(Image placementMap)
+{
+
+}
+
 void Game::loadAssets()
 {
     heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3_markers.png");
@@ -227,7 +232,7 @@ void Game::update()
     player.updateBullet();
     camera.position = camPos;
     checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
-    UpdateCamera(&camera, CAMERA_FREE);
+    UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
 }
 
