@@ -59,7 +59,7 @@ void Game::init()
     camera.position = camPos;     // Camera position
     camera.target = { 0.0f, 0.0f, -2300.0f };          // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
-    camera.fovy = 90.0f;                                    // Camera field-of-view Y
+    camera.fovy = 60.0f;                                    // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
 
     loadAssets();
@@ -269,7 +269,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_UP))
     {
         billPositionRotating.x = player.getPosition().x;
-        if (billSpeed < 3.0f)
+        if (billSpeed < 2.0f)
         {
             billSpeed += 0.3f;
         }
@@ -279,7 +279,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_DOWN))
     {
         billPositionRotating.x = player.getPosition().x;
-        if (billSpeed > -3.0f)
+        if (billSpeed > -2.0f)
         {
             billSpeed -= 0.3f;
         }
@@ -289,7 +289,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_LEFT))
     {
         billPositionRotating.y = player.getPosition().y;
-        if (billSpeed > -3.0f)
+        if (billSpeed > -2.0f)
         {
             billSpeed -= 0.3f;
         }
@@ -299,7 +299,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_RIGHT))
     {
         billPositionRotating.y = player.getPosition().y;
-        if (billSpeed < 3.0f)
+        if (billSpeed < 2.0f)
         {
             billSpeed += 0.3f;
         }
@@ -436,7 +436,7 @@ void Game::mapMove()
 
 void Game::cameraMove()
 {
-    float speed = 0.3f;
+    float speed = 0.2f;
 
     if (player.getPosition().x < lowerLimit.x && camPos.x > player.getPosition().x)
     {

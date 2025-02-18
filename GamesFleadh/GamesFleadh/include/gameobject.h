@@ -24,6 +24,7 @@ public:
 	void rotateYaw(int t_direction);
 
 	void resetAnimation();
+	void holdAnimation(int t_frameStart, int t_frameEnd);
 
 protected:
 	Model m_body;

@@ -33,7 +33,7 @@ void Enemy::updateHitBox()
 
 void Enemy::spawn(Vector3 t_position)
 {
-	m_health = 2;
+	m_health = 10;
 
 	m_position.x = t_position.x - 1.0f;
 	m_position.y = t_position.y + 5.0f;

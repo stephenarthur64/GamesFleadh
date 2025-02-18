@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.3f),  bulletCount(0)
+Player::Player() : m_speed(0.2f),  bulletCount(0)
 {
 	currentState = new IdleState;
 	animsCount = 0;
@@ -62,7 +62,7 @@ void Player::rotate(int t_direction)
 
 void Player::init()
 {
-	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
+	m_body = LoadModel("ASSETS/3D/Player/Buzzz/planet.glb");
 	setHitBox();
 
 	//m_weapon.init();

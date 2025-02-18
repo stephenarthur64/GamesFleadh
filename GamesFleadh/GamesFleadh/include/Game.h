@@ -74,8 +74,8 @@ private:
 	Player player;
 	Mushroom mushroom[2];
 
-	Vector2 lowerLimit = { 4.0f, 0.0f };
-	Vector2 upperLimit = { 8.0f, 3.0f };
+	Vector2 lowerLimit = { 6.0f, 0.0f };
+	Vector2 upperLimit = { 7.0f, 1.5f };
 
 	const int MAX_MUSHROOMS = 2;
 	int mushroomOnMap = 0;
