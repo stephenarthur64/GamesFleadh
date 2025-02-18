@@ -108,6 +108,13 @@ void Player::resetToOrigin()
 	setHitBox();
 }
 
+void lookat_angles(Vector3* target, float* yaw, float* pitch) 
+{
+	*yaw = -(atan2(target->x, target->y) * RAD2DEG) + 90.0f;
+	float distance = sqrt(target->x * target->x + target->z * target->z);
+	*pitch = -(-atan2(target->y, distance) * RAD2DEG);
+}
+
 void Player::faceCrosshair(Vector3 t_crosshairPos)
 {
 	Matrix mat = MatrixLookAt(t_crosshairPos, m_position, { 0,1,0 });
@@ -117,8 +124,11 @@ void Player::faceCrosshair(Vector3 t_crosshairPos)
 	Vector3 scale = { 0 };
 
 	MatrixDecompose(mat, &translation, &rotation, &scale);
+	rotation = QuaternionNormalize(rotation);
 
-	m_body.transform = QuaternionToMatrix(rotation);
+	//m_body.transform = QuaternionToMatrix(rotation);
+
+	lookat_angles(&t_crosshairPos, &m_yaw, &m_pitch);
 }
 
 void Player::shootBullet()
