@@ -227,7 +227,7 @@ void Game::update()
     player.updateBullet();
     camera.position = camPos;
     checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
-    UpdateCamera(&camera, CAMERA_FREE);
+    UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
 }
 
@@ -407,7 +407,7 @@ void Game::mapMove()
     const Vector3 nextMap = { -32.0f, -0.0f, -128.0f };
     float mapLength = 64.0f;
     
-    if (player.getPosition().z > -64.0f) return; // -playerZOffsetFromCamera) return;
+    if (player.getPosition().z > -64.0f -playerZOffsetFromCamera) return;
 
     if(activeMap == 1)
     {
