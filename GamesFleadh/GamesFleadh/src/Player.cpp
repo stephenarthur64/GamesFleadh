@@ -77,8 +77,6 @@ void Player::render()
 	DrawModel(m_body, m_position, 2.0f, m_colour);
 	//DrawBoundingBox(m_hitbox, RED);
 
-	//m_weapon.render();
-
 	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].render();
@@ -93,11 +91,8 @@ void Player::update()
 
 void Player::resetToOrigin()
 {
-	// m_position.z = -9.0f;
-	// m_position = { 0.0f, 0.0f, 0.0f };
 	std::cout << "\nResetting player's position.";
-	m_position.z = 0.0f; // 16.0f;
-	// move(Vector3Zero());
+	m_position.z = 16.0f;
 	setHitBox();
 }
 

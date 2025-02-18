@@ -43,7 +43,7 @@ void Game::init()
     camera.position = camPos;                   // Camera position
     camera.target = { 0.0f, 0.0f, -2300.0f };   // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };           // Camera up vector (rotation towards target)
-    camera.fovy = 90.0f;                        // Camera field-of-view Y
+    camera.fovy = 60.0f;                        // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;     // Camera projection type
 
     loadAssets();
@@ -84,7 +84,7 @@ void Game::loadAssets()
         mushroom[i].init();
         if (i != mushroomOnMap)
         {
-            mushroom[i].spawn({ -1.0f, 2.0f, -90.0f });
+            mushroom[i].spawn({ -1.0f, 2.0f, -79.0f });
         }
         mushroom[i].spawnEnemy();
     }
@@ -392,28 +392,31 @@ void Game::mapMove()
 {
     float newMapX = mapPosition.x;
     float newMapX2 = mapPosition2.x;
+    const Vector3 mainMap = { -32.0f, -0.0f, -64.0f };
+    const Vector3 nextMap = { -32.0f, -0.0f, -128.0f };
+    float mapLength = 64.0f;
     
     if (player.getPosition().z > -64.0f - playerZOffsetFromCamera) return;
 
     if(activeMap == 1)
     {
-        mapPosition2 = { -32.0f, -0.0f, -64.0f }; // These should possibly be constants
-        mapPosition = { -32.0f, -0.0f, -128.0f };
+        mapPosition2 = mainMap; // These should possibly be constants
+        mapPosition = nextMap;
         activeMap = 2;
-    } // Poss make this an else?
-    if (activeMap == 2)
+    }
+    else if (activeMap == 2)
     {
-        mapPosition = { -32.0f, -0.0f, -64.0f };
-        mapPosition2 = { -32.0f, -0.0f, -128.0f };
+        mapPosition = mainMap;
+        mapPosition2 = nextMap;
         activeMap = 1;
     } 
 
     mushroomOnMap = 1;
-    mushroom[1].spawn({ -1.0f, 2.0f, -30.0f });
+    mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });
     mushroom[1].spawnEnemy();
     mushroom[1].playerDetected(true);
 
-    mushroom[0].spawn({ -1.0f, 2.0f, -90.0f });
+    mushroom[0].spawn({ -1.0f, 2.0f, -mapLength - 15.0f});
     mushroom[0].spawnEnemy();
     mushroom[0].playerDetected(false);
 
