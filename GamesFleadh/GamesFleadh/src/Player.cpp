@@ -96,6 +96,19 @@ void Player::resetToOrigin()
 	setHitBox();
 }
 
+void Player::faceCrosshair(Vector3 t_crosshairPos)
+{
+	Matrix mat = MatrixLookAt(t_crosshairPos, m_position, { 0,1,0 });
+
+	Vector3 translation = { 0 };
+	Quaternion rotation = { 0 };
+	Vector3 scale = { 0 };
+
+	MatrixDecompose(mat, &translation, &rotation, &scale);
+
+	m_body.transform = QuaternionToMatrix(rotation);
+}
+
 void Player::shootBullet()
 {
 	if (bulletCount < 10)

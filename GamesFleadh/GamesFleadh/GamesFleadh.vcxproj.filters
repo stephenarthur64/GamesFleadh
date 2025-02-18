@@ -84,6 +84,12 @@
     <ClInclude Include="include\Weapon.h">
       <Filter>Header Files\GO</Filter>
     </ClInclude>
+    <ClInclude Include="include\ShootState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DeathState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -136,6 +142,12 @@
     </ClCompile>
     <ClCompile Include="src\Weapon.cpp">
       <Filter>Source Files\GO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShootState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DeathState.cpp">
+      <Filter>Source Files\FSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

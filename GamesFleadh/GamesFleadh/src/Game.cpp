@@ -60,7 +60,7 @@ void Game::loadAssets()
     heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
-    bill = LoadTexture("ASSETS/billboard.png");
+    bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
     billUp = { 0.0f, 1.0f, 0.0f };
     size = { source.width / source.height, 1.0f };
@@ -162,7 +162,7 @@ void Game::render()
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
     DrawFPS(10, 30);
 
-    DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
+    /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
     DrawText((TextFormat("NormalX: %f, NormalZ: %f", worldNormalX, worldNormalZ)), 10, 45, 32, ORANGE);
     DrawText((TextFormat("TexU: %f, TexV: %f", texUcoord, texVcoord)), 10, 90, 32, PURPLE);
     DrawText((TextFormat("World Y Normal: %f", worldYNormalFromCol)), 10, 135, 32, BROWN);
@@ -172,7 +172,7 @@ void Game::render()
     DrawText((TextFormat("Map 02 Position x %f, y %f, z %f", mapPosition2.x, mapPosition2.y, mapPosition2.z)), 10, 280, 32, SKYBLUE);
     
     DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
-    DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);
+    DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);*/
 
     EndDrawing();
 }
@@ -184,6 +184,7 @@ void Game::update()
     player.updateZPos(camPos.z - playerZOffsetFromCamera);
     player.update();
     cameraMove();
+    player.faceCrosshair(billPositionRotating);
 
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
     distanceRotating = Vector3Distance(camera.position, billPositionRotating);
