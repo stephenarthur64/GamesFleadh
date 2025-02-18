@@ -21,7 +21,10 @@ public:
 	int currentBullet() { return bulletCount; }
 	void setHitBox();
 	void updateHitBox(float t_x);
+	
 	void collision(bool collide);
+	void worldCollision(bool collide);
+
 	void updateZPos(float newXPos);
 	virtual void rotate(int t_direction) override;
 	virtual void init() override;

@@ -187,8 +187,6 @@ void Game::update()
     gamepadUpdate();
     inputControl();
     player.updateZPos(camPos.z - playerZOffsetFromCamera);
-    player.update();
-    cameraMove();
     player.faceCrosshair(billPositionRotating);
 
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
@@ -220,13 +218,15 @@ void Game::update()
     }
     else
     {
-        player.collision(false);
+       // player.collision(false);
         std::cout << "\nNot Colliding!\n";
     }// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
 
     player.updateBullet();
     camera.position = camPos;
     checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
+    player.update();
+    cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
 }
@@ -319,7 +319,7 @@ void Game::inputControl()
     }
     else
     {
-        player.collision(false);
+        //player.collision(false);
     }
 
     if (IsKeyPressed(KEY_ENTER))

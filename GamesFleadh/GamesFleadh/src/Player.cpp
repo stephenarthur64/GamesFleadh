@@ -39,7 +39,19 @@ void Player::collision(bool collide)
 {
 	if (collide)
 	{
-		m_colour = RED;
+		handleInput(Event::EVENT_DAMAGE);
+	}
+	else
+	{
+		m_colour = WHITE;
+	}
+}
+
+void Player::worldCollision(bool collide)
+{
+	if (collide)
+	{
+		handleInput(Event::EVENT_DAMAGE);
 	}
 	else
 	{
