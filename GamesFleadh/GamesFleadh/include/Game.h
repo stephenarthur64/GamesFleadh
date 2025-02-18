@@ -1,4 +1,5 @@
 #pragma once
+#include<iostream>
 #include <raylib.h>
 #include "raymath.h"
 #include "rlgl.h" // RS: Added for skybox
@@ -41,10 +42,17 @@ public:
 private:
 	Camera camera;
 	Camera camTopDown;
+
 	Image heightmapImage;
 	Texture2D heightmapTexture;
 	Mesh heightmapMesh;
 	Model heightmapModel;
+
+	Image heightmapImageTest;
+	Texture2D heightmapTextureTest;
+	Mesh heightmapMeshTest;
+	Model heightmapModelTest;
+
 	Vector3 mapPosition;
 	Vector3 mapPosition2;
 	Vector3 camPos;

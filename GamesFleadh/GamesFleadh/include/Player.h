@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <raylib.h>
 #include "Globals.h"
 #include "Bullet.h"

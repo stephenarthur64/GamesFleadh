@@ -1,11 +1,13 @@
 #include "Game.h"
 #include <cmath> // Used for abs()
 
+
 const Vector3 vector3Origin = { 0.0f, 0.0f, 0.0f };
 
 // Bunch of variables RoB has made global in the name of making his code work quickly
-//const Vector3 mapSize = { 16, 8, 16 }; // Original prior to trying to make collision work
-const Vector3 mapSize = { 1, 1, 1 };
+
+const Vector3 mapSize = { 64, 64, 64 };
+
 float worldNormalX;
 float worldNormalZ;
 float texUcoord;
@@ -20,6 +22,8 @@ BoundingBox heightMapBounds;
 // Bunch of variables RoB has made global in order to get skybox in quickly - can probably throw this in header!
 Mesh cube;
 Model skybox;
+
+const float playerZOffsetFromCamera = 5.0f;
 
 Game::Game() : score(0), activeMap(1)
 {
@@ -40,7 +44,7 @@ Game::~Game()
     // Skybox memory management
     UnloadShader(skybox.materials[0].shader);
     UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
-    UnloadModel(skybox);        // Unload skybox model
+    UnloadModel(skybox);
 }
 
 void Game::run()
@@ -61,7 +65,7 @@ void Game::init()
     // Define our custom camera to look into our 3d world
     camera = { 0 };
     // camPos = { 7.0f, 2.0f, 0.0f };
-    camPos = { 0.0f, 2.0f, 0.0f };
+    camPos = { 0.0f, 4.0f, -2.0f }; // Determines player's starting position!
     camera.position = camPos;     // Camera position
     camera.target = { 0.0f, 0.0f, -2300.0f };          // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
@@ -80,14 +84,19 @@ void Game::init()
     
     gamepadInit();
 
+    //player.resetToOrigin();
+
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 }
 
 void Game::loadAssets()
 {
     // heightmapImage = LoadImage("ASSETS/heightmapWider.png");     // Load heightmap image (RAM)
-    heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4.png");
+    heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
+
+    //heightmapImageTest = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark.png");
+    //heightmapTextureTest = LoadTextureFromImage(heightmapImageTest);
 
     bill = LoadTexture("ASSETS/billboard.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
@@ -97,13 +106,20 @@ void Game::loadAssets()
 
     heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
     heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
+
+    //heightmapMeshTest = GenMeshHeightmap(heightmapImageTest, mapSizeTest);
+    //heightmapModelTest = LoadModelFromMesh(heightmapMeshTest);
+
     // heightmapModel.transform = MatrixRotateXYZ({ DEG2RAD * 270.0f, DEG2RAD * 270.0f, DEG2RAD * 270.0f });
     heightMapBounds = GetModelBoundingBox(heightmapModel); // Getting data for collision
 
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
+    // heightmapModelTest.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture;
+
     //mapPosition = { 35.0f, -0.0f, -70.0f };           // Define model position // ORIGINAL prior to trying to solve collision
-    mapPosition = { 0.0f, 0.0f, 0.0f };
-    mapPosition2 = { 35.0f, -0.0f, -130.0f };
+    mapPosition = { -32.0f, -0.0f, -64.0f };// -playerZOffsetFromCamera};           // Define model position
+    // mapPosition = { 0.0f, 0.0f, 0.0f };
+    mapPosition2 = { -32.0f, -0.0f, -128.0f };// -playerZOffsetFromCamera};
 
 
     
@@ -172,8 +188,10 @@ void Game::render()
 
     DrawModel(heightmapModel, mapPosition, 1.0f, { 147, 204, 147, 255 });
     DrawModel(heightmapModel, mapPosition2, 1.0f, { 147, 204, 147, 255 });
+
+    // DrawModel(heightmapModelTest, mapPosition, 1.0f, ORANGE);
     
-    // player.render();
+    player.render();
     
     /*for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
@@ -185,7 +203,9 @@ void Game::render()
     DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
 
 
-    DrawSphereWires(vector3Origin, 0.064f, 8, 8, ORANGE); // Marks origin.
+    DrawSphereWires(vector3Origin, 0.25f, 8, 8, ORANGE); // Marks origin.
+    DrawSphereWires(Vector3{ 0.0f,2.0f,-64.0f }, 0.25f, 6, 6, RED);
+    DrawSphereWires(Vector3{ 0.0f,2.0f, 0.0f }, 0.25f, 6, 6, BLUE);
     DrawSphereWires(heightMapBounds.min, 0.125f, 6, 6, GREEN);
     DrawSphereWires(heightMapBounds.max, 0.125f, 6, 6, PURPLE);
     
@@ -205,9 +225,10 @@ void Game::render()
     DrawText((TextFormat("World Y Pos: %f", worldYPos)), 10, 170, 32, SKYBLUE);
     DrawText((TextFormat("CAMERA XPos: %f, YPos: %f, ZPos: %f", camPos.x, camPos.y, camPos.z)), 10, 202, 32, GREEN);
     DrawText((TextFormat("Map 01 Position x %f, y %f, z %f", mapPosition.x, mapPosition.y, mapPosition.z)), 10, 247, 32, ORANGE);
+    DrawText((TextFormat("Map 02 Position x %f, y %f, z %f", mapPosition2.x, mapPosition2.y, mapPosition2.z)), 10, 280, 32, SKYBLUE);
     
-    DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 280, 32, GREEN);
-    DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 316, 32, PURPLE);
+    DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
+    DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);
 
     EndDrawing();
 }
@@ -216,7 +237,7 @@ void Game::update()
 {
     gamepadUpdate();
     inputControl();
-    player.updateZPos(camPos.z - 5.0f);
+    player.updateZPos(camPos.z - playerZOffsetFromCamera);
     player.update();
     cameraMove();
 
@@ -261,7 +282,7 @@ void Game::update()
     player.updateBullet();
     camera.position = camPos;
     checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
-    UpdateCamera(&camera, CAMERA_FIRST_PERSON);
+    UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
 }
 
@@ -342,10 +363,17 @@ void Game::inputControl()
         player.move({1,0,0});
     }
 
-    if (IsKeyDown(KEY_SPACE))
-    {
-        autoScroll = true;
+    if (IsKeyReleased(KEY_SPACE))
+    {// RS: Toggle! Is nice, you like.
+        autoScroll = !autoScroll;
     }
+
+    //if (IsKeyReleased(KEY_Z))
+    //{
+    //    player.resetToOrigin();
+    //    //cameraMove();
+    //    
+    //}
 
     if (IsKeyPressed(KEY_ENTER))
     {
@@ -429,15 +457,15 @@ void Game::mapMove()
     //{ 35.0f, 0.0f, -70.0f }; 
     float newMapX = mapPosition.x;
     float newMapX2 = mapPosition2.x;
-
-    if (player.getPosition().z < -74.0f && activeMap == 1)
+    
+    // RS: These ifs should definitely be a function - repeating code, bad smell!
+    if (player.getPosition().z < -64.0f - playerZOffsetFromCamera && activeMap == 1)
     {
-        // mapPosition2 = { 35.0f, 0.0f, -70.0f }; Original prior to trying to fix collision
-        mapPosition2 = { 0.0f, 0.0f, 0.0f };
-        mapPosition = { 35.0f, 0.0f, -130.0f };
+        mapPosition2 = { -32.0f, -0.0f, -64.0f }; //- playerZOffsetFromCamera};
+        mapPosition = { -32.0f, -0.0f, -128.0f }; //- playerZOffsetFromCamera};
         activeMap = 2;
-        camPos.z = -9.2f;
-        player.resetToOrigin();
+        camPos.z = 0.0f;// -9.2f;
+        // player.resetToOrigin();
         mushroomOnMap = 0;
         mushroom[0].spawn({-1.0f, 2.0f, -30.0f});
         mushroom[0].spawnEnemy();
@@ -448,14 +476,14 @@ void Game::mapMove()
         mushroom[1].playerDetected(false);
     }
 
-    if (player.getPosition().z < -74.0f && activeMap == 2)
+    if (player.getPosition().z < -64.0f - playerZOffsetFromCamera && activeMap == 2)
     {
         // mapPosition = { 35.0f, 0.0f, -70.0f }; Original prior to trying to fix collision
-        mapPosition = { 0.0f, 0.0f, 0.0f };
-        mapPosition2 = { 35.0f, 0.0f, -130.0f }; 
+        mapPosition = { -32.0f, -0.0f, -64.0f };// -playerZOffsetFromCamera};
+        mapPosition2 = { -32.0f, -0.0f, -128.0f };// -playerZOffsetFromCamera};
         activeMap = 1;
-        camPos.z = -9.2f;
-        player.resetToOrigin();
+        camPos.z = 0.0f;// -9.2f;
+        // player.resetToOrigin();
         mushroomOnMap = 1;
 
         mushroom[1].spawn({ -1.0f, 2.0f, -30.0f });
