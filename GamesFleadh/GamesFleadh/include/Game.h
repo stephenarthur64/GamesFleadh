@@ -53,8 +53,8 @@ private:
 	Mesh heightmapMeshTest;
 	Model heightmapModelTest;
 
-	Vector3 mapPosition;
-	Vector3 mapPosition2;
+	Vector3 mapPosition = { -32.0f, -0.0f, -64.0f };
+	Vector3 mapPosition2 = { -32.0f, -0.0f, -128.0f };
 	Vector3 camPos;
 	Vector3 camTopDownPos;
 	
@@ -109,6 +109,8 @@ private:
 	Model skybox;
 
 	// Terrain Collision Variables
+	const float SeemingMagicalOffset = 2.0f;
+
 	const Vector3 mapSize = { 64, 64, 64 };
 
 	float worldNormalX;

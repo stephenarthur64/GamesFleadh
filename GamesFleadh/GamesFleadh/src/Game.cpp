@@ -57,7 +57,7 @@ void Game::init()
 
 void Game::loadAssets()
 {
-    heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
+    heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3_markers.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
     bill = LoadTexture("ASSETS/billboard.png");
@@ -73,8 +73,8 @@ void Game::loadAssets()
 
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
 
-    mapPosition = { -32.0f, -0.0f, -64.0f };          // Define model position
-    mapPosition2 = { -32.0f, -0.0f, -128.0f };
+    //mapPosition = { -32.0f, -0.0f, -64.0f };          // Define model position
+    //mapPosition2 = { -32.0f, -0.0f, -128.0f };
     
     player.init();
     billPositionStatic = { 2.0f,2.0f,0.0f };
@@ -148,9 +148,14 @@ void Game::render()
     
     DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
 
-    DrawSphereWires(Vector3Zero(), 0.25f, 8, 8, ORANGE); // Marks origin.
-    DrawSphereWires(Vector3{ 0.0f,2.0f,-64.0f }, 0.25f, 6, 6, RED);
-    DrawSphereWires(Vector3{ 0.0f,2.0f, 0.0f }, 0.25f, 6, 6, BLUE);
+    DrawSphereWires(Vector3{ 0.0f, 0.0f, 0.0f }, 0.25f, 8, 8, ORANGE); // Marks origin.
+    DrawSphereWires(Vector3{ 0.0f, 4.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
+    DrawSphereWires(Vector3{ 0.0f, 8.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
+    DrawSphereWires(Vector3{ 0.0f,0.0f,-64.0f }, 0.25f, 6, 6, RED);
+    DrawSphereWires(Vector3{ 0.0f,4.0f,-64.0f }, 0.25f, 6, 6, RED);
+    DrawSphereWires(Vector3{ 0.0f,8.0f,-64.0f }, 0.25f, 6, 6, RED);
+    DrawSphereWires(Vector3{ 0.0f,2.0f, 0.0f  }, 0.25f, 6, 6, BLUE);
+    DrawSphereWires(Vector3{ 0.0f,2.0f, -64.0f}, 0.25f, 6, 6, BLUE);
     DrawSphereWires(heightMapBounds.min, 0.125f, 6, 6, GREEN);
     DrawSphereWires(heightMapBounds.max, 0.125f, 6, 6, PURPLE);
 
@@ -160,19 +165,19 @@ void Game::render()
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
-    DrawFPS(10, 30);
+    //DrawFPS(10, 30);
 
-    DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
+    //DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
     DrawText((TextFormat("NormalX: %f, NormalZ: %f", worldNormalX, worldNormalZ)), 10, 45, 32, ORANGE);
     DrawText((TextFormat("TexU: %f, TexV: %f", texUcoord, texVcoord)), 10, 90, 32, PURPLE);
     DrawText((TextFormat("World Y Normal: %f", worldYNormalFromCol)), 10, 135, 32, BROWN);
     DrawText((TextFormat("World Y Pos: %f", worldYPos)), 10, 170, 32, SKYBLUE);
     DrawText((TextFormat("CAMERA XPos: %f, YPos: %f, ZPos: %f", camPos.x, camPos.y, camPos.z)), 10, 202, 32, GREEN);
-    DrawText((TextFormat("Map 01 Position x %f, y %f, z %f", mapPosition.x, mapPosition.y, mapPosition.z)), 10, 247, 32, ORANGE);
-    DrawText((TextFormat("Map 02 Position x %f, y %f, z %f", mapPosition2.x, mapPosition2.y, mapPosition2.z)), 10, 280, 32, SKYBLUE);
+    //DrawText((TextFormat("Map 01 Position x %f, y %f, z %f", mapPosition.x, mapPosition.y, mapPosition.z)), 10, 247, 32, ORANGE);
+    //DrawText((TextFormat("Map 02 Position x %f, y %f, z %f", mapPosition2.x, mapPosition2.y, mapPosition2.z)), 10, 280, 32, SKYBLUE);
     
-    DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
-    DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);
+    //DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
+    //DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);
 
     EndDrawing();
 }
@@ -195,37 +200,33 @@ void Game::update()
 
     // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE (Probably move into collision function)
     // Get Normalised Coord
-     worldNormalX = (player.getPosition().x + abs(mapPosition.x)) / mapSize.x;
-     worldNormalZ = (player.getPosition().z + abs(mapPosition.z)) / mapSize.z;
-     texUcoord = worldNormalX * heightmapImage.width;
-     texVcoord = worldNormalZ * heightmapImage.height;
+    worldNormalX = (player.getPosition().x + abs(mapPosition.x)) / mapSize.x;
+    worldNormalZ = ((player.getPosition().z + SeemingMagicalOffset) + abs(mapPosition.z)) / mapSize.z;
+    texUcoord = worldNormalX * heightmapImage.width;
+    texVcoord = worldNormalZ * heightmapImage.height;
 
-    // Clampity clamp (make this a helper function?) 0.001f - just to be sure we don't get OOBounds error
-    /*if (texUcoord > heightmapImage.height - 0.001f) texUcoord = heightmapImage.height - 0.001f;
-    if (texUcoord < 0) texUcoord = 0;*/
-    texUcoord = Clamp(texUcoord, 0, heightmapImage.height - 0.001f);
+    texUcoord = Clamp(texUcoord, 0, heightmapImage.height - 0.001f); // Avoids OOBounds error
+    texVcoord = Clamp(texVcoord, 0, heightmapImage.width - 0.001f);
 
-    /*if (texVcoord > heightmapImage.width - 0.001f) texVcoord = heightmapImage.width - 0.001f;
-    if (texVcoord < 0) texVcoord = 0;*/
-    texVcoord = Clamp(texUcoord, 0, heightmapImage.width - 0.001f);
-
-     colorFromPosition = GetImageColor(heightmapImage, texUcoord, texVcoord);
-     worldYNormalFromCol = colorFromPosition.r / 255.0f;
-     worldYPos = worldYNormalFromCol * mapSize.y;
+    colorFromPosition = GetImageColor(heightmapImage, texUcoord, texVcoord);
+    worldYNormalFromCol = colorFromPosition.r / 255.0f;
+    worldYPos = worldYNormalFromCol * mapSize.y;
 
     if (player.getPosition().y <= worldYPos)
     {
         player.collision(true);
+        std::cout << "\nColliding!\n";
     }
     else
     {
         player.collision(false);
+        std::cout << "\nNot Colliding!\n";
     }// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
 
     player.updateBullet();
     camera.position = camPos;
     checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
-    UpdateCamera(&camera, CAMERA_PERSPECTIVE);
+    UpdateCamera(&camera, CAMERA_FREE);
 
 }
 
@@ -311,6 +312,15 @@ void Game::inputControl()
         autoScroll = !autoScroll;
     }
 
+    if (IsKeyPressed(KEY_Z))
+    {
+        player.collision(true);
+    }
+    else
+    {
+        player.collision(false);
+    }
+
     if (IsKeyPressed(KEY_ENTER))
     {
         player.shootBullet();
@@ -390,10 +400,10 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
 void Game::mapMove()
 {
-    float newMapX = mapPosition.x;
-    float newMapX2 = mapPosition2.x;
+    //float newMapX = mapPosition.x;
+    //float newMapX2 = mapPosition2.x;
     
-    if (player.getPosition().z > -64.0f - playerZOffsetFromCamera) return;
+    if (player.getPosition().z > -64.0f) return; // -playerZOffsetFromCamera) return;
 
     if(activeMap == 1)
     {
