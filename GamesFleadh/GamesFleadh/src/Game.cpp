@@ -20,6 +20,7 @@ Game::~Game()
     UnloadShader(skybox.materials[0].shader);// Skybox memory management
     UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
     UnloadModel(skybox);
+    CloseAudioDevice();
 }
 
 void Game::run()
@@ -36,6 +37,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
+    InitAudioDevice();
 
     // Define our custom camera to look into our 3d world
     camera = { 0 };
@@ -142,9 +144,10 @@ void Game::render()
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         mushroom[i].render();
+        mushroom[i].renderBoom(camera);
     }
 
-    DrawGrid(20, 1.0f);
+    
     
     DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
 
@@ -159,12 +162,20 @@ void Game::render()
     DrawSphereWires(heightMapBounds.min, 0.125f, 6, 6, GREEN);
     DrawSphereWires(heightMapBounds.max, 0.125f, 6, 6, PURPLE);
 
+    DrawGrid(20, 1.0f);
     EndMode3D();
 
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
+    for (int i = 0; i < MAX_MUSHROOMS; i++)
+    {
+        if (mushroom[i].isActive())
+        {
+            DrawText(TextFormat("FEEDER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
+        }
+    }
     DrawFPS(10, 30);
 
     /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);

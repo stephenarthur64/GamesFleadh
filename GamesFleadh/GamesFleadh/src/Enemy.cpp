@@ -33,7 +33,7 @@ void Enemy::updateHitBox()
 
 void Enemy::spawn(Vector3 t_position)
 {
-	m_health = 10;
+	m_health = 1;
 
 	m_position.x = t_position.x - 1.0f;
 	m_position.y = t_position.y + 5.0f;
@@ -77,6 +77,11 @@ void Enemy::init()
 	//m_body = LoadModel("ASSETS/RS/animTest.glb");
 	setHitBox();
 	m_mudBomb.init();
+	fxBoom = LoadSound("ASSETS/boom.wav");
+	explosion = LoadTexture("ASSETS/explosion.png");
+	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
+	frameHeight = (float)(explosion.height / NUM_LINES);           // Sprite one frame rectangle height
+	frameRec = { 0, 0, frameWidth, frameHeight };
 }
 
 void Enemy::render()
@@ -84,6 +89,15 @@ void Enemy::render()
 	DrawModel(m_body, m_position, 0.8f, m_colour);
 	DrawBoundingBox(m_hitbox, GREEN);
 	m_mudBomb.render();
+}
+
+void Enemy::renderBoom(Camera &t_camera)
+{
+	if (active)
+	{
+		DrawBillboard(t_camera, explosion, m_position, 2.0f, WHITE);
+		//DrawTextureRec(explosion, frameRec, position, WHITE);
+	}
 }
 
 void Enemy::shootBullet()
@@ -102,11 +116,44 @@ void Enemy::disableShooting()
 	bulletTick = -1;
 }
 
+void Enemy::boom()
+{
+	if (active)
+	{
+		framesCounter++;
+
+		if (framesCounter > 2)
+		{
+			currentFrame++;
+
+			if (currentFrame >= NUM_FRAMES_PER_LINE)
+			{
+				currentFrame = 0;
+				currentLine++;
+
+				if (currentLine >= NUM_LINES)
+				{
+					currentLine = 0;
+					active = false;
+				}
+			}
+
+			framesCounter = 0;
+		}
+	}
+}
+
 void Enemy::kill()
 {
 	m_hitbox.min.x = 1000.0f;
 	m_hitbox.max.x = 1001.0f;
 	disableShooting();
+	active = true;
+
+	position.x = m_position.x;
+	position.y = m_position.y;
+
+	//PlaySound(fxBoom);
 
 	//m_position.x = 1000.0f;
 }
@@ -115,6 +162,8 @@ void Enemy::update()
 {
 	currentState->update(this);
 	m_mudBomb.move();
+
+	boom();
 
 	if (bulletTick >= 180)
 	{

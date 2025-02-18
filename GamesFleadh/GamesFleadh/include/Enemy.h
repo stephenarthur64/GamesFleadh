@@ -5,6 +5,9 @@
 #include "Bullet.h"
 #include <raymath.h>
 
+#define NUM_FRAMES_PER_LINE     5
+#define NUM_LINES               5
+
 class Enemy : public GameObject
 {
 public:
@@ -17,6 +20,8 @@ public:
 	virtual void init() override;
 	virtual void render() override;
 
+	void renderBoom(Camera& t_camera);
+
 	Model* getBulletModel(int count) { return m_mudBomb.getModel(); }
 	Vector3 getBulletPositon(int count) { return m_mudBomb.getPosition(); }
 	BoundingBox getBulletHitBox(int count) { return m_mudBomb.getHitbox(); }
@@ -24,6 +29,9 @@ public:
 	void shootBullet();
 	void despawnBullet();
 	void disableShooting();
+
+	void boom();
+	bool isActive() { return active; }
 
 	void kill();
 
@@ -39,5 +47,23 @@ private:
 
 	int bulletTick = -1;
 	int damageTick = -1;
+
+	Sound fxBoom;
+
+	// Load explosion texture
+	Texture2D explosion;
+
+	// Init variables for animation
+	float frameWidth;   // Sprite one frame rectangle width
+	float frameHeight;           // Sprite one frame rectangle height
+	int currentFrame = 0;
+	int currentLine = 0;
+
+	Rectangle frameRec;
+	Vector2 position = { 0.0f, 0.0f };
+
+	bool active = false;
+	int framesCounter = 0;
+
 };
 
