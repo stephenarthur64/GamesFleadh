@@ -42,12 +42,12 @@ void GameObject::rotateYaw(int t_direction)
 
 	speed *= t_direction;
 
-	if (m_yaw >= 80.0f && t_direction == -1)
+	if (m_yaw >= 85.0f && t_direction == -1)
 	{
 		m_yaw += speed;
 	}
 
-	if (m_yaw <= 110.0f && t_direction == 1)
+	if (m_yaw <= 95.0f && t_direction == 1)
 	{
 		m_yaw += speed;
 	}
@@ -56,4 +56,12 @@ void GameObject::rotateYaw(int t_direction)
 void GameObject::resetAnimation()
 {
 	animCurrentFrame = 1;
+}
+
+void GameObject::holdAnimation(int t_frameStart, int t_frameEnd)
+{
+	if (animCurrentFrame > t_frameEnd)
+	{
+		animCurrentFrame = t_frameStart;
+	}
 }

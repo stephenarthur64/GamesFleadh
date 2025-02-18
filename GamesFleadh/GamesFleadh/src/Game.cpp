@@ -268,7 +268,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_UP))
     {
         billPositionRotating.x = player.getPosition().x;
-        if (billSpeed < 3.0f)
+        if (billSpeed < 2.0f)
         {
             billSpeed += 0.3f;
         }
@@ -278,7 +278,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_DOWN))
     {
         billPositionRotating.x = player.getPosition().x;
-        if (billSpeed > -3.0f)
+        if (billSpeed > -2.0f)
         {
             billSpeed -= 0.3f;
         }
@@ -288,7 +288,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_LEFT))
     {
         billPositionRotating.y = player.getPosition().y;
-        if (billSpeed > -3.0f)
+        if (billSpeed > -2.0f)
         {
             billSpeed -= 0.3f;
         }
@@ -298,7 +298,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_RIGHT))
     {
         billPositionRotating.y = player.getPosition().y;
-        if (billSpeed < 3.0f)
+        if (billSpeed < 2.0f)
         {
             billSpeed += 0.3f;
         }
@@ -422,7 +422,7 @@ void Game::mapMove()
 
 void Game::cameraMove()
 {
-    float speed = 0.3f;
+    float speed = 0.2f;
 
     if (player.getPosition().x < lowerLimit.x && camPos.x > player.getPosition().x)
     {

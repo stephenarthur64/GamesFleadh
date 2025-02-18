@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.3f),  bulletCount(0)
+Player::Player() : m_speed(0.2f),  bulletCount(0)
 {
 	currentState = new IdleState;
 	animsCount = 0;
