@@ -79,10 +79,10 @@ void Player::render()
 
 	//m_weapon.render();
 
-	/*for (int i = 0; i < getBulletMax(); i++)
+	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].render();
-	}*/
+	}
 }
 
 void Player::update()

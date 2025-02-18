@@ -82,6 +82,7 @@ private:
 
 	bool autoScroll{ false };
 
+	const float playerZOffsetFromCamera = 5.0f;
 	Player player;
 	Mushroom mushroom[2];
 
@@ -102,5 +103,23 @@ private:
 	Vector2 size;
 	Vector2 origin;
 	float billSpeed = 0.0f;
+
+	// Skybox variables
+	Mesh cube;
+	Model skybox;
+
+	// Terrain Collision Variables
+	const Vector3 mapSize = { 64, 64, 64 };
+
+	float worldNormalX;
+	float worldNormalZ;
+	float texUcoord;
+	float texVcoord;
+
+	Color colorFromPosition;
+	float worldYNormalFromCol;
+	float worldYPos;
+
+	BoundingBox heightMapBounds;
 };
 

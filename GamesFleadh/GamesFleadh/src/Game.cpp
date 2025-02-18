@@ -1,30 +1,6 @@
 #include "Game.h"
 #include <cmath> // Used for abs()
 
-
-const Vector3 vector3Origin = { 0.0f, 0.0f, 0.0f };
-
-// Bunch of variables RoB has made global in the name of making his code work quickly
-
-const Vector3 mapSize = { 64, 64, 64 };
-
-float worldNormalX;
-float worldNormalZ;
-float texUcoord;
-float texVcoord;
-
-Color colorFromPosition;
-float worldYNormalFromCol;
-float worldYPos;
-
-BoundingBox heightMapBounds;
-
-// Bunch of variables RoB has made global in order to get skybox in quickly - can probably throw this in header!
-Mesh cube;
-Model skybox;
-
-const float playerZOffsetFromCamera = 5.0f;
-
 Game::Game() : score(0), activeMap(1)
 {
     leftStickX = 0.0f;
@@ -39,10 +15,9 @@ Game::~Game()
 {
     UnloadTexture(heightmapTexture);     // Unload texture
     UnloadModel(heightmapModel);         // Unload model
-    UnloadImage(heightmapImage);             // Unload heightmap image from RAM, already uploaded to VRAM
-
-    // Skybox memory management
-    UnloadShader(skybox.materials[0].shader);
+    UnloadImage(heightmapImage);         // Unload heightmap image from RAM, already uploaded to VRAM
+    
+    UnloadShader(skybox.materials[0].shader);// Skybox memory management
     UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
     UnloadModel(skybox);
 }
@@ -64,19 +39,12 @@ void Game::init()
 
     // Define our custom camera to look into our 3d world
     camera = { 0 };
-    // camPos = { 7.0f, 2.0f, 0.0f };
-    camPos = { 0.0f, 4.0f, -2.0f }; // Determines player's starting position!
-    camera.position = camPos;     // Camera position
-    camera.target = { 0.0f, 0.0f, -2300.0f };          // Camera looking at point
-    camera.up = { 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
-    camera.fovy = 90.0f;                                    // Camera field-of-view Y
-    camera.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
-
-    /*camTopDown = { 0 };
-    camTopDownPos = { 0.0f, 0.0f, 0.0f };
-    camTopDown.position = camTopDownPos;
-    camera.target = { 0.0f, 0.0f, 0.0f };*/
-
+    camPos = { 0.0f, 4.0f, -2.0f };             // Determines player's starting position!
+    camera.position = camPos;                   // Camera position
+    camera.target = { 0.0f, 0.0f, -2300.0f };   // Camera looking at point
+    camera.up = { 0.0f, 1.0f, 0.0f };           // Camera up vector (rotation towards target)
+    camera.fovy = 90.0f;                        // Camera field-of-view Y
+    camera.projection = CAMERA_PERSPECTIVE;     // Camera projection type
 
     loadAssets();
     
@@ -84,19 +52,13 @@ void Game::init()
     
     gamepadInit();
 
-    //player.resetToOrigin();
-
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 }
 
 void Game::loadAssets()
 {
-    // heightmapImage = LoadImage("ASSETS/heightmapWider.png");     // Load heightmap image (RAM)
     heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
-
-    //heightmapImageTest = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark.png");
-    //heightmapTextureTest = LoadTextureFromImage(heightmapImageTest);
 
     bill = LoadTexture("ASSETS/billboard.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
@@ -105,23 +67,14 @@ void Game::loadAssets()
     origin = Vector2Scale(size, 0.5f);
 
     heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
-    heightmapModel = LoadModelFromMesh(heightmapMesh);                  // Load model from generated mesh
+    heightmapModel = LoadModelFromMesh(heightmapMesh);         // Load model from generated mesh
 
-    //heightmapMeshTest = GenMeshHeightmap(heightmapImageTest, mapSizeTest);
-    //heightmapModelTest = LoadModelFromMesh(heightmapMeshTest);
-
-    // heightmapModel.transform = MatrixRotateXYZ({ DEG2RAD * 270.0f, DEG2RAD * 270.0f, DEG2RAD * 270.0f });
     heightMapBounds = GetModelBoundingBox(heightmapModel); // Getting data for collision
 
     heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
-    // heightmapModelTest.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture;
 
-    //mapPosition = { 35.0f, -0.0f, -70.0f };           // Define model position // ORIGINAL prior to trying to solve collision
-    mapPosition = { -32.0f, -0.0f, -64.0f };// -playerZOffsetFromCamera};           // Define model position
-    // mapPosition = { 0.0f, 0.0f, 0.0f };
-    mapPosition2 = { -32.0f, -0.0f, -128.0f };// -playerZOffsetFromCamera};
-
-
+    mapPosition = { -32.0f, -0.0f, -64.0f };          // Define model position
+    mapPosition2 = { -32.0f, -0.0f, -128.0f };
     
     player.init();
     billPositionStatic = { 2.0f,2.0f,0.0f };
@@ -140,9 +93,6 @@ void Game::loadAssets()
 
 void Game::setupSkybox()
 {
-    // BEGIN SKYBOX INIT ----------------------------------------------------------------------------------
-    // RS: Should most of the following be in loadAssets()?
-    // Load skybox model
     cube = GenMeshCube(1.0f, 1.0f, 1.0f);
     skybox = LoadModelFromMesh(cube);
 
@@ -163,11 +113,9 @@ void Game::setupSkybox()
 
     char skyboxFileName[256] = { 0 };
 
-    // Image skyboxImage = LoadImage("ASSETS/3D/Skybox/Skybox_example.png");
     Image skyboxImage = LoadImage("ASSETS/3D/Skybox/skyBox.png");
     skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = LoadTextureCubemap(skyboxImage, CUBEMAP_LAYOUT_AUTO_DETECT);    // CUBEMAP_LAYOUT_PANORAMA
     UnloadImage(skyboxImage);
-    // CONCLUDE SKYBOX INIT -----------------------------------------------------------------------------
 }
 
 void Game::render()
@@ -178,37 +126,33 @@ void Game::render()
 
     BeginMode3D(camera);
 
-    // SKYBOX STUFF STARTS: We are inside the cube, we need to disable backface culling!
-    rlDisableBackfaceCulling();
+    // SKYBOX RENDER 
+    rlDisableBackfaceCulling(); // We are inside the cube, we need to disable backface culling!
     rlDisableDepthMask();
     DrawModel(skybox, Vector3{ 0, 0, 0 }, 1.0f, WHITE);
     rlEnableBackfaceCulling();
     rlEnableDepthMask();
-    // SKYBOX STUFF ENDS
+    // SKYBOX RENDER ENDS
 
     DrawModel(heightmapModel, mapPosition, 1.0f, { 147, 204, 147, 255 });
     DrawModel(heightmapModel, mapPosition2, 1.0f, { 147, 204, 147, 255 });
-
-    // DrawModel(heightmapModelTest, mapPosition, 1.0f, ORANGE);
     
     player.render();
     
-    /*for (int i = 0; i < MAX_MUSHROOMS; i++)
+    for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         mushroom[i].render();
-    }*/
+    }
 
     DrawGrid(20, 1.0f);
     
     DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
 
-
-    DrawSphereWires(vector3Origin, 0.25f, 8, 8, ORANGE); // Marks origin.
+    DrawSphereWires(Vector3Zero(), 0.25f, 8, 8, ORANGE); // Marks origin.
     DrawSphereWires(Vector3{ 0.0f,2.0f,-64.0f }, 0.25f, 6, 6, RED);
     DrawSphereWires(Vector3{ 0.0f,2.0f, 0.0f }, 0.25f, 6, 6, BLUE);
     DrawSphereWires(heightMapBounds.min, 0.125f, 6, 6, GREEN);
     DrawSphereWires(heightMapBounds.max, 0.125f, 6, 6, PURPLE);
-    
 
     EndMode3D();
 
@@ -247,11 +191,9 @@ void Game::update()
     {
         mushroom[i].update();
     }
-    mapMove(); // Repos terrain meshes based on camera X (distance/z) pos
-    /*camPos.z -= 6;
-    camPos.y = 10;*/
+    mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
-    // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE
+    // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE (Probably move into collision function)
     // Get Normalised Coord
      worldNormalX = (player.getPosition().x + abs(mapPosition.x)) / mapSize.x;
      worldNormalZ = (player.getPosition().z + abs(mapPosition.z)) / mapSize.z;
@@ -259,11 +201,13 @@ void Game::update()
      texVcoord = worldNormalZ * heightmapImage.height;
 
     // Clampity clamp (make this a helper function?) 0.001f - just to be sure we don't get OOBounds error
-    if (texUcoord > heightmapImage.height - 0.001f) texUcoord = heightmapImage.height - 0.001f;
-    if (texUcoord < 0) texUcoord = 0;
+    /*if (texUcoord > heightmapImage.height - 0.001f) texUcoord = heightmapImage.height - 0.001f;
+    if (texUcoord < 0) texUcoord = 0;*/
+    texUcoord = Clamp(texUcoord, 0, heightmapImage.height - 0.001f);
 
-    if (texVcoord > heightmapImage.width - 0.001f) texVcoord = heightmapImage.width - 0.001f;
-    if (texVcoord < 0) texVcoord = 0;
+    /*if (texVcoord > heightmapImage.width - 0.001f) texVcoord = heightmapImage.width - 0.001f;
+    if (texVcoord < 0) texVcoord = 0;*/
+    texVcoord = Clamp(texUcoord, 0, heightmapImage.width - 0.001f);
 
      colorFromPosition = GetImageColor(heightmapImage, texUcoord, texVcoord);
      worldYNormalFromCol = colorFromPosition.r / 255.0f;
@@ -276,8 +220,7 @@ void Game::update()
     else
     {
         player.collision(false);
-    }
-    // RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
+    }// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
 
     player.updateBullet();
     camera.position = camPos;
@@ -368,13 +311,6 @@ void Game::inputControl()
         autoScroll = !autoScroll;
     }
 
-    //if (IsKeyReleased(KEY_Z))
-    //{
-    //    player.resetToOrigin();
-    //    //cameraMove();
-    //    
-    //}
-
     if (IsKeyPressed(KEY_ENTER))
     {
         player.shootBullet();
@@ -454,49 +390,34 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
 void Game::mapMove()
 {
-    //{ 35.0f, 0.0f, -70.0f }; 
     float newMapX = mapPosition.x;
     float newMapX2 = mapPosition2.x;
     
-    // RS: These ifs should definitely be a function - repeating code, bad smell!
-    if (player.getPosition().z < -64.0f - playerZOffsetFromCamera && activeMap == 1)
+    if (player.getPosition().z > -64.0f - playerZOffsetFromCamera) return;
+
+    if(activeMap == 1)
     {
-        mapPosition2 = { -32.0f, -0.0f, -64.0f }; //- playerZOffsetFromCamera};
-        mapPosition = { -32.0f, -0.0f, -128.0f }; //- playerZOffsetFromCamera};
+        mapPosition2 = { -32.0f, -0.0f, -64.0f }; // These should possibly be constants
+        mapPosition = { -32.0f, -0.0f, -128.0f };
         activeMap = 2;
-        camPos.z = 0.0f;// -9.2f;
-        // player.resetToOrigin();
-        mushroomOnMap = 0;
-        mushroom[0].spawn({-1.0f, 2.0f, -30.0f});
-        mushroom[0].spawnEnemy();
-        mushroom[0].playerDetected(true);
-
-        mushroom[1].spawn({ -1.0f, 2.0f, -90.0f });
-        mushroom[1].spawnEnemy();
-        mushroom[1].playerDetected(false);
-    }
-
-    if (player.getPosition().z < -64.0f - playerZOffsetFromCamera && activeMap == 2)
+    } // Poss make this an else?
+    if (activeMap == 2)
     {
-        // mapPosition = { 35.0f, 0.0f, -70.0f }; Original prior to trying to fix collision
-        mapPosition = { -32.0f, -0.0f, -64.0f };// -playerZOffsetFromCamera};
-        mapPosition2 = { -32.0f, -0.0f, -128.0f };// -playerZOffsetFromCamera};
+        mapPosition = { -32.0f, -0.0f, -64.0f };
+        mapPosition2 = { -32.0f, -0.0f, -128.0f };
         activeMap = 1;
-        camPos.z = 0.0f;// -9.2f;
-        // player.resetToOrigin();
-        mushroomOnMap = 1;
+    } 
 
-        mushroom[1].spawn({ -1.0f, 2.0f, -30.0f });
-        mushroom[1].spawnEnemy();
-        mushroom[1].playerDetected(true);
+    mushroomOnMap = 1;
+    mushroom[1].spawn({ -1.0f, 2.0f, -30.0f });
+    mushroom[1].spawnEnemy();
+    mushroom[1].playerDetected(true);
 
-        mushroom[0].spawn({ -1.0f, 2.0f, -90.0f });
-        mushroom[0].spawnEnemy();
-        mushroom[0].playerDetected(false);
-    }
+    mushroom[0].spawn({ -1.0f, 2.0f, -90.0f });
+    mushroom[0].spawnEnemy();
+    mushroom[0].playerDetected(false);
 
-    
-    
+    camPos.z = 0.0f;
 }
 
 void Game::cameraMove()
@@ -528,5 +449,4 @@ void Game::cameraMove()
         upperLimit.y += speed;
         lowerLimit.y += speed;
     }
-
 }
