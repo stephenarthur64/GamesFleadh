@@ -25,6 +25,7 @@ State* ShootState::handleInput(Event t_event)
 void ShootState::update(GameObject* obj)
 {
 	tick++;
+	//obj->holdAnimation(0, 3);
 	obj->animation(1);
 }
 

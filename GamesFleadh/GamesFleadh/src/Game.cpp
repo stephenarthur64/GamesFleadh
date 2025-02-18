@@ -43,7 +43,7 @@ void Game::init()
     camera.position = camPos;                   // Camera position
     camera.target = { 0.0f, 0.0f, -2300.0f };   // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };           // Camera up vector (rotation towards target)
-    camera.fovy = 90.0f;                        // Camera field-of-view Y
+    camera.fovy = 60.0f;                        // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;     // Camera projection type
 
     loadAssets();
@@ -60,7 +60,7 @@ void Game::loadAssets()
     heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3_markers.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
-    bill = LoadTexture("ASSETS/billboard.png");
+    bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
     billUp = { 0.0f, 1.0f, 0.0f };
     size = { source.width / source.height, 1.0f };
@@ -84,7 +84,7 @@ void Game::loadAssets()
         mushroom[i].init();
         if (i != mushroomOnMap)
         {
-            mushroom[i].spawn({ -1.0f, 2.0f, -90.0f });
+            mushroom[i].spawn({ -1.0f, 2.0f, -79.0f });
         }
         mushroom[i].spawnEnemy();
     }
@@ -165,9 +165,9 @@ void Game::render()
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
-    //DrawFPS(10, 30);
+    DrawFPS(10, 30);
 
-    //DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
+    /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
     DrawText((TextFormat("NormalX: %f, NormalZ: %f", worldNormalX, worldNormalZ)), 10, 45, 32, ORANGE);
     DrawText((TextFormat("TexU: %f, TexV: %f", texUcoord, texVcoord)), 10, 90, 32, PURPLE);
     DrawText((TextFormat("World Y Normal: %f", worldYNormalFromCol)), 10, 135, 32, BROWN);
@@ -176,8 +176,8 @@ void Game::render()
     //DrawText((TextFormat("Map 01 Position x %f, y %f, z %f", mapPosition.x, mapPosition.y, mapPosition.z)), 10, 247, 32, ORANGE);
     //DrawText((TextFormat("Map 02 Position x %f, y %f, z %f", mapPosition2.x, mapPosition2.y, mapPosition2.z)), 10, 280, 32, SKYBLUE);
     
-    //DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
-    //DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);
+    DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
+    DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);*/
 
     EndDrawing();
 }
@@ -189,6 +189,7 @@ void Game::update()
     player.updateZPos(camPos.z - playerZOffsetFromCamera);
     player.update();
     cameraMove();
+    player.faceCrosshair(billPositionRotating);
 
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
     distanceRotating = Vector3Distance(camera.position, billPositionRotating);
@@ -269,7 +270,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_UP))
     {
         billPositionRotating.x = player.getPosition().x;
-        if (billSpeed < 3.0f)
+        if (billSpeed < 2.0f)
         {
             billSpeed += 0.3f;
         }
@@ -279,7 +280,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_DOWN))
     {
         billPositionRotating.x = player.getPosition().x;
-        if (billSpeed > -3.0f)
+        if (billSpeed > -2.0f)
         {
             billSpeed -= 0.3f;
         }
@@ -289,7 +290,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_LEFT))
     {
         billPositionRotating.y = player.getPosition().y;
-        if (billSpeed > -3.0f)
+        if (billSpeed > -2.0f)
         {
             billSpeed -= 0.3f;
         }
@@ -299,7 +300,7 @@ void Game::inputControl()
     if (IsKeyDown(KEY_RIGHT))
     {
         billPositionRotating.y = player.getPosition().y;
-        if (billSpeed < 3.0f)
+        if (billSpeed < 2.0f)
         {
             billSpeed += 0.3f;
         }
@@ -400,30 +401,33 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
 void Game::mapMove()
 {
-    //float newMapX = mapPosition.x;
-    //float newMapX2 = mapPosition2.x;
+    float newMapX = mapPosition.x;
+    float newMapX2 = mapPosition2.x;
+    const Vector3 mainMap = { -32.0f, -0.0f, -64.0f };
+    const Vector3 nextMap = { -32.0f, -0.0f, -128.0f };
+    float mapLength = 64.0f;
     
     if (player.getPosition().z > -64.0f) return; // -playerZOffsetFromCamera) return;
 
     if(activeMap == 1)
     {
-        mapPosition2 = { -32.0f, -0.0f, -64.0f }; // These should possibly be constants
-        mapPosition = { -32.0f, -0.0f, -128.0f };
+        mapPosition2 = mainMap; // These should possibly be constants
+        mapPosition = nextMap;
         activeMap = 2;
-    } // Poss make this an else?
-    if (activeMap == 2)
+    }
+    else if (activeMap == 2)
     {
-        mapPosition = { -32.0f, -0.0f, -64.0f };
-        mapPosition2 = { -32.0f, -0.0f, -128.0f };
+        mapPosition = mainMap;
+        mapPosition2 = nextMap;
         activeMap = 1;
     } 
 
     mushroomOnMap = 1;
-    mushroom[1].spawn({ -1.0f, 2.0f, -30.0f });
+    mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });
     mushroom[1].spawnEnemy();
     mushroom[1].playerDetected(true);
 
-    mushroom[0].spawn({ -1.0f, 2.0f, -90.0f });
+    mushroom[0].spawn({ -1.0f, 2.0f, -mapLength - 15.0f});
     mushroom[0].spawnEnemy();
     mushroom[0].playerDetected(false);
 
@@ -432,7 +436,7 @@ void Game::mapMove()
 
 void Game::cameraMove()
 {
-    float speed = 0.3f;
+    float speed = 0.2f;
 
     if (player.getPosition().x < lowerLimit.x && camPos.x > player.getPosition().x)
     {

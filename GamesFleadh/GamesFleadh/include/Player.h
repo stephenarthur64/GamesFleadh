@@ -29,6 +29,7 @@ public:
 	void update();
 
 	void resetToOrigin();
+	void faceCrosshair(Vector3 t_crosshairPos);
 
 	void shootBullet();
 	void updateBullet();

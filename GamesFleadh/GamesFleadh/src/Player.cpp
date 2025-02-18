@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.3f),  bulletCount(0)
+Player::Player() : m_speed(0.2f),  bulletCount(0)
 {
 	currentState = new IdleState;
 	animsCount = 0;
@@ -77,8 +77,6 @@ void Player::render()
 	DrawModel(m_body, m_position, 2.0f, m_colour);
 	//DrawBoundingBox(m_hitbox, RED);
 
-	//m_weapon.render();
-
 	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].render();
@@ -93,12 +91,22 @@ void Player::update()
 
 void Player::resetToOrigin()
 {
-	// m_position.z = -9.0f;
-	// m_position = { 0.0f, 0.0f, 0.0f };
 	std::cout << "\nResetting player's position.";
-	m_position.z = 0.0f; // 16.0f;
-	// move(Vector3Zero());
+	m_position.z = 16.0f;
 	setHitBox();
+}
+
+void Player::faceCrosshair(Vector3 t_crosshairPos)
+{
+	Matrix mat = MatrixLookAt(t_crosshairPos, m_position, { 0,1,0 });
+
+	Vector3 translation = { 0 };
+	Quaternion rotation = { 0 };
+	Vector3 scale = { 0 };
+
+	MatrixDecompose(mat, &translation, &rotation, &scale);
+
+	m_body.transform = QuaternionToMatrix(rotation);
 }
 
 void Player::shootBullet()
