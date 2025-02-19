@@ -59,6 +59,8 @@ private:
 	Vector3 camPos;
 	Vector3 camTopDownPos;
 	
+	Texture2D healthBar;
+
 	float camSpeed = 0.2f;
 	float camDirection;
 

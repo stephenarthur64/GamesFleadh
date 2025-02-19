@@ -64,6 +64,8 @@ void Game::loadAssets()
     heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
+    healthBar = LoadTexture("ASSETS/2D/UI/HealthBar.png");
+
     bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
     billUp = { 0.0f, 1.0f, 0.0f };
@@ -171,6 +173,7 @@ void Game::render()
     DrawGrid(20, 1.0f);
     EndMode3D();
 
+    DrawTexture(healthBar, 0, 1000, WHITE);
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
@@ -353,6 +356,7 @@ void Game::gamepadInit()
     rightStickDeadzoneY = 0.1f;
     leftTriggerDeadzone = -0.9f;
     rightTriggerDeadzone = -0.9f;
+
 }
 
 void Game::gamepadUpdate()
@@ -375,6 +379,8 @@ void Game::gamepadUpdate()
         if (rightStickY > -rightStickDeadzoneY && rightStickY < rightStickDeadzoneY) rightStickY = 0.0f;
         if (leftTrigger < leftTriggerDeadzone) leftTrigger = -1.0f;
         if (rightTrigger < rightTriggerDeadzone) rightTrigger = -1.0f;
+
+        SetGamepadVibration(gamepad, 1.0f, 1.0f, 100.0f);
     }
 }
 
