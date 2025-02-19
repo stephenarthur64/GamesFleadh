@@ -148,7 +148,12 @@ void Game::loadAssets()
     player.init();
     billPositionStatic = { 2.0f,2.0f,3.0f };
 
-    /*for (int i = 0; i < MAX_MUSHROOMS; i++)
+    /*for (int i = 0; i < MAX_STREET_FURNITURE; i++)
+    {
+        streetF[i].init();
+    }
+
+    for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         mushroom[i].init();
         if (i != mushroomOnMap)
@@ -157,11 +162,11 @@ void Game::loadAssets()
         }
         mushroom[i].spawnEnemy();
     }
-    mushroom[0].playerDetected(true);*/
+    mushroom[0].playerDetected(true);*/*/
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
-    //PlayMusicStream(bgm);
+   // PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -195,9 +200,11 @@ void Game::render()
 {
     BeginDrawing();
 
-    ClearBackground({ 22, 22, 31, 255 });
+    ClearBackground({ RAYWHITE });
 
     BeginMode3D(camera);
+    
+   
 
     // SKYBOX RENDER 
     rlDisableBackfaceCulling(); // We are inside the cube, we need to disable backface culling!
@@ -207,10 +214,13 @@ void Game::render()
     rlEnableDepthMask();
     // SKYBOX RENDER ENDS
 
+    player.render();
+
+    DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
+
     DrawModel(heightmapModel, mapPosition, 1.0f, { 147, 204, 147, 255 });
     DrawModel(heightmapModel, mapPosition2, 1.0f, { 147, 204, 147, 255 });
     
-    player.render();
     
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
@@ -218,9 +228,12 @@ void Game::render()
         mushroom[i].renderBoom(camera);
     }
 
+    for (int i = 0; i < MAX_STREET_FURNITURE; i++)
+    {
+        streetF[i].render();
+    }
     
     
-    DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
 
     //DrawSphereWires(Vector3{ 0.0f, 0.0f, 0.0f }, 0.25f, 8, 8, ORANGE); // Marks origin.
     //DrawSphereWires(Vector3{ 0.0f, 4.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
