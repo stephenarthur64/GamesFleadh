@@ -90,6 +90,9 @@
     <ClInclude Include="include\ShootState.h">
       <Filter>Header Files\FSM</Filter>
     </ClInclude>
+    <ClInclude Include="include\StreetFurniture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -148,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="src\ShootState.cpp">
       <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="StreetFurniture.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
