@@ -38,6 +38,7 @@ public:
 
 	void mapMove();
 	void cameraMove();
+	void crosshairMove();
 
 private:
 	Camera camera;

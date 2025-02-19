@@ -9,6 +9,7 @@ Game::Game() : score(0), activeMap(1)
     rightStickY = 0.0f;
     leftTrigger = 0.0f;
     rightTrigger = 0.0f;
+    billSpeed = 0.3f;
 }
 
 Game::~Game()
@@ -60,7 +61,7 @@ void Game::init()
 
 void Game::loadAssets()
 {
-    heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3_markers.png");
+    heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
     bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
@@ -95,7 +96,7 @@ void Game::loadAssets()
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
-    //PlayMusicStream(bgm);
+    PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -256,7 +257,7 @@ void Game::inputControl()
         camDirection = 0.0f;
         if (leftStickY < 0)
         {
-           camDirection -= camSpeed * (-leftStickY);
+           //camDirection -= camSpeed * (-leftStickY);
         }
         else
         {
@@ -269,7 +270,7 @@ void Game::inputControl()
     {
         if (leftStickY > 0)
         {
-            camDirection = camSpeed * (-leftStickY);
+            //camDirection = camSpeed * (-leftStickY);
         }
         else
         {
@@ -287,46 +288,22 @@ void Game::inputControl()
 
     if (IsKeyDown(KEY_UP))
     {
-        billPositionRotating.x = player.getPosition().x;
-        if (billSpeed < 2.0f)
-        {
-            billSpeed += 0.3f;
-        }
-        billPositionRotating.y = player.getPosition().y + billSpeed;
         player.move({0, -1, 0});
     }
     if (IsKeyDown(KEY_DOWN))
     {
-        billPositionRotating.x = player.getPosition().x;
-        if (billSpeed > -2.0f)
-        {
-            billSpeed -= 0.3f;
-        }
-        billPositionRotating.y = player.getPosition().y + billSpeed;
         player.move({0,1,0});
     }
     if (IsKeyDown(KEY_LEFT))
     {
-        billPositionRotating.y = player.getPosition().y;
-        if (billSpeed > -2.0f)
-        {
-            billSpeed -= 0.3f;
-        }
-        billPositionRotating.x = player.getPosition().x + billSpeed;
         player.move({-1,0,0});
     }
     if (IsKeyDown(KEY_RIGHT))
     {
-        billPositionRotating.y = player.getPosition().y;
-        if (billSpeed < 2.0f)
-        {
-            billSpeed += 0.3f;
-        }
-        billPositionRotating.x = player.getPosition().x + billSpeed;
         player.move({1,0,0});
     }
 
-    if (IsKeyReleased(KEY_SPACE))
+    if (IsKeyReleased(KEY_SPACE) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
     {// RS: Toggle! Is nice, you like.
         autoScroll = !autoScroll;
     }
@@ -340,22 +317,29 @@ void Game::inputControl()
         //player.collision(false);
     }
 
-    if (IsKeyPressed(KEY_ENTER))
+    if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         player.shootBullet();
     }
 
-    Vector3 normVelocity = Vector3Normalize({ rightStickX, rightStickY, 0 });
+    Vector3 normVelocity = Vector3Normalize({ leftStickX, leftStickY, 0 });
 
     player.move(normVelocity);
     camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
 
+    crosshairMove();
     billPositionRotating.z = player.getPosition().z - 3.0f;
 
     if (autoScroll)
     {
         camPos.z += -0.1f;
     }
+}
+
+void Game::crosshairMove()
+{
+    billPositionRotating.x += billSpeed * rightStickX;
+    billPositionRotating.y += billSpeed * -rightStickY;
 }
 
 void Game::gamepadInit()
@@ -484,3 +468,5 @@ void Game::cameraMove()
     camera.target = billPositionRotating;
     camera.target.z = billPositionRotating.z - 15.0f;
 }
+
+
