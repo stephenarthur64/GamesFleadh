@@ -107,6 +107,7 @@ void Player::faceCrosshair(Vector3 t_crosshairPos)
 	MatrixDecompose(mat, &translation, &rotation, &scale);
 
 	m_body.transform = QuaternionToMatrix(rotation);
+
 }
 
 void Player::shootBullet()

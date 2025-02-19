@@ -49,10 +49,7 @@ private:
 	Mesh heightmapMesh;
 	Model heightmapModel;
 
-	Image heightmapImageTest;
-	Texture2D heightmapTextureTest;
-	Mesh heightmapMeshTest;
-	Model heightmapModelTest;
+	Image imgPlacementTest;
 
 	Vector3 mapPosition = { -32.0f, -0.0f, -64.0f };
 	Vector3 mapPosition2 = { -32.0f, -0.0f, -128.0f };
@@ -122,6 +119,8 @@ private:
 	Color colorFromPosition;
 	float worldYNormalFromCol;
 	float worldYPos;
+
+	Vector3 objectPlacementTest;
 
 	BoundingBox heightMapBounds;
 };
