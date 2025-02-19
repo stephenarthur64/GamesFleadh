@@ -29,7 +29,7 @@ State* MovingLeftState::handleInput(Event t_event)
 void MovingLeftState::update(GameObject* obj)
 {
     obj->animation(0);
-    obj->rotateYaw(-1);
+    //obj->rotateYaw(-1);
 }
 
 void MovingLeftState::enter(GameObject* obj)

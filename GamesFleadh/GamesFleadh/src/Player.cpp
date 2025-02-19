@@ -117,18 +117,18 @@ void lookat_angles(Vector3* target, float* yaw, float* pitch)
 
 void Player::faceCrosshair(Vector3 t_crosshairPos)
 {
-	Matrix mat = MatrixLookAt(t_crosshairPos, m_position, { 0,1,0 });
+	Matrix mat = MatrixLookAt(m_position, t_crosshairPos, { 0,1,0 });
+
+	mat = MatrixInvert(mat);
 
 	Vector3 translation = { 0 };
 	Quaternion rotation = { 0 };
 	Vector3 scale = { 0 };
-
+	
 	MatrixDecompose(mat, &translation, &rotation, &scale);
-	rotation = QuaternionNormalize(rotation);
 
-	//m_body.transform = QuaternionToMatrix(rotation);
 
-	lookat_angles(&t_crosshairPos, &m_yaw, &m_pitch);
+	m_body.transform = MatrixMultiply(MatrixRotateY(DEG2RAD * 90.0f), QuaternionToMatrix(rotation));
 }
 
 void Player::shootBullet()

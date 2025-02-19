@@ -80,7 +80,7 @@ void Game::loadAssets()
     //mapPosition2 = { -32.0f, -0.0f, -128.0f };
     
     player.init();
-    billPositionStatic = { 2.0f,2.0f,0.0f };
+    billPositionStatic = { 2.0f,2.0f,3.0f };
 
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
@@ -95,7 +95,7 @@ void Game::loadAssets()
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
-    PlayMusicStream(bgm);
+    //PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -207,6 +207,7 @@ void Game::update()
     player.faceCrosshair(billPositionRotating);
 
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
+    distanceStatic += 2.0f;
     distanceRotating = Vector3Distance(camera.position, billPositionRotating);
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
@@ -349,7 +350,7 @@ void Game::inputControl()
     player.move(normVelocity);
     camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
 
-    billPositionRotating.z = player.getPosition().z - 1.0f;
+    billPositionRotating.z = player.getPosition().z - 3.0f;
 
     if (autoScroll)
     {
