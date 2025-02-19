@@ -481,4 +481,6 @@ void Game::cameraMove()
         upperLimit.y += speed;
         lowerLimit.y += speed;
     }
+    camera.target = billPositionRotating;
+    camera.target.z = billPositionRotating.z - 15.0f;
 }

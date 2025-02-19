@@ -21,6 +21,8 @@ public:
 	int currentBullet() { return bulletCount; }
 	void setHitBox();
 	void updateHitBox(float t_x);
+
+	Quaternion getCrosshairRotation() { return crosshairRotation; }
 	
 	void collision(bool collide);
 	void worldCollision(bool collide);
@@ -48,5 +50,7 @@ private:
 	Bullet bullet[10];
 	int bulletCount;
 	const int MAX_BULLETS = 10;
+
+	Quaternion crosshairRotation;
 };
 
