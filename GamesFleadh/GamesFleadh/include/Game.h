@@ -18,6 +18,7 @@
 #include "Globals.h"
 #include "Player.h"
 #include "Mushroom.h"
+#include "StreetFurniture.h"
 
 class Game
 {
@@ -88,9 +89,12 @@ private:
 	const float playerZOffsetFromCamera = 5.0f;
 	Player player;
 	Mushroom mushroom[2];
+	StreetFurniture streetF[5];
 
 	Vector2 lowerLimit = { -1.0f, 2.0f };
 	Vector2 upperLimit = { 1.0f, 2.5f };
+
+	const int MAX_STREET_FURNITURE = 5;
 
 	const int MAX_MUSHROOMS = 2;
 	int mushroomOnMap = 0;
