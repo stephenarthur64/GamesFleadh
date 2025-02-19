@@ -9,7 +9,7 @@ Game::Game() : score(0), activeMap(1)
     rightStickY = 0.0f;
     leftTrigger = 0.0f;
     rightTrigger = 0.0f;
-    billSpeed = 0.3f;
+    billSpeed = 0.2f;
 }
 
 Game::~Game()
@@ -96,7 +96,7 @@ void Game::loadAssets()
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
-    PlayMusicStream(bgm);
+    //PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -319,7 +319,7 @@ void Game::inputControl()
 
     if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
-        player.shootBullet();
+        player.shootBullet(billPositionRotating);
     }
 
     Vector3 normVelocity = Vector3Normalize({ leftStickX, leftStickY, 0 });

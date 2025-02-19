@@ -104,7 +104,7 @@ void Enemy::renderBoom(Camera &t_camera)
 void Enemy::shootBullet()
 {
 	bulletTick = 0;
-	m_mudBomb.spawn(m_position, 0.3f);
+	//m_mudBomb.spawn(m_position, 0.3f, {0,0,1});
 }
 
 void Enemy::despawnBullet()
@@ -162,7 +162,7 @@ void Enemy::kill()
 void Enemy::update()
 {
 	currentState->update(this);
-	m_mudBomb.move();
+	//m_mudBomb.move({1,0,0});
 
 	boom();
 

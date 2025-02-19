@@ -131,17 +131,17 @@ void Player::faceCrosshair(Vector3 t_crosshairPos)
 	m_body.transform = MatrixMultiply(MatrixRotateY(DEG2RAD * 90.0f), QuaternionToMatrix(crosshairRotation));
 }
 
-void Player::shootBullet()
+void Player::shootBullet(Vector3 t_target)
 {
 	if (bulletCount < 10)
 	{
-		bullet[bulletCount].spawn(m_position, -0.3f);
+		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
 		bulletCount++;
 	}
 	else
 	{
 		bulletCount = 0;
-		bullet[bulletCount].spawn(m_position, -0.3f);
+		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
 	}
 }
 

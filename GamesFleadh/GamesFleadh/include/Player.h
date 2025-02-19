@@ -36,7 +36,7 @@ public:
 	void resetToOrigin();
 	void faceCrosshair(Vector3 t_crosshairPos);
 
-	void shootBullet();
+	void shootBullet(Vector3 t_target);
 	void updateBullet();
 	void despawnBullet(int bulletNum);
 
