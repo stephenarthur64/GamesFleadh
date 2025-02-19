@@ -162,7 +162,7 @@ void Game::loadAssets()
         }
         mushroom[i].spawnEnemy();
     }
-    mushroom[0].playerDetected(true);*/*/
+    mushroom[0].playerDetected(true);*/
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
@@ -426,8 +426,34 @@ void Game::inputControl()
 
 void Game::crosshairMove()
 {
-    billPositionRotating.x += billSpeed * rightStickX;
-    billPositionRotating.y += billSpeed * -rightStickY;
+    if (IsKeyDown(KEY_I))
+    {
+        keyboardY = -1.0f;
+    }
+    else if (IsKeyDown(KEY_K))
+    {
+        keyboardY = 1.0f;
+    }
+    else
+    {
+        keyboardY = 0.0f;
+    }
+
+    if (IsKeyDown(KEY_J))
+    {
+        keyboardX = -1.0f;
+    }
+    else if (IsKeyDown(KEY_L))
+    {
+        keyboardX = 1.0f;
+    }
+    else
+    {
+        keyboardX = 0.0f;
+    }
+
+    billPositionRotating.x += billSpeed * (rightStickX + keyboardX);
+    billPositionRotating.y += billSpeed * (- (rightStickY + keyboardY));
 }
 
 void Game::gamepadInit()

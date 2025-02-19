@@ -79,6 +79,9 @@ private:
 	float leftTrigger;
 	float rightTrigger;
 
+	float keyboardX;
+	float keyboardY;
+
 	int score;
 	int activeMap;
 
