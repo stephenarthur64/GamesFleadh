@@ -13,13 +13,13 @@ void Mushroom::rotate(int t_direction)
 
 void Mushroom::init()
 {
-	m_body = LoadModel("ASSETS/3D/Mushroom/shroom.glb"); // <--------- If new model, put here
+	m_body = LoadModel("ASSETS/3D/StreetFurniture/Mushrooms/DefaultMushroom.glb"); // <--------- If new model, put here
 	enemy.init();
 }
 
 void Mushroom::render()
 {
-	DrawModel(m_body, m_position, 1.0f, m_colour);
+	DrawModel(m_body, m_position, 0.5f, m_colour);
 	enemy.render();
 }
 

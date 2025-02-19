@@ -98,7 +98,7 @@ void Game::loadAssets()
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
-    //PlayMusicStream(bgm);
+   // PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()

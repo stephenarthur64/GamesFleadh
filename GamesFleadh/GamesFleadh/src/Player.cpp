@@ -22,11 +22,11 @@ void Player::setHitBox()
 	m_hitbox.min.x = m_position.x - hitboxOffsetMin;
 	m_hitbox.max.x = m_position.x - hitboxOffsetMax;
 
-	m_hitbox.min.y = m_position.y - 0.4f;
-	m_hitbox.max.y = m_position.y + 0.6f;
+	m_hitbox.min.y = m_position.y - 0.1f;
+	m_hitbox.max.y = m_position.y + 1.1f;
 
-	m_hitbox.min.z = m_position.y - 6.0f;
-	m_hitbox.max.z = m_position.y - 7.5f;
+	m_hitbox.min.z = m_position.z + 0.5f;
+	m_hitbox.max.z = m_position.z - 1.0f;
 }
 
 void Player::updateHitBox(float t_z)
@@ -61,7 +61,8 @@ void Player::worldCollision(bool collide)
 
 void Player::updateZPos(float newXPos)
 {
-	m_position.z = newXPos;
+	m_position.z = newXPos; 
+	setHitBox();
 }
 
 void Player::rotate(int t_direction)
@@ -77,7 +78,6 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
-	//m_weapon.init();
 	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].init();
@@ -87,7 +87,7 @@ void Player::init()
 void Player::render()
 {
 	DrawModel(m_body, m_position, 2.0f, m_colour);
-	//DrawBoundingBox(m_hitbox, RED);
+	DrawBoundingBox(m_hitbox, RED);
 
 	for (int i = 0; i < getBulletMax(); i++)
 	{
