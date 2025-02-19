@@ -23,6 +23,11 @@ void Mushroom::render()
 	enemy.render();
 }
 
+void Mushroom::renderBoom(Camera& t_camera)
+{
+	enemy.renderBoom(t_camera);
+}
+
 void Mushroom::playerDetected(bool t_spotted)
 {
 	if (t_spotted)

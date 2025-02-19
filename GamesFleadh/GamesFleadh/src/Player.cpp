@@ -39,7 +39,19 @@ void Player::collision(bool collide)
 {
 	if (collide)
 	{
-		m_colour = RED;
+		handleInput(Event::EVENT_DAMAGE);
+	}
+	else
+	{
+		m_colour = WHITE;
+	}
+}
+
+void Player::worldCollision(bool collide)
+{
+	if (collide)
+	{
+		handleInput(Event::EVENT_DAMAGE);
 	}
 	else
 	{
@@ -96,31 +108,40 @@ void Player::resetToOrigin()
 	setHitBox();
 }
 
-void Player::faceCrosshair(Vector3 t_crosshairPos)
+void lookat_angles(Vector3* target, float* yaw, float* pitch) 
 {
-	Matrix mat = MatrixLookAt(t_crosshairPos, m_position, { 0,1,0 });
-
-	Vector3 translation = { 0 };
-	Quaternion rotation = { 0 };
-	Vector3 scale = { 0 };
-
-	MatrixDecompose(mat, &translation, &rotation, &scale);
-
-	m_body.transform = QuaternionToMatrix(rotation);
-
+	*yaw = -(atan2(target->x, target->y) * RAD2DEG) + 90.0f;
+	float distance = sqrt(target->x * target->x + target->z * target->z);
+	*pitch = -(-atan2(target->y, distance) * RAD2DEG);
 }
 
-void Player::shootBullet()
+void Player::faceCrosshair(Vector3 t_crosshairPos)
+{
+	Matrix mat = MatrixLookAt(m_position, t_crosshairPos, { 0,1,0 });
+
+	mat = MatrixInvert(mat);
+
+	Vector3 translation = { 0 };
+	Quaternion crosshairRotation = { 0 };
+	Vector3 scale = { 0 };
+	
+	MatrixDecompose(mat, &translation, &crosshairRotation, &scale);
+
+
+	m_body.transform = MatrixMultiply(MatrixRotateY(DEG2RAD * 90.0f), QuaternionToMatrix(crosshairRotation));
+}
+
+void Player::shootBullet(Vector3 t_target)
 {
 	if (bulletCount < 10)
 	{
-		bullet[bulletCount].spawn(m_position, -0.3f);
+		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
 		bulletCount++;
 	}
 	else
 	{
 		bulletCount = 0;
-		bullet[bulletCount].spawn(m_position, -0.3f);
+		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
 	}
 }
 

@@ -9,6 +9,7 @@ Game::Game() : score(0), activeMap(1)
     rightStickY = 0.0f;
     leftTrigger = 0.0f;
     rightTrigger = 0.0f;
+    billSpeed = 0.2f;
 }
 
 Game::~Game()
@@ -20,6 +21,8 @@ Game::~Game()
     UnloadShader(skybox.materials[0].shader);// Skybox memory management
     UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
     UnloadModel(skybox);
+    UnloadMusicStream(bgm);
+    CloseAudioDevice();
 }
 
 void Game::run()
@@ -36,6 +39,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
+    InitAudioDevice();
 
     // Define our custom camera to look into our 3d world
     camera = { 0 };
@@ -123,6 +127,8 @@ void Game::loadAssets()
     heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
+    healthBar = LoadTexture("ASSETS/2D/UI/HealthBar.png");
+
     bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
     billUp = { 0.0f, 1.0f, 0.0f };
@@ -140,9 +146,22 @@ void Game::loadAssets()
     //mapPosition2 = { -32.0f, -0.0f, -128.0f };
     
     player.init();
-    billPositionStatic = { 2.0f,2.0f,0.0f };
+    billPositionStatic = { 2.0f,2.0f,3.0f };
 
-    
+    /*for (int i = 0; i < MAX_MUSHROOMS; i++)
+    {
+        mushroom[i].init();
+        if (i != mushroomOnMap)
+        {
+            mushroom[i].spawn({ -1.0f, 2.0f, -79.0f });
+        }
+        mushroom[i].spawnEnemy();
+    }
+    mushroom[0].playerDetected(true);*/
+
+    bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
+    SetMusicVolume(bgm, 0.2);
+    //PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -196,9 +215,10 @@ void Game::render()
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         mushroom[i].render();
+        mushroom[i].renderBoom(camera);
     }
 
-    DrawGrid(20, 1.0f);
+    
     
     DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
 
@@ -216,12 +236,21 @@ void Game::render()
 
     DrawSphere(objectPlacementTest, 2.0f, ORANGE);
 
+    DrawGrid(20, 1.0f);
     EndMode3D();
 
+    DrawTexture(healthBar, 0, 1000, WHITE);
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
+    for (int i = 0; i < MAX_MUSHROOMS; i++)
+    {
+        if (mushroom[i].isActive())
+        {
+            DrawText(TextFormat("FEEDER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
+        }
+    }
     DrawFPS(10, 30);
 
     /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
@@ -241,14 +270,14 @@ void Game::render()
 
 void Game::update()
 {
+    UpdateMusicStream(bgm);
     gamepadUpdate();
     inputControl();
     player.updateZPos(camPos.z - playerZOffsetFromCamera);
-    player.update();
-    cameraMove();
     player.faceCrosshair(billPositionRotating);
 
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
+    distanceStatic += 2.0f;
     distanceRotating = Vector3Distance(camera.position, billPositionRotating);
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
@@ -284,6 +313,8 @@ void Game::update()
     player.updateBullet();
     camera.position = camPos;
     checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
+    player.update();
+    cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
 }
@@ -295,7 +326,7 @@ void Game::inputControl()
         camDirection = 0.0f;
         if (leftStickY < 0)
         {
-           camDirection -= camSpeed * (-leftStickY);
+           //camDirection -= camSpeed * (-leftStickY);
         }
         else
         {
@@ -308,7 +339,7 @@ void Game::inputControl()
     {
         if (leftStickY > 0)
         {
-            camDirection = camSpeed * (-leftStickY);
+            //camDirection = camSpeed * (-leftStickY);
         }
         else
         {
@@ -326,46 +357,22 @@ void Game::inputControl()
 
     if (IsKeyDown(KEY_UP))
     {
-        billPositionRotating.x = player.getPosition().x;
-        if (billSpeed < 2.0f)
-        {
-            billSpeed += 0.3f;
-        }
-        billPositionRotating.y = player.getPosition().y + billSpeed;
         player.move({0, -1, 0});
     }
     if (IsKeyDown(KEY_DOWN))
     {
-        billPositionRotating.x = player.getPosition().x;
-        if (billSpeed > -2.0f)
-        {
-            billSpeed -= 0.3f;
-        }
-        billPositionRotating.y = player.getPosition().y + billSpeed;
         player.move({0,1,0});
     }
     if (IsKeyDown(KEY_LEFT))
     {
-        billPositionRotating.y = player.getPosition().y;
-        if (billSpeed > -2.0f)
-        {
-            billSpeed -= 0.3f;
-        }
-        billPositionRotating.x = player.getPosition().x + billSpeed;
         player.move({-1,0,0});
     }
     if (IsKeyDown(KEY_RIGHT))
     {
-        billPositionRotating.y = player.getPosition().y;
-        if (billSpeed < 2.0f)
-        {
-            billSpeed += 0.3f;
-        }
-        billPositionRotating.x = player.getPosition().x + billSpeed;
         player.move({1,0,0});
     }
 
-    if (IsKeyReleased(KEY_SPACE))
+    if (IsKeyReleased(KEY_SPACE) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
     {// RS: Toggle! Is nice, you like.
         autoScroll = !autoScroll;
     }
@@ -376,31 +383,38 @@ void Game::inputControl()
     }
     else
     {
-        player.collision(false);
+        //player.collision(false);
     }
+
 
     if (IsKeyReleased(KEY_X))
     {
         std::cout << "\nPlacing objects.\n";
         placeObjectsFromImage(imgPlacementTest);
     }
-
-    if (IsKeyPressed(KEY_ENTER))
+    if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
-        player.shootBullet();
+        player.shootBullet(billPositionRotating);
     }
 
-    Vector3 normVelocity = Vector3Normalize({ rightStickX, rightStickY, 0 });
+    Vector3 normVelocity = Vector3Normalize({ leftStickX, leftStickY, 0 });
 
     player.move(normVelocity);
     camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
 
-    billPositionRotating.z = player.getPosition().z - 1.0f;
+    crosshairMove();
+    billPositionRotating.z = player.getPosition().z - 3.0f;
 
     if (autoScroll)
     {
         camPos.z += -0.1f;
     }
+}
+
+void Game::crosshairMove()
+{
+    billPositionRotating.x += billSpeed * rightStickX;
+    billPositionRotating.y += billSpeed * -rightStickY;
 }
 
 void Game::gamepadInit()
@@ -414,6 +428,7 @@ void Game::gamepadInit()
     rightStickDeadzoneY = 0.1f;
     leftTriggerDeadzone = -0.9f;
     rightTriggerDeadzone = -0.9f;
+
 }
 
 void Game::gamepadUpdate()
@@ -436,6 +451,8 @@ void Game::gamepadUpdate()
         if (rightStickY > -rightStickDeadzoneY && rightStickY < rightStickDeadzoneY) rightStickY = 0.0f;
         if (leftTrigger < leftTriggerDeadzone) leftTrigger = -1.0f;
         if (rightTrigger < rightTriggerDeadzone) rightTrigger = -1.0f;
+
+        SetGamepadVibration(gamepad, 1.0f, 1.0f, 100.0f);
     }
 }
 
@@ -470,7 +487,7 @@ void Game::mapMove()
     const Vector3 nextMap = { -32.0f, -0.0f, -128.0f };
     float mapLength = 64.0f;
     
-    if (player.getPosition().z > -64.0f) return; // -playerZOffsetFromCamera) return;
+    if (player.getPosition().z > -64.0f -playerZOffsetFromCamera) return;
 
     if(activeMap == 1)
     {
@@ -526,4 +543,8 @@ void Game::cameraMove()
         upperLimit.y += speed;
         lowerLimit.y += speed;
     }
+    camera.target = billPositionRotating;
+    camera.target.z = billPositionRotating.z - 15.0f;
 }
+
+

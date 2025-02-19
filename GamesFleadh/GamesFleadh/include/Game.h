@@ -39,6 +39,7 @@ public:
 
 	void mapMove();
 	void cameraMove();
+	void crosshairMove();
 
 private:
 	Camera camera;
@@ -56,6 +57,8 @@ private:
 	Vector3 camPos;
 	Vector3 camTopDownPos;
 	
+	Texture2D healthBar;
+
 	float camSpeed = 0.2f;
 	float camDirection;
 
@@ -97,7 +100,7 @@ private:
 	float distanceStatic;
 	float distanceRotating;
 	float rotation = 0.0f;
-	Vector3 billPositionRotating = { 1.0f, 2.0f, 1.0f };
+	Vector3 billPositionRotating = { 1.0f, 2.0f, 5.0f };
 	Vector2 size;
 	Vector2 origin;
 	float billSpeed = 0.0f;
@@ -123,5 +126,7 @@ private:
 	Vector3 objectPlacementTest;
 
 	BoundingBox heightMapBounds;
+
+	Music bgm;
 };
 

@@ -21,7 +21,12 @@ public:
 	int currentBullet() { return bulletCount; }
 	void setHitBox();
 	void updateHitBox(float t_x);
+
+	Quaternion getCrosshairRotation() { return crosshairRotation; }
+	
 	void collision(bool collide);
+	void worldCollision(bool collide);
+
 	void updateZPos(float newXPos);
 	virtual void rotate(int t_direction) override;
 	virtual void init() override;
@@ -31,7 +36,7 @@ public:
 	void resetToOrigin();
 	void faceCrosshair(Vector3 t_crosshairPos);
 
-	void shootBullet();
+	void shootBullet(Vector3 t_target);
 	void updateBullet();
 	void despawnBullet(int bulletNum);
 
@@ -45,5 +50,7 @@ private:
 	Bullet bullet[10];
 	int bulletCount;
 	const int MAX_BULLETS = 10;
+
+	Quaternion crosshairRotation;
 };
 

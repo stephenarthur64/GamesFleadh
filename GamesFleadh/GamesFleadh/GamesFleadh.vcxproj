@@ -39,6 +39,7 @@
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\ShootState.h" />
     <ClInclude Include="include\State.h" />
+    <ClInclude Include="include\StreetFurniture.h" />
     <ClInclude Include="include\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +62,7 @@
     <ClCompile Include="src\ShootState.cpp" />
     <ClCompile Include="src\State.cpp" />
     <ClCompile Include="src\Weapon.cpp" />
+    <ClCompile Include="StreetFurniture.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -154,7 +156,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\raylib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;raylib.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

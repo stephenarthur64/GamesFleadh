@@ -10,11 +10,15 @@ public:
 	virtual void init() override;
 	virtual void render() override;
 
+	void renderBoom(Camera& t_camera);
+
 	BoundingBox getEnemyHitbox() { return enemy.getHitbox(); }
 	void setCollisions(bool t_collide) { enemy.collision(t_collide); }
 	GameObject* getEnemy() { return &enemy; }
 
 	void playerDetected(bool t_spotted);
+
+	bool isActive() { return enemy.isActive(); }
 
 	void update();
 
