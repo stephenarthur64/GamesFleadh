@@ -82,11 +82,11 @@ bool Tile::collision(Vector3 t_collider)
 	return false;
 }
 
-void Tile::update()
+void Tile::update(Vector3 t_target)
 {
     for (StreetFurniture item : m_furnitureVec)
     {
-        item.update();
+        item.update(t_target);
     }
 }
 

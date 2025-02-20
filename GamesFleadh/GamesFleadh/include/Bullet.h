@@ -12,6 +12,7 @@ public:
 	void spawn(Vector3 t_pos, float speed, Vector3 t_velocity);
 	void despawn();
 	void move();
+	void follow();
 	virtual void init() override;
 	virtual void render() override;
 	virtual void rotate(int t_direction) override;

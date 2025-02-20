@@ -27,11 +27,11 @@ void Mushroom::renderBoom(Camera& t_camera)
 	feeder.renderBoom(t_camera);
 }
 
-void Mushroom::playerDetected(bool t_spotted)
+void Mushroom::playerDetected(bool t_spotted, Vector3 t_target)
 {
 	if (t_spotted)
 	{
-		feeder.shootBullet();
+		feeder.shootBullet(t_target);
 	}
 	else
 	{
@@ -39,9 +39,9 @@ void Mushroom::playerDetected(bool t_spotted)
 	}
 }
 
-void Mushroom::update()
+void Mushroom::update(Vector3 t_target)
 {
-	feeder.update();
+	feeder.update(t_target);
 }
 
 void Mushroom::spawn(Vector3 t_pos)

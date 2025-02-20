@@ -21,7 +21,7 @@ public:
 
 	bool collision(Vector3 t_collider);
 
-	void update();
+	void update(Vector3 t_target);
 
 private:
 	Image m_heightMap;

@@ -103,7 +103,7 @@ void Game::placeObjectsFromImage(Image placementMap)
                     mushroom[mushroomCount].spawnFeeder();
                     mushroomCount++;
                 }
-                mushroom[0].playerDetected(true);
+                mushroom[0].playerDetected(true, player.getPosition());
 
                 /*for (int i = 0; i < MAX_MUSHROOMS; i++)
                 {
@@ -169,7 +169,7 @@ void Game::loadAssets()
         }
         mushroom[i].spawnFeeder();
     }
-    mushroom[0].playerDetected(true);
+    mushroom[0].playerDetected(true, player.getPosition());
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
@@ -308,7 +308,7 @@ void Game::update()
     distanceRotating = Vector3Distance(camera.position, billPositionRotating);
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
-        mushroom[i].update();
+        mushroom[i].update(player.getPosition());
     }
     mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
@@ -558,11 +558,11 @@ void Game::mapMove()
     mushroomOnMap = 1;
     mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });
     mushroom[1].spawnFeeder();
-    mushroom[1].playerDetected(true);
+    mushroom[1].playerDetected(true, player.getPosition());
 
     mushroom[0].spawn({ -1.0f, 2.0f, -mapLength - 15.0f});
     mushroom[0].spawnFeeder();
-    mushroom[0].playerDetected(false);
+    mushroom[0].playerDetected(false, {0,0,0});
 
     camPos.z = 0.0f;
 }

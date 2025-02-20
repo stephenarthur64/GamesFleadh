@@ -101,10 +101,11 @@ void Feeder::renderBoom(Camera &t_camera)
 	}
 }
 
-void Feeder::shootBullet()
+void Feeder::shootBullet(Vector3 t_target)
 {
+	m_target = t_target;
 	bulletTick = 0;
-	//m_mudBomb.spawn(m_position, 0.3f, {0,0,1});
+	m_mudBomb.spawn(m_position, 0.3f, m_target);
 }
 
 void Feeder::despawnBullet()
@@ -159,17 +160,17 @@ void Feeder::kill()
 	//m_position.x = 1000.0f;
 }
 
-void Feeder::update()
+void Feeder::update(Vector3 t_target)
 {
 	currentState->update(this);
-	//m_mudBomb.move({1,0,0});
+	m_mudBomb.follow();
 
 	boom();
 
 	if (bulletTick >= 180)
 	{
 		bulletTick = 0;
-		shootBullet();
+		shootBullet(t_target);
 	}
 	else if (bulletTick > -1)
 	{

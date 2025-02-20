@@ -16,11 +16,11 @@ public:
 	void setCollisions(bool t_collide) { feeder.collision(t_collide); }
 	GameObject* getFeeder() { return &feeder; }
 
-	void playerDetected(bool t_spotted);
+	void playerDetected(bool t_spotted, Vector3 t_target);
 
 	bool isActive() { return feeder.isActive(); }
 
-	void update();
+	void update(Vector3 t_target);
 
 	void spawn(Vector3 t_pos);
 	void spawnFeeder();
