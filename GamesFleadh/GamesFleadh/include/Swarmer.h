@@ -15,6 +15,7 @@ public:
 	virtual void render();
 
 	void setLimits(float t_upperLimit, float t_lowerLimit);
+	void setHitbox();
 
 	void update();
 	void playerSpotted(bool t_spotted);

@@ -17,17 +17,29 @@ void Swarmer::init()
 {
 	m_body = LoadModel("ASSETS/3D/Enemy/Swarmer/Swarmer.glb");
 	setLimits(5, 0);
+	setHitbox();
 }
 
 void Swarmer::render()
 {
 	DrawModel(m_body, m_position, 1.0f, WHITE);
+	DrawBoundingBox(m_hitbox, BLUE);
 }
 
 void Swarmer::setLimits(float t_upperLimit, float t_lowerLimit)
 {
 	m_upperLimit = t_upperLimit;
 	m_lowerLimit = t_lowerLimit;
+}
+
+void Swarmer::setHitbox()
+{
+	Vector3 minOffset = { -1.0f, -0.5f, -1.0f };
+	Vector3 maxOffset = { 1.0f, 1.5f, 1.0f };
+
+	m_hitbox.min = m_position + minOffset;
+	m_hitbox.max = m_position + maxOffset;
+
 }
 
 void Swarmer::update()
@@ -68,6 +80,8 @@ void Swarmer::hover()
 	if (m_direction == NORTH)
 	{
 		m_position.y += m_speed;
+		m_hitbox.min.y += m_speed;
+		m_hitbox.max.y += m_speed;
 
 		if (m_upperLimit < m_position.y)
 		{
@@ -78,6 +92,8 @@ void Swarmer::hover()
 	if (m_direction == SOUTH)
 	{
 		m_position.y -= m_speed;
+		m_hitbox.min.y -= m_speed;
+		m_hitbox.max.y -= m_speed;
 
 		if (m_lowerLimit > m_position.y)
 		{
@@ -111,4 +127,6 @@ void Swarmer::chasePlayer()
 	m_velocity *= m_speed;
 
 	m_position += m_velocity;
+	m_hitbox.min += m_velocity;
+	m_hitbox.max += m_velocity;
 }
