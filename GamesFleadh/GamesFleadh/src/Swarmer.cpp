@@ -20,10 +20,10 @@ void Swarmer::init()
 
 void Swarmer::render()
 {
-	DrawModel(m_body, m_position, 2.0f, WHITE);
+	DrawModel(m_body, m_position, 1.0f, WHITE);
 }
 
 void Swarmer::update()
 {
-//	currentState->update(this);
+	currentState->update(this);
 }
