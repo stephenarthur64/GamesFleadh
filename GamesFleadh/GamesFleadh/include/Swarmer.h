@@ -19,6 +19,8 @@ public:
 	void playerSpotted(bool t_spotted);
 	void hover();
 
+	void checkDistanceFromPlayer(Vector3 t_playerPos);
+
 private:
 	int spottedTick = 0;
 
@@ -27,5 +29,6 @@ private:
 
 	float m_speed;
 	Direction m_direction;
+	bool m_spotted;
 };
 

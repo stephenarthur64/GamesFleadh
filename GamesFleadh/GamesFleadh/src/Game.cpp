@@ -301,6 +301,7 @@ void Game::update()
     player.updateZPos(camPos.z - playerZOffsetFromCamera);
     player.faceCrosshair(billPositionRotating);
 
+    swarmer->checkDistanceFromPlayer(player.getPosition());
     swarmer->update();
 
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);

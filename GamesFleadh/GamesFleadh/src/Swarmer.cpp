@@ -1,6 +1,6 @@
 #include "Swarmer.h"
 
-Swarmer::Swarmer() : m_speed(0.1f), m_direction(NORTH)
+Swarmer::Swarmer() : m_speed(0.1f), m_direction(NORTH), m_spotted(false)
 {
 	currentState = new IdleState;
 	m_position = { -2.0f, 1.0f, -12.0f };
@@ -33,13 +33,16 @@ void Swarmer::setLimits(float t_upperLimit, float t_lowerLimit)
 void Swarmer::update()
 {
 	currentState->update(this);
-	if (spottedTick < 48 && spottedTick > -1)
+	
+	playerSpotted(m_spotted);
+
+	if (spottedTick >= 48)
 	{
-		playerSpotted(true);
+		//m_spotted = false;
 	}
-	else
+
+	if (!m_spotted)
 	{
-		playerSpotted(false);
 		hover();
 	}
 
@@ -54,7 +57,7 @@ void Swarmer::playerSpotted(bool t_spotted)
 	}
 	else
 	{
-		spottedTick = -1;
+		spottedTick = 0;
 		handleInput(Event::EVENT_NONE);
 	}
 }
@@ -79,5 +82,22 @@ void Swarmer::hover()
 		{
 			m_direction = NORTH;
 		}
+	}
+}
+
+void Swarmer::checkDistanceFromPlayer(Vector3 t_playerPos)
+{
+	float xDistance = (t_playerPos.x - m_position.x) * (t_playerPos.x - m_position.x);
+	float zDistance = (t_playerPos.z - m_position.z) * (t_playerPos.z - m_position.z);
+
+	float distance = sqrtf(xDistance + zDistance);
+
+	if (distance <= 2.0f)
+	{
+		m_spotted = true;
+	}
+	else
+	{
+		m_spotted = false;
 	}
 }
