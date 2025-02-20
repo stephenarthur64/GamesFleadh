@@ -5,6 +5,7 @@
 #include "MovingRightState.h"
 #include "DamageState.h"
 #include "ShootState.h"
+#include "PlayerSpottedState.h"
 
 State* IdleState::handleInput(Event t_event)
 {
@@ -33,6 +34,11 @@ State* IdleState::handleInput(Event t_event)
 	if (t_event == Event::EVENT_DAMAGE)
 	{
 		return new DamageState;
+	}
+
+	if (t_event == Event::EVENT_SPOTTED)
+	{
+		return new PlayerSpottedState;
 	}
 
 	return nullptr;

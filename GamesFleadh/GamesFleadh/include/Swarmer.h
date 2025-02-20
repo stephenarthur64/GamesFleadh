@@ -13,5 +13,9 @@ public:
 	virtual void render();
 
 	void update();
+	void playerSpotted(bool t_spotted);
+
+private:
+	int spottedTick = 0;
 };
 

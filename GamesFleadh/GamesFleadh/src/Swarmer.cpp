@@ -26,4 +26,26 @@ void Swarmer::render()
 void Swarmer::update()
 {
 	currentState->update(this);
+	if (spottedTick < 48 && spottedTick > -1)
+	{
+		playerSpotted(true);
+	}
+	else
+	{
+		playerSpotted(false);
+	}
+}
+
+void Swarmer::playerSpotted(bool t_spotted)
+{
+	if (t_spotted)
+	{
+		spottedTick++;
+		handleInput(Event::EVENT_SPOTTED);
+	}
+	else
+	{
+		spottedTick = -1;
+		handleInput(Event::EVENT_NONE);
+	}
 }

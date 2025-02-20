@@ -1,0 +1,26 @@
+#include "PlayerSpottedState.h"
+#include "IdleState.h"
+#include "DamageState.h"
+#include "ShootState.h"
+
+State* PlayerSpottedState::handleInput(Event t_event)
+{
+    if (t_event == Event::EVENT_NONE)
+    {
+        return new IdleState;
+    }
+    return nullptr;
+}
+
+void PlayerSpottedState::update(GameObject* obj)
+{
+    obj->animation(1);
+}
+
+void PlayerSpottedState::enter(GameObject* obj)
+{
+}
+
+void PlayerSpottedState::exit(GameObject* obj)
+{
+}
