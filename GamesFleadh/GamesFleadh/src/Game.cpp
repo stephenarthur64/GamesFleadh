@@ -147,6 +147,11 @@ void Game::loadAssets()
     
     player.init();
     billPositionStatic = { 2.0f,2.0f,3.0f };
+
+    for (int i = 0; i < maxSwarmer; i++)
+    {
+        swarmer[i].init();
+    }
     
     // placeObjectsFromImage(imgPlacementTest);
 
@@ -230,6 +235,11 @@ void Game::render()
         mushroom[i].renderBoom(camera);
     }
 
+    for (int i = 0; i < maxSwarmer; i++)
+    {
+        swarmer[0].render();
+    }
+
     /*for (int i = 0; i < maxStreetFurniture; i++)
     {
         streetF[i].render();
@@ -290,6 +300,8 @@ void Game::update()
     inputControl();
     player.updateZPos(camPos.z - playerZOffsetFromCamera);
     player.faceCrosshair(billPositionRotating);
+
+    swarmer->update();
 
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
     distanceStatic += 2.0f;

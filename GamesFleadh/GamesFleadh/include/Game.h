@@ -19,6 +19,7 @@
 #include "Player.h"
 #include "Mushroom.h"
 #include "StreetFurniture.h"
+#include "Swarmer.h"
 
 class Game
 {
@@ -91,11 +92,14 @@ private:
 	Player player;
 	Mushroom mushroom[2];
 	// StreetFurniture streetF[5];
+	Swarmer swarmer[5];
 
 	Vector2 lowerLimit = { -1.0f, 2.0f };
 	Vector2 upperLimit = { 1.0f, 2.5f };
 
 	int maxStreetFurniture = 5; // Changed from const as this will be set by terrain;
+
+	int maxSwarmer = 5;
 
 	const int MAX_MUSHROOMS = 2;
 	int mushroomOnMap = 0;
