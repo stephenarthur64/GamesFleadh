@@ -1,10 +1,10 @@
 #include "Swarmer.h"
 
-Swarmer::Swarmer() : m_speed(0.1f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(6.0f)
+Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(5.0f)
 {
 	currentState = new IdleState;
 	m_health = 1;
-	m_position = { -2.0f, 1.0f, -12.0f };
+	m_position = { -2.0f, 3.0f, -12.0f };
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Enemy/Swarmer/Swarmer.glb", &animsCount);
@@ -17,7 +17,7 @@ void Swarmer::rotate(int t_direction)
 void Swarmer::init()
 {
 	m_body = LoadModel("ASSETS/3D/Enemy/Swarmer/Swarmer.glb");
-	setLimits(5, 0);
+	setLimits(5, -5);
 	setHitbox();
 	fxBoom = LoadSound("ASSETS/boom.wav");
 	SetSoundVolume(fxBoom, 0.3);
@@ -76,6 +76,8 @@ void Swarmer::kill()
 	active = true;
 
 	PlaySound(fxBoom);
+
+	handleInput(EVENT_NONE);
 }
 
 void Swarmer::boom()
@@ -135,6 +137,7 @@ void Swarmer::playerSpotted(bool t_spotted)
 	}
 	else
 	{
+		m_speed = 0.05f;
 		spottedTick = 0;
 		handleInput(Event::EVENT_NONE);
 	}
@@ -144,11 +147,11 @@ void Swarmer::hover()
 {
 	if (m_direction == NORTH)
 	{
-		m_position.y += m_speed;
-		m_hitbox.min.y += m_speed;
-		m_hitbox.max.y += m_speed;
+		m_position.x += m_speed;
+		m_hitbox.min.x += m_speed;
+		m_hitbox.max.x += m_speed;
 
-		if (m_upperLimit < m_position.y)
+		if (m_upperLimit < m_position.x)
 		{
 			m_direction = SOUTH;
 		}
@@ -156,11 +159,11 @@ void Swarmer::hover()
 
 	if (m_direction == SOUTH)
 	{
-		m_position.y -= m_speed;
-		m_hitbox.min.y -= m_speed;
-		m_hitbox.max.y -= m_speed;
+		m_position.x -= m_speed;
+		m_hitbox.min.x -= m_speed;
+		m_hitbox.max.x -= m_speed;
 
-		if (m_lowerLimit > m_position.y)
+		if (m_lowerLimit > m_position.x)
 		{
 			m_direction = NORTH;
 		}
@@ -196,6 +199,8 @@ void Swarmer::checkDistanceFromPlayer(Vector3 t_playerPos)
 
 void Swarmer::chasePlayer()
 {
+	m_speed = 0.1f;
+
 	m_velocity = m_target - m_position;
 	m_velocity = Vector3Normalize(m_velocity);
 	m_velocity *= m_speed;

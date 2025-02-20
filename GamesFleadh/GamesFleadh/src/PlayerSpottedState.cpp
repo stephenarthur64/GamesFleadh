@@ -25,6 +25,7 @@ void PlayerSpottedState::update(GameObject* obj)
 
 void PlayerSpottedState::enter(GameObject* obj)
 {
+    obj->resetAnimation();
 }
 
 void PlayerSpottedState::exit(GameObject* obj)
