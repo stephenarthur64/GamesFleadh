@@ -148,7 +148,9 @@ void Game::loadAssets()
     player.init();
     billPositionStatic = { 2.0f,2.0f,3.0f };
 
-    /*for (int i = 0; i < MAX_STREET_FURNITURE; i++)
+    // placeObjectsFromImage(imgPlacementTest);
+
+    for (int i = 0; i < maxStreetFurniture; i++)
     {
         streetF[i].init();
     }
@@ -162,7 +164,7 @@ void Game::loadAssets()
         }
         mushroom[i].spawnEnemy();
     }
-    mushroom[0].playerDetected(true);*/
+    mushroom[0].playerDetected(true);
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
@@ -228,7 +230,7 @@ void Game::render()
         mushroom[i].renderBoom(camera);
     }
 
-    for (int i = 0; i < MAX_STREET_FURNITURE; i++)
+    for (int i = 0; i < maxStreetFurniture; i++)
     {
         streetF[i].render();
     }

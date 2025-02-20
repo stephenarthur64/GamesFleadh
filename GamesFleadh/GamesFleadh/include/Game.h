@@ -95,7 +95,7 @@ private:
 	Vector2 lowerLimit = { -1.0f, 2.0f };
 	Vector2 upperLimit = { 1.0f, 2.5f };
 
-	const int MAX_STREET_FURNITURE = 5;
+	int maxStreetFurniture = 5; // Changed from const as this will be set by terrain;
 
 	const int MAX_MUSHROOMS = 2;
 	int mushroomOnMap = 0;

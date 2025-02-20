@@ -8,7 +8,6 @@ Mushroom::Mushroom()
 
 void Mushroom::rotate(int t_direction)
 {
-
 }
 
 void Mushroom::init()
