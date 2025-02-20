@@ -59,8 +59,71 @@ void Game::init()
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 }
 
+void Game::placeObjectsFromImage(Image placementMap)
+{
+    // 626 111
+    // Color testCol = GetImageColor(placementMap, 626, 111);
+
+    int mushroomCount = 0;
+
+    for (int u = 0; u < placementMap.width; u++)
+    {
+        for (int v = 0; v < placementMap.height; v++)
+        {
+            Color col = GetImageColor(placementMap, u, v);
+
+            if (col.r == 255 && col.b == 0 && col.g == 0) // Possibly early out here
+            {
+                std::cout << "Found red pixel.";
+
+                Color heightFromCol = GetImageColor(heightmapImage, u, v);
+
+                float placementTexUcoord = static_cast<float>(u);
+                float placementColYcoord = static_cast<float>(heightFromCol.r);
+                float placementTexVcoord = static_cast<float>(v);
+
+                float placeWorldNormX = placementTexUcoord / heightmapImage.width;
+                float placeWorldNormY = placementColYcoord / 255.0f;
+                float placeWorldNormZ = placementTexVcoord / heightmapImage.height;
+
+                float placeWorldCoordX = (placeWorldNormX * mapSize.x) - abs(mapPosition.x);
+                float placeWorldCoordY = placeWorldNormY * mapSize.y;
+                float placeWorldCoordZ = ((placeWorldNormZ * mapSize.y) - abs(mapPosition.z) - SeemingMagicalOffset); // Not sure I need the last offset for objects
+
+                //objectPlacementTest = { placeWorldCoordX, placeWorldCoordY, placeWorldCoordZ };
+                Vector3 mushroomOrigin = { placeWorldCoordX, placeWorldCoordY, placeWorldCoordZ };
+
+                if (mushroomCount < MAX_MUSHROOMS)
+                {
+                    mushroom[mushroomCount].init();
+                    //if (mushroomCount != mushroomOnMap)
+                    //{
+                        mushroom[mushroomCount].spawn(mushroomOrigin);
+                    //}
+                    mushroom[mushroomCount].spawnEnemy();
+                    mushroomCount++;
+                }
+                mushroom[0].playerDetected(true);
+
+                /*for (int i = 0; i < MAX_MUSHROOMS; i++)
+                {
+                    mushroom[i].init();
+                    if (i != mushroomOnMap)
+                    {
+                        mushroom[i].spawn({ -1.0f, 2.0f, -79.0f });
+                    }
+                    mushroom[i].spawnEnemy();
+                }*/
+                
+            }
+        }
+    }
+}
+
 void Game::loadAssets()
 {
+    imgPlacementTest = LoadImage("ASSETS/2D/Heightmaps/test1_EnemyPlacement01001RS.png");
+
     heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
     heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
 
@@ -85,10 +148,12 @@ void Game::loadAssets()
     player.init();
     billPositionStatic = { 2.0f,2.0f,3.0f };
 
-    for (int i = 0; i < MAX_STREET_FURNITURE; i++)
+    // placeObjectsFromImage(imgPlacementTest);
+
+    /*for (int i = 0; i < maxStreetFurniture; i++)
     {
         streetF[i].init();
-    }
+    }*/
 
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
@@ -165,23 +230,26 @@ void Game::render()
         mushroom[i].renderBoom(camera);
     }
 
-    for (int i = 0; i < MAX_STREET_FURNITURE; i++)
+    /*for (int i = 0; i < maxStreetFurniture; i++)
     {
         streetF[i].render();
-    }
+    }*/
     
     
 
-    DrawSphereWires(Vector3{ 0.0f, 0.0f, 0.0f }, 0.25f, 8, 8, ORANGE); // Marks origin.
-    DrawSphereWires(Vector3{ 0.0f, 4.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
-    DrawSphereWires(Vector3{ 0.0f, 8.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
-    DrawSphereWires(Vector3{ 0.0f,0.0f,-64.0f }, 0.25f, 6, 6, RED);
-    DrawSphereWires(Vector3{ 0.0f,4.0f,-64.0f }, 0.25f, 6, 6, RED);
-    DrawSphereWires(Vector3{ 0.0f,8.0f,-64.0f }, 0.25f, 6, 6, RED);
-    DrawSphereWires(Vector3{ 0.0f,2.0f, 0.0f  }, 0.25f, 6, 6, BLUE);
-    DrawSphereWires(Vector3{ 0.0f,2.0f, -64.0f}, 0.25f, 6, 6, BLUE);
-    DrawSphereWires(heightMapBounds.min, 0.125f, 6, 6, GREEN);
-    DrawSphereWires(heightMapBounds.max, 0.125f, 6, 6, PURPLE);
+    //DrawSphereWires(Vector3{ 0.0f, 0.0f, 0.0f }, 0.25f, 8, 8, ORANGE); // Marks origin.
+    //DrawSphereWires(Vector3{ 0.0f, 4.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
+    //DrawSphereWires(Vector3{ 0.0f, 8.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
+    //DrawSphereWires(Vector3{ 0.0f,0.0f,-64.0f }, 0.25f, 6, 6, RED);
+    //DrawSphereWires(Vector3{ 0.0f,4.0f,-64.0f }, 0.25f, 6, 6, RED);
+    //DrawSphereWires(Vector3{ 0.0f,8.0f,-64.0f }, 0.25f, 6, 6, RED);
+    //DrawSphereWires(Vector3{ 0.0f,2.0f, 0.0f  }, 0.25f, 6, 6, BLUE);
+    //DrawSphereWires(Vector3{ 0.0f,2.0f, -64.0f}, 0.25f, 6, 6, BLUE);
+    
+    //DrawSphereWires(heightMapBounds.min, 0.5f, 6, 6, GREEN);
+    //DrawSphereWires(heightMapBounds.max, 0.5f, 6, 6, PURPLE);
+
+    DrawSphere(objectPlacementTest, 2.0f, ORANGE);
 
     DrawGrid(20, 1.0f);
     EndMode3D();
@@ -249,12 +317,12 @@ void Game::update()
     if (player.getPosition().y <= worldYPos)
     {
         player.collision(true);
-        std::cout << "\nColliding!\n";
+        //std::cout << "\nColliding!\n";
     }
     else
     {
-       // player.collision(false);
-        std::cout << "\nNot Colliding!\n";
+        player.collision(false);
+        //std::cout << "\nNot Colliding!\n";
     }// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
 
     player.updateBullet();
@@ -333,6 +401,12 @@ void Game::inputControl()
         //player.collision(false);
     }
 
+
+    if (IsKeyReleased(KEY_X))
+    {
+        std::cout << "\nPlacing objects.\n";
+        placeObjectsFromImage(imgPlacementTest);
+    }
     if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         player.shootBullet(billPositionRotating);
@@ -354,8 +428,34 @@ void Game::inputControl()
 
 void Game::crosshairMove()
 {
-    billPositionRotating.x += billSpeed * rightStickX;
-    billPositionRotating.y += billSpeed * -rightStickY;
+    if (IsKeyDown(KEY_I))
+    {
+        keyboardY = -1.0f;
+    }
+    else if (IsKeyDown(KEY_K))
+    {
+        keyboardY = 1.0f;
+    }
+    else
+    {
+        keyboardY = 0.0f;
+    }
+
+    if (IsKeyDown(KEY_J))
+    {
+        keyboardX = -1.0f;
+    }
+    else if (IsKeyDown(KEY_L))
+    {
+        keyboardX = 1.0f;
+    }
+    else
+    {
+        keyboardX = 0.0f;
+    }
+
+    billPositionRotating.x += billSpeed * (rightStickX + keyboardX);
+    billPositionRotating.y += billSpeed * (- (rightStickY + keyboardY));
 }
 
 void Game::gamepadInit()

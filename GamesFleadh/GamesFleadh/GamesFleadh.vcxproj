@@ -41,6 +41,7 @@
     <ClInclude Include="include\State.h" />
     <ClInclude Include="include\StreetFurniture.h" />
     <ClInclude Include="include\Weapon.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Bullet.cpp" />
@@ -63,6 +64,7 @@
     <ClCompile Include="src\State.cpp" />
     <ClCompile Include="src\Weapon.cpp" />
     <ClCompile Include="StreetFurniture.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

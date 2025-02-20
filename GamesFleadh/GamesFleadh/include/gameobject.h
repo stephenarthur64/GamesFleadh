@@ -26,6 +26,8 @@ public:
 	void resetAnimation();
 	void holdAnimation(int t_frameStart, int t_frameEnd);
 
+	bool m_inPlay = false;
+
 protected:
 	Model m_body;
 	Vector3 m_position;

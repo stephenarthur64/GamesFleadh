@@ -27,6 +27,7 @@ public:
 	~Game();
 	void run();
 	void init();
+	void placeObjectsFromImage(Image placementMap);
 	void render();
 	void update();
 	void loadAssets();
@@ -50,10 +51,7 @@ private:
 	Mesh heightmapMesh;
 	Model heightmapModel;
 
-	Image heightmapImageTest;
-	Texture2D heightmapTextureTest;
-	Mesh heightmapMeshTest;
-	Model heightmapModelTest;
+	Image imgPlacementTest;
 
 	Vector3 mapPosition = { -32.0f, -0.0f, -64.0f };
 	Vector3 mapPosition2 = { -32.0f, -0.0f, -128.0f };
@@ -81,6 +79,9 @@ private:
 	float leftTrigger;
 	float rightTrigger;
 
+	float keyboardX;
+	float keyboardY;
+
 	int score;
 	int activeMap;
 
@@ -89,12 +90,12 @@ private:
 	const float playerZOffsetFromCamera = 5.0f;
 	Player player;
 	Mushroom mushroom[2];
-	StreetFurniture streetF[5];
+	// StreetFurniture streetF[5];
 
 	Vector2 lowerLimit = { -1.0f, 2.0f };
 	Vector2 upperLimit = { 1.0f, 2.5f };
 
-	const int MAX_STREET_FURNITURE = 5;
+	int maxStreetFurniture = 5; // Changed from const as this will be set by terrain;
 
 	const int MAX_MUSHROOMS = 2;
 	int mushroomOnMap = 0;
@@ -128,6 +129,8 @@ private:
 	Color colorFromPosition;
 	float worldYNormalFromCol;
 	float worldYPos;
+
+	Vector3 objectPlacementTest;
 
 	BoundingBox heightMapBounds;
 
