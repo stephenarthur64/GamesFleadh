@@ -39,12 +39,12 @@ void Bullet::move()
 	}
 }
 
-void Bullet::follow()
+void Bullet::follow(Vector3 t_target)
 {
 	if (m_active)
 	{
-		distance += 0.1f;
-		m_position = Vector3MoveTowards(m_position, m_velocity, distance);
+		distance += 0.001f;
+		m_position = Vector3MoveTowards(m_position, t_target, distance);
 	}
 }
 

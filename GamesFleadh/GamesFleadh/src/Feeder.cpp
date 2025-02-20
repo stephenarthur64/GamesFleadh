@@ -163,9 +163,15 @@ void Feeder::kill()
 void Feeder::update(Vector3 t_target)
 {
 	currentState->update(this);
-	m_mudBomb.follow();
+	m_mudBomb.follow(t_target);
 
 	boom();
+
+	if (bulletTick >= 180 && t_target.z > m_position.z)
+	{
+		m_mudBomb.despawn();
+		disableShooting();
+	}
 
 	if (bulletTick >= 180)
 	{
