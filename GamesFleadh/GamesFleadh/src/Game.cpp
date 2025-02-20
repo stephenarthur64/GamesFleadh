@@ -238,6 +238,7 @@ void Game::render()
     for (int i = 0; i < maxSwarmer; i++)
     {
         swarmer[0].render();
+        swarmer[0].renderBoom(camera);
     }
 
     /*for (int i = 0; i < maxStreetFurniture; i++)
@@ -525,12 +526,20 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
             player.despawnBullet(i);
             score += 10;
         }
+        if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getBulletPositon(i), 1.0f))
+        {
+            swarmer[0].collision(true);
+            player.despawnBullet(i);
+            score += 10;
+        }
     }
 
     if (collide != 1)
     {
         mushroom[mushroomOnMap].setCollisions(false);
     }
+
+    
 }
 
 void Game::mapMove()
