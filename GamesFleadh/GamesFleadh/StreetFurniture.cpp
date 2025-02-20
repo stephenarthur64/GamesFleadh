@@ -2,7 +2,7 @@
 
 StreetFurniture::StreetFurniture()
 {
-	m_position = { 1.0f, 1.0f, -13.0f };
+	m_position = { 1.0f, 1.0f, -10.0f };
 }
 
 void StreetFurniture::rotate(int t_direction)
