@@ -1,6 +1,6 @@
-#include "Enemy.h"
+#include "Feeder.h"
 
-Enemy::Enemy()
+Feeder::Feeder()
 {
 	currentState = new IdleState;
 	m_health = 1;
@@ -12,7 +12,7 @@ Enemy::Enemy()
 	//modelAnimations = LoadModelAnimations("ASSETS/RS/animTest.glb", &animsCount);
 }
 
-void Enemy::setHitBox()
+void Feeder::setHitBox()
 {
 	m_hitbox = GetModelBoundingBox(m_body);
 	m_hitbox.min.z = m_position.z + hitboxOffsetMin;
@@ -20,7 +20,7 @@ void Enemy::setHitBox()
 	updateHitBox();
 }
 
-void Enemy::updateHitBox()
+void Feeder::updateHitBox()
 {
 	m_hitbox.min.x += m_position.x;
 	m_hitbox.min.y += m_position.y;
@@ -31,7 +31,7 @@ void Enemy::updateHitBox()
 	m_hitbox.max.z += m_position.z;
 }
 
-void Enemy::spawn(Vector3 t_position)
+void Feeder::spawn(Vector3 t_position)
 {
 	m_health = 1;
 
@@ -49,7 +49,7 @@ void Enemy::spawn(Vector3 t_position)
 	m_hitbox.max.z = t_position.z - 0.5f;
 }
 
-void Enemy::collision(bool t_collision)
+void Feeder::collision(bool t_collision)
 {
 	if (t_collision)
 	{
@@ -70,7 +70,7 @@ void Enemy::collision(bool t_collision)
 	}
 }
 
-void Enemy::init()
+void Feeder::init()
 {
 	m_body = LoadModel("ASSETS/3D/Enemy/Feeder/Feeder.glb"); //<---------- Here for model change of Feeder
 	m_yaw = 200.0f;
@@ -85,14 +85,14 @@ void Enemy::init()
 	frameRec = { 0, 0, frameWidth, frameHeight };
 }
 
-void Enemy::render()
+void Feeder::render()
 {
 	DrawModel(m_body, m_position, 0.8f, m_colour);
 	DrawBoundingBox(m_hitbox, GREEN);
 	m_mudBomb.render();
 }
 
-void Enemy::renderBoom(Camera &t_camera)
+void Feeder::renderBoom(Camera &t_camera)
 {
 	if (active)
 	{
@@ -101,23 +101,23 @@ void Enemy::renderBoom(Camera &t_camera)
 	}
 }
 
-void Enemy::shootBullet()
+void Feeder::shootBullet()
 {
 	bulletTick = 0;
 	//m_mudBomb.spawn(m_position, 0.3f, {0,0,1});
 }
 
-void Enemy::despawnBullet()
+void Feeder::despawnBullet()
 {
 	m_mudBomb.despawn();
 }
 
-void Enemy::disableShooting()
+void Feeder::disableShooting()
 {
 	bulletTick = -1;
 }
 
-void Enemy::boom()
+void Feeder::boom()
 {
 	if (active)
 	{
@@ -144,7 +144,7 @@ void Enemy::boom()
 	}
 }
 
-void Enemy::kill()
+void Feeder::kill()
 {
 	m_hitbox.min.x = 1000.0f;
 	m_hitbox.max.x = 1001.0f;
@@ -159,7 +159,7 @@ void Enemy::kill()
 	//m_position.x = 1000.0f;
 }
 
-void Enemy::update()
+void Feeder::update()
 {
 	currentState->update(this);
 	//m_mudBomb.move({1,0,0});
@@ -193,6 +193,6 @@ void Enemy::update()
 	}
 }
 
-void Enemy::rotate(int t_direction)
+void Feeder::rotate(int t_direction)
 {
 }

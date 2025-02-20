@@ -8,10 +8,10 @@
 #define NUM_FRAMES_PER_LINE     5
 #define NUM_LINES               5
 
-class Enemy : public GameObject
+class Feeder : public GameObject
 {
 public:
-	Enemy();
+	Feeder();
 
 	void setHitBox();
 	void updateHitBox();

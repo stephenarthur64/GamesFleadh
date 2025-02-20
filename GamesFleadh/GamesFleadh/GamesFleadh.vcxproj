@@ -24,7 +24,7 @@
     <ClInclude Include="include\ConcreteCommands.h" />
     <ClInclude Include="include\DamageState.h" />
     <ClInclude Include="include\DeathState.h" />
-    <ClInclude Include="include\Enemy.h" />
+    <ClInclude Include="include\Feeder.h" />
     <ClInclude Include="include\events.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\gameobject.h" />
@@ -48,7 +48,7 @@
     <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\DamageState.cpp" />
     <ClCompile Include="src\DeathState.cpp" />
-    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\Feeder.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\gameobject.cpp" />
     <ClCompile Include="src\IdleState.cpp" />

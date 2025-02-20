@@ -13,35 +13,35 @@ void Mushroom::rotate(int t_direction)
 void Mushroom::init()
 {
 	m_body = LoadModel("ASSETS/3D/StreetFurniture/Mushrooms/DefaultMushroom.glb"); // <--------- If new model, put here
-	enemy.init();
+	feeder.init();
 }
 
 void Mushroom::render()
 {
 	DrawModel(m_body, m_position, 0.5f, m_colour);
-	enemy.render();
+	feeder.render();
 }
 
 void Mushroom::renderBoom(Camera& t_camera)
 {
-	enemy.renderBoom(t_camera);
+	feeder.renderBoom(t_camera);
 }
 
 void Mushroom::playerDetected(bool t_spotted)
 {
 	if (t_spotted)
 	{
-		enemy.shootBullet();
+		feeder.shootBullet();
 	}
 	else
 	{
-		enemy.disableShooting();
+		feeder.disableShooting();
 	}
 }
 
 void Mushroom::update()
 {
-	enemy.update();
+	feeder.update();
 }
 
 void Mushroom::spawn(Vector3 t_pos)
@@ -49,7 +49,7 @@ void Mushroom::spawn(Vector3 t_pos)
 	m_position = t_pos;
 }
 
-void Mushroom::spawnEnemy()
+void Mushroom::spawnFeeder()
 {
-	enemy.spawn(m_position);
+	feeder.spawn(m_position);
 }

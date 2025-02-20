@@ -1,6 +1,6 @@
 #pragma once
 #include "gameobject.h"
-#include "Enemy.h"
+#include "Feeder.h"
 #include "Globals.h"
 #include <string>
 
@@ -26,6 +26,6 @@ public:
 	void setHitBox();
 
 private:
-	Enemy* m_feeder{}; // Starts as null pointer
+	Feeder* m_feeder{}; // Starts as null pointer
 };
 

@@ -11,7 +11,7 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 
 	if (t_hasFeeder)
 	{
-		m_feeder = new Enemy;
+		m_feeder = new Feeder;
 		m_feeder->init();
 	}
 }
