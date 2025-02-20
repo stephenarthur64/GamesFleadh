@@ -2,6 +2,7 @@
 #include "gameobject.h"
 #include "IdleState.h"
 #include "Globals.h"
+#include <raymath.h>
 
 class Swarmer :
     public GameObject
@@ -20,6 +21,7 @@ public:
 	void hover();
 
 	void checkDistanceFromPlayer(Vector3 t_playerPos);
+	void chasePlayer();
 
 private:
 	int spottedTick = 0;
@@ -30,5 +32,10 @@ private:
 	float m_speed;
 	Direction m_direction;
 	bool m_spotted;
+
+	Vector3 m_target;
+	Vector3 m_velocity;
+
+	const float MAX_DISTANCE;
 };
 

@@ -40,6 +40,7 @@
     <ClInclude Include="include\PlayerSpottedState.h" />
     <ClInclude Include="include\ShootState.h" />
     <ClInclude Include="include\State.h" />
+    <ClInclude Include="include\StateChase.h" />
     <ClInclude Include="include\StreetFurniture.h" />
     <ClInclude Include="include\Swarmer.h" />
     <ClInclude Include="include\Weapon.h" />
@@ -65,6 +66,7 @@
     <ClCompile Include="src\PlayerSpottedState.cpp" />
     <ClCompile Include="src\ShootState.cpp" />
     <ClCompile Include="src\State.cpp" />
+    <ClCompile Include="src\StateChase.cpp" />
     <ClCompile Include="src\Swarmer.cpp" />
     <ClCompile Include="src\Weapon.cpp" />
     <ClCompile Include="StreetFurniture.cpp" />

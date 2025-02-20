@@ -1,6 +1,6 @@
 #include "Swarmer.h"
 
-Swarmer::Swarmer() : m_speed(0.1f), m_direction(NORTH), m_spotted(false)
+Swarmer::Swarmer() : m_speed(0.1f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(6.0f)
 {
 	currentState = new IdleState;
 	m_position = { -2.0f, 1.0f, -12.0f };
@@ -38,7 +38,8 @@ void Swarmer::update()
 
 	if (spottedTick >= 48)
 	{
-		//m_spotted = false;
+		handleInput(Event::EVENT_CHASE);
+		chasePlayer();
 	}
 
 	if (!m_spotted)
@@ -92,12 +93,22 @@ void Swarmer::checkDistanceFromPlayer(Vector3 t_playerPos)
 
 	float distance = sqrtf(xDistance + zDistance);
 
-	if (distance <= 2.0f)
+	if (distance <= MAX_DISTANCE)
 	{
+		m_target = t_playerPos;
 		m_spotted = true;
 	}
 	else
 	{
 		m_spotted = false;
 	}
+}
+
+void Swarmer::chasePlayer()
+{
+	m_velocity = m_target - m_position;
+	m_velocity = Vector3Normalize(m_velocity);
+	m_velocity *= m_speed;
+
+	m_position += m_velocity;
 }
