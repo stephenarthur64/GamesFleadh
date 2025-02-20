@@ -31,6 +31,8 @@ public:
 	virtual void rotate(int t_direction) override;
 	virtual void init() override;
 	virtual void render() override;
+	Rectangle getHealthBar() { return m_healthbar; }
+
 	void update();
 
 	void resetToOrigin();
@@ -52,5 +54,6 @@ private:
 	const int MAX_BULLETS = 10;
 
 	Quaternion crosshairRotation;
+	Rectangle m_healthbar;
 };
 

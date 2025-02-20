@@ -39,6 +39,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
+    ToggleFullscreen();
     InitAudioDevice();
 
     // Define our custom camera to look into our 3d world
@@ -265,7 +266,9 @@ void Game::render()
     DrawGrid(20, 1.0f);
     EndMode3D();
 
+    DrawRectangleRec(player.getHealthBar(), GREEN);
     DrawTexture(healthBar, 0, 1000, WHITE);
+   
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);

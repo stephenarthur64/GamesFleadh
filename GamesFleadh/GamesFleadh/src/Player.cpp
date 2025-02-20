@@ -78,6 +78,11 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
+	m_healthbar.x = 40;
+	m_healthbar.y = 1015;
+	m_healthbar.width = 450;
+	m_healthbar.height = 40;
+
 	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].init();
