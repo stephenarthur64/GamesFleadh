@@ -7,6 +7,8 @@ enum Direction {NORTH, SOUTH, EAST, WEST};
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 
+const Color GREEN_HILL = { 147, 204, 147, 255 };
+
 
 const std::string FURNITURE_BATCH_MUSH = "ASSETS/3D/StreetFurniture/Mushrooms/BatchMushroom.glb";
 const std::string FURNITURE_BUMPY_MUSH = "ASSETS/3D/StreetFurniture/Mushrooms/BumpyMushroom.glb";

@@ -51,81 +51,35 @@ void Game::init()
     camera.projection = CAMERA_PERSPECTIVE;     // Camera projection type
 
     loadAssets();
+
+    m_tileCurrent = 0;
+    m_tileNext = 1; // For finshed version, should be next tile in collection, eg. '1'
+
+    m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true);
+    m_terrainTileCollection[m_tileNext].tileIsCurrent(false);
     
     setupSkybox();
     
     gamepadInit();
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-}
 
-void Game::placeObjectsFromImage(Image placementMap)
-{
-    // 626 111
-    // Color testCol = GetImageColor(placementMap, 626, 111);
-
-    int mushroomCount = 0;
-
-    for (int u = 0; u < placementMap.width; u++)
-    {
-        for (int v = 0; v < placementMap.height; v++)
-        {
-            Color col = GetImageColor(placementMap, u, v);
-
-            if (col.r == 255 && col.b == 0 && col.g == 0) // Possibly early out here
-            {
-                std::cout << "Found red pixel.";
-
-                Color heightFromCol = GetImageColor(heightmapImage, u, v);
-
-                float placementTexUcoord = static_cast<float>(u);
-                float placementColYcoord = static_cast<float>(heightFromCol.r);
-                float placementTexVcoord = static_cast<float>(v);
-
-                float placeWorldNormX = placementTexUcoord / heightmapImage.width;
-                float placeWorldNormY = placementColYcoord / 255.0f;
-                float placeWorldNormZ = placementTexVcoord / heightmapImage.height;
-
-                float placeWorldCoordX = (placeWorldNormX * mapSize.x) - abs(mapPosition.x);
-                float placeWorldCoordY = placeWorldNormY * mapSize.y;
-                float placeWorldCoordZ = ((placeWorldNormZ * mapSize.y) - abs(mapPosition.z) - SeemingMagicalOffset); // Not sure I need the last offset for objects
-
-                //objectPlacementTest = { placeWorldCoordX, placeWorldCoordY, placeWorldCoordZ };
-                Vector3 mushroomOrigin = { placeWorldCoordX, placeWorldCoordY, placeWorldCoordZ };
-
-                if (mushroomCount < MAX_MUSHROOMS)
-                {
-                    mushroom[mushroomCount].init();
-                    //if (mushroomCount != mushroomOnMap)
-                    //{
-                        mushroom[mushroomCount].spawn(mushroomOrigin);
-                    //}
-                    mushroom[mushroomCount].spawnEnemy();
-                    mushroomCount++;
-                }
-                mushroom[0].playerDetected(true);
-
-                /*for (int i = 0; i < MAX_MUSHROOMS; i++)
-                {
-                    mushroom[i].init();
-                    if (i != mushroomOnMap)
-                    {
-                        mushroom[i].spawn({ -1.0f, 2.0f, -79.0f });
-                    }
-                    mushroom[i].spawnEnemy();
-                }*/
-                
-            }
-        }
-    }
+    m_gameIsBeginning = false;
 }
 
 void Game::loadAssets()
 {
-    imgPlacementTest = LoadImage("ASSETS/2D/Heightmaps/test1_EnemyPlacement01001RS.png");
+    //imgPlacementTest = LoadImage("ASSETS/2D/Heightmaps/test1_EnemyPlacement01001RS.png");
 
-    heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
-    heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
+    //heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
+    //heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
+
+    // There should be multiples of adding tiles.
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01));
+    //m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true);
+    //m_terrainTileCollection[m_tileNext].tileIsCurrent(false);
+    
 
     healthBar = LoadTexture("ASSETS/2D/UI/HealthBar.png");
 
@@ -135,36 +89,15 @@ void Game::loadAssets()
     size = { source.width / source.height, 1.0f };
     origin = Vector2Scale(size, 0.5f);
 
-    heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
-    heightmapModel = LoadModelFromMesh(heightmapMesh);         // Load model from generated mesh
+    //heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
+    //heightmapModel = LoadModelFromMesh(heightmapMesh);         // Load model from generated mesh
 
-    heightMapBounds = GetModelBoundingBox(heightmapModel); // Getting data for collision
+    //heightMapBounds = GetModelBoundingBox(heightmapModel); // Getting data for collision
 
-    heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
-
-    //mapPosition = { -32.0f, -0.0f, -64.0f };          // Define model position
-    //mapPosition2 = { -32.0f, -0.0f, -128.0f };
+    //heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
     
     player.init();
     billPositionStatic = { 2.0f,2.0f,3.0f };
-
-    // placeObjectsFromImage(imgPlacementTest);
-
-    /*for (int i = 0; i < maxStreetFurniture; i++)
-    {
-        streetF[i].init();
-    }*/
-
-    for (int i = 0; i < MAX_MUSHROOMS; i++)
-    {
-        mushroom[i].init();
-        if (i != mushroomOnMap)
-        {
-            mushroom[i].spawn({ -1.0f, 2.0f, -79.0f });
-        }
-        mushroom[i].spawnEnemy();
-    }
-    mushroom[0].playerDetected(true);
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
@@ -205,8 +138,6 @@ void Game::render()
     ClearBackground({ RAYWHITE });
 
     BeginMode3D(camera);
-    
-   
 
     // SKYBOX RENDER 
     rlDisableBackfaceCulling(); // We are inside the cube, we need to disable backface culling!
@@ -220,23 +151,14 @@ void Game::render()
 
     DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
 
-    DrawModel(heightmapModel, mapPosition, 1.0f, { 147, 204, 147, 255 });
-    DrawModel(heightmapModel, mapPosition2, 1.0f, { 147, 204, 147, 255 });
-    
-    
-    for (int i = 0; i < MAX_MUSHROOMS; i++)
+    for (Tile tileToDraw : m_terrainTileCollection)
     {
-        mushroom[i].render();
-        mushroom[i].renderBoom(camera);
+        tileToDraw.render();
     }
 
-    /*for (int i = 0; i < maxStreetFurniture; i++)
-    {
-        streetF[i].render();
-    }*/
+    //DrawModel(heightmapModel, mapPosition, 1.0f, { 147, 204, 147, 255 });
+    //DrawModel(heightmapModel, mapPosition2, 1.0f, { 147, 204, 147, 255 });
     
-    
-
     //DrawSphereWires(Vector3{ 0.0f, 0.0f, 0.0f }, 0.25f, 8, 8, ORANGE); // Marks origin.
     //DrawSphereWires(Vector3{ 0.0f, 4.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
     //DrawSphereWires(Vector3{ 0.0f, 8.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
@@ -259,13 +181,13 @@ void Game::render()
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
-    for (int i = 0; i < MAX_MUSHROOMS; i++)
+    /*for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         if (mushroom[i].isActive())
         {
             DrawText(TextFormat("FEEDER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
         }
-    }
+    }*/
     DrawFPS(10, 30);
 
     /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
@@ -294,43 +216,43 @@ void Game::update()
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
     distanceStatic += 2.0f;
     distanceRotating = Vector3Distance(camera.position, billPositionRotating);
-    for (int i = 0; i < MAX_MUSHROOMS; i++)
+    /*for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         mushroom[i].update();
-    }
+    }*/
     mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
-    // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE (Probably move into collision function)
-    // Get Normalised Coord
-    worldNormalX = (player.getPosition().x + abs(mapPosition.x)) / mapSize.x;
-    worldNormalZ = ((player.getPosition().z + SeemingMagicalOffset) + abs(mapPosition.z)) / mapSize.z;
-    texUcoord = worldNormalX * heightmapImage.width;
-    texVcoord = worldNormalZ * heightmapImage.height;
+    //// RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE (Probably move into collision function)
+    //// Get Normalised Coord
+    //worldNormalX = (player.getPosition().x + abs(mapPosition.x)) / mapSize.x;
+    //worldNormalZ = ((player.getPosition().z + SeemingMagicalOffset) + abs(mapPosition.z)) / mapSize.z;
+    //texUcoord = worldNormalX * heightmapImage.width;
+    //texVcoord = worldNormalZ * heightmapImage.height;
 
-    texUcoord = Clamp(texUcoord, 0, heightmapImage.height - 0.001f); // Avoids OOBounds error
-    texVcoord = Clamp(texVcoord, 0, heightmapImage.width - 0.001f);
+    //texUcoord = Clamp(texUcoord, 0, heightmapImage.height - 0.001f); // Avoids OOBounds error
+    //texVcoord = Clamp(texVcoord, 0, heightmapImage.width - 0.001f);
 
-    colorFromPosition = GetImageColor(heightmapImage, texUcoord, texVcoord);
-    worldYNormalFromCol = colorFromPosition.r / 255.0f;
-    worldYPos = worldYNormalFromCol * mapSize.y;
+    //colorFromPosition = GetImageColor(heightmapImage, texUcoord, texVcoord);
+    //worldYNormalFromCol = colorFromPosition.r / 255.0f;
+    //worldYPos = worldYNormalFromCol * mapSize.y;
 
-    if (player.getPosition().y <= worldYPos)
-    {
-        player.collision(true);
-        //std::cout << "\nColliding!\n";
-    }
-    else
-    {
-        player.collision(false);
-        //std::cout << "\nNot Colliding!\n";
-    }// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
+    //if (player.getPosition().y <= worldYPos)
+    //{
+    //    player.collision(true);
+    //    //std::cout << "\nColliding!\n";
+    //}
+    //else
+    //{
+    //    player.collision(false);
+    //    //std::cout << "\nNot Colliding!\n";
+    //}// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
 
     player.updateBullet();
     camera.position = camPos;
-    checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
+    // checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
     player.update();
     cameraMove();
-    UpdateCamera(&camera, CAMERA_PERSPECTIVE);
+    UpdateCamera(&camera, CAMERA_FREE);
 
 }
 
@@ -405,7 +327,7 @@ void Game::inputControl()
     if (IsKeyReleased(KEY_X))
     {
         std::cout << "\nPlacing objects.\n";
-        placeObjectsFromImage(imgPlacementTest);
+        // placeObjectsFromImage(imgPlacementTest);
     }
     if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
@@ -472,6 +394,11 @@ void Game::gamepadInit()
 
 }
 
+void Game::gameBegins()
+{
+    
+}
+
 void Game::gamepadUpdate()
 {
 
@@ -503,7 +430,7 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
     player.collision(CheckCollisionBoxes(t_a, t_b));   
 
-    for (int i = 0; i < player.getBulletMax(); i++)
+    /*for (int i = 0; i < player.getBulletMax(); i++)
     {
         if (CheckCollisionBoxSphere(mushroom[mushroomOnMap].getEnemyHitbox(), player.getBulletPositon(i), 1.0f))
         {
@@ -517,40 +444,51 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
     if (collide != 1)
     {
         mushroom[mushroomOnMap].setCollisions(false);
-    }
+    }*/
 }
 
 void Game::mapMove()
 {
-    float newMapX = mapPosition.x;
-    float newMapX2 = mapPosition2.x;
-    const Vector3 mainMap = { -32.0f, -0.0f, -64.0f };
-    const Vector3 nextMap = { -32.0f, -0.0f, -128.0f };
+    if (player.getPosition().z > -64.0f - playerZOffsetFromCamera) return;
+
+    m_tileCurrent = m_tileNext;
+    m_tileNext = rand() % m_terrainTileCollection.size();
+
+    for (Tile item : m_terrainTileCollection)
+    {
+        item.setInPlay(false);
+    }
+
+    m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true);
+    m_terrainTileCollection[m_tileNext].tileIsCurrent(false);
+
+    //float newMapX = mapPosition.x;
+    //float newMapX2 = mapPosition2.x;
+    //const Vector3 mainMap = { -32.0f, -0.0f, -64.0f };
+    //const Vector3 nextMap = { -32.0f, -0.0f, -128.0f };
     float mapLength = 64.0f;
     
-    if (player.getPosition().z > -64.0f -playerZOffsetFromCamera) return;
+    //if(activeMap == 1)
+    //{
+    //    mapPosition2 = mainMap; // These should possibly be constants
+    //    mapPosition = nextMap;
+    //    activeMap = 2;
+    //}
+    //else if (activeMap == 2)
+    //{
+    //    mapPosition = mainMap;
+    //    mapPosition2 = nextMap;
+    //    activeMap = 1;
+    //} 
 
-    if(activeMap == 1)
-    {
-        mapPosition2 = mainMap; // These should possibly be constants
-        mapPosition = nextMap;
-        activeMap = 2;
-    }
-    else if (activeMap == 2)
-    {
-        mapPosition = mainMap;
-        mapPosition2 = nextMap;
-        activeMap = 1;
-    } 
-
-    mushroomOnMap = 1;
+    /*mushroomOnMap = 1;
     mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });
     mushroom[1].spawnEnemy();
     mushroom[1].playerDetected(true);
 
     mushroom[0].spawn({ -1.0f, 2.0f, -mapLength - 15.0f});
     mushroom[0].spawnEnemy();
-    mushroom[0].playerDetected(false);
+    mushroom[0].playerDetected(false);*/
 
     camPos.z = 0.0f;
 }

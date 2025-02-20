@@ -25,6 +25,8 @@ public:
 
 private:
 	Image m_heightMap;
+	Texture2D m_heightMapTex;
+	Mesh m_heightMapMesh;
 	Image m_furnitureMap;
 	// Model m_tileModel;
 	std::vector<StreetFurniture> m_furnitureVec;

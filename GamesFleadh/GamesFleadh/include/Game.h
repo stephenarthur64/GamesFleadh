@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include "raymath.h"
 #include "rlgl.h" // RS: Added for skybox
+#include <vector>
 
 // RS: Again, added for skybox - shader for skybox depends on platform.
 #if defined(PLATFORM_DESKTOP)
@@ -19,6 +20,7 @@
 #include "Player.h"
 #include "Mushroom.h"
 #include "StreetFurniture.h"
+#include "Tile.h"
 
 class Game
 {
@@ -35,7 +37,12 @@ public:
 
 	void inputControl();
 	void gamepadInit();
+
+	void gameBegins();
+
 	void gamepadUpdate();
+
+
 	void checkCollisions(BoundingBox t_a, BoundingBox t_b);
 
 	void mapMove();
@@ -89,7 +96,7 @@ private:
 
 	const float playerZOffsetFromCamera = 5.0f;
 	Player player;
-	Mushroom mushroom[2];
+	// Mushroom mushroom[2];
 	// StreetFurniture streetF[5];
 
 	Vector2 lowerLimit = { -1.0f, 2.0f };
@@ -97,8 +104,8 @@ private:
 
 	int maxStreetFurniture = 5; // Changed from const as this will be set by terrain;
 
-	const int MAX_MUSHROOMS = 2;
-	int mushroomOnMap = 0;
+	//const int MAX_MUSHROOMS = 2;
+	//int mushroomOnMap = 0;
 
 	Texture2D bill;
 	Vector3 billPositionStatic;
@@ -135,5 +142,14 @@ private:
 	BoundingBox heightMapBounds;
 
 	Music bgm;
+
+	std::vector<Tile> m_terrainTileCollection;
+
+	bool m_gameIsBeginning = true;
+
+	int m_tileCurrent = 0;
+
+	int m_tileNext = 0;
+
 };
 

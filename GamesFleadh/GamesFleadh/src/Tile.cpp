@@ -10,6 +10,8 @@ Tile::Tile(std::string t_heightMapAddress = "", std::string t_furnitureMapAddres
 		// If no, generate model
 		Mesh heightmapMesh = GenMeshHeightmap(m_heightMap, MAP_SIZE);
 		m_body = LoadModelFromMesh(heightmapMesh);
+        m_heightMapTex = LoadTextureFromImage(m_heightMap);
+        m_body.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_heightMapTex; // Set map diffuse texture
 	}
 	else
 	{	// If yes, load model
@@ -36,7 +38,7 @@ void Tile::render()
 {
 	if (!m_inPlay) return;
 
-	DrawModel(m_body, m_position, 1.0f, m_colour);
+	DrawModel(m_body, m_position, 1.0f, GREEN_HILL); // m_colour - object colour should be used here
 	
     // Render furniture?
     for (StreetFurniture item : m_furnitureVec)
@@ -70,6 +72,8 @@ void Tile::tileIsCurrent(bool t_current)
 		m_position = MAP_POS_NEXT;
 		// Pass position to furniture here
 	}
+
+    setInPlay(true);
 }
 
 /// <summary>
