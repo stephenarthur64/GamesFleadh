@@ -34,6 +34,7 @@ public:
 	Rectangle getHealthBar() { return m_healthbar; }
 
 	void update();
+	void updateHealthbar();
 
 	void resetToOrigin();
 	void faceCrosshair(Vector3 t_crosshairPos);
@@ -55,5 +56,7 @@ private:
 
 	Quaternion crosshairRotation;
 	Rectangle m_healthbar;
+
+	const float HEALTHBAR_MAX;
 };
 

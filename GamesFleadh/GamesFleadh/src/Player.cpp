@@ -1,9 +1,10 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.2f),  bulletCount(0)
+Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450)
 {
 	currentState = new IdleState;
+	m_health = 100;
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Player/Buzzz/Buzz.glb", &animsCount);
@@ -80,7 +81,7 @@ void Player::init()
 
 	m_healthbar.x = 40;
 	m_healthbar.y = 1015;
-	m_healthbar.width = 450;
+	m_healthbar.width = HEALTHBAR_MAX;
 	m_healthbar.height = 40;
 
 	for (int i = 0; i < getBulletMax(); i++)
@@ -103,7 +104,14 @@ void Player::render()
 void Player::update()
 {
 	currentState->update(this);
+	updateHealthbar();
 	//m_weapon.update(m_position);
+}
+
+void Player::updateHealthbar()
+{
+	float onePercent = HEALTHBAR_MAX / 100;
+	m_healthbar.width = m_health * onePercent;
 }
 
 void Player::resetToOrigin()
