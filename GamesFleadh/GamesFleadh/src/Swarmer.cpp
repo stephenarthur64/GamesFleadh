@@ -1,6 +1,6 @@
 #include "Swarmer.h"
 
-Swarmer::Swarmer() : m_speed(0.1f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(2.0f)
+Swarmer::Swarmer() : m_speed(0.1f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(6.0f)
 {
 	currentState = new IdleState;
 	m_health = 1;
@@ -169,17 +169,26 @@ void Swarmer::hover()
 
 void Swarmer::checkDistanceFromPlayer(Vector3 t_playerPos)
 {
-	float xDistance = (t_playerPos.x - m_position.x) * (t_playerPos.x - m_position.x);
-	float zDistance = (t_playerPos.z - m_position.z) * (t_playerPos.z - m_position.z);
+	if (!m_spotted)
+	{
+		m_target = t_playerPos;
+	}
+
+	float xDistance = (m_target.x - m_position.x) * (m_target.x - m_position.x);
+	float zDistance = (m_target.z - m_position.z) * (m_target.z - m_position.z);
 
 	float distance = sqrtf(xDistance + zDistance);
 
 	if (distance <= MAX_DISTANCE)
 	{
-		m_target = t_playerPos;
 		m_spotted = true;
 	}
 	else
+	{
+		m_spotted = false;
+	}
+
+	if (distance <= 0.5f)
 	{
 		m_spotted = false;
 	}
