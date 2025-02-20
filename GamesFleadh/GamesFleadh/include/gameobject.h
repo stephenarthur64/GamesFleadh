@@ -26,7 +26,7 @@ public:
 	void resetAnimation();
 	void holdAnimation(int t_frameStart, int t_frameEnd);
 
-	bool m_exists = false;
+	bool m_inPlay = false;
 
 protected:
 	Model m_body;

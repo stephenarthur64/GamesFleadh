@@ -150,10 +150,10 @@ void Game::loadAssets()
 
     // placeObjectsFromImage(imgPlacementTest);
 
-    for (int i = 0; i < maxStreetFurniture; i++)
+    /*for (int i = 0; i < maxStreetFurniture; i++)
     {
         streetF[i].init();
-    }
+    }*/
 
     for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
@@ -230,10 +230,10 @@ void Game::render()
         mushroom[i].renderBoom(camera);
     }
 
-    for (int i = 0; i < maxStreetFurniture; i++)
+    /*for (int i = 0; i < maxStreetFurniture; i++)
     {
         streetF[i].render();
-    }
+    }*/
     
     
 
