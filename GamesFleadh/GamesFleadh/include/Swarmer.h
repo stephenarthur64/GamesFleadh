@@ -26,6 +26,8 @@ public:
 	void collision(bool t_collide);
 	void kill();
 
+	bool isActive() { return active; }
+
 	void update();
 	void playerSpotted(bool t_spotted);
 	void hover();

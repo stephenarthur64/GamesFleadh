@@ -113,7 +113,7 @@ void Swarmer::update()
 
 	playerSpotted(m_spotted);
 
-	if (spottedTick >= 48)
+	if (spottedTick >= 48 && m_health > 0)
 	{
 		handleInput(Event::EVENT_CHASE);
 		chasePlayer();
