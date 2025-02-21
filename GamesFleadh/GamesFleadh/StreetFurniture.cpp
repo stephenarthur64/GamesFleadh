@@ -38,7 +38,7 @@ void StreetFurniture::render()
 {
 	if (!m_inPlay) return; // Not in gameplay: early out.
 
-	std::cout << "Item in play set to: " << m_inPlay << "\n";
+	// std::cout << "Item in play set to: " << m_inPlay << "\n";
 
 	DrawModel(m_body, m_position, 0.5f, WHITE);
 	DrawBoundingBox(m_hitbox, BLUE);
@@ -69,6 +69,7 @@ void StreetFurniture::playerDetected(bool t_spotted)
 
 void StreetFurniture::update()
 {
+	std::cout << "I am updating!\n";
 	if (m_feeder == nullptr) return;
 	m_feeder->update();
 }

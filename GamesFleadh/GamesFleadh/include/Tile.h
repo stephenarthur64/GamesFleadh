@@ -21,6 +21,7 @@ public:
 	void tileIsCurrent(bool t_current); 
 
 	bool isColliding(Vector3 t_collider);
+	bool checkFurnitureItemsCollision(BoundingBox t_player);
 
 	std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
 

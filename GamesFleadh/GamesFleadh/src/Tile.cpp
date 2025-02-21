@@ -3,9 +3,9 @@
 Tile::Tile(std::string t_heightMapAddress = "", std::string t_furnitureMapAddress = "", 
     std::string t_tileModelAddress = "", std::string t_diffuseMapAddress = "")
 {
-	m_heightMapImage = LoadImage(t_heightMapAddress.c_str());
+	m_heightMapImage    = LoadImage(t_heightMapAddress.c_str());
 	m_furnitureMapImage = LoadImage(t_furnitureMapAddress.c_str());
-    m_diffuseMapImage = LoadImage(t_diffuseMapAddress.c_str()); // This is hardcoded.
+    m_diffuseMapImage   = LoadImage(t_diffuseMapAddress.c_str()); // This is hardcoded.
 	
 	if (t_tileModelAddress == "")// Do we have a pre-built model?
 	{// If no, generate model
@@ -59,7 +59,7 @@ void Tile::setInPlay(bool t_inPlay)
 
     for (StreetFurniture& item : m_furnitureVec)
     {
-        std::cout << "Setting item to: " << t_inPlay << "\n";
+        //std::cout << "Setting item to: " << t_inPlay << "\n";
         item.m_inPlay = t_inPlay;
     }
 }
@@ -127,6 +127,18 @@ bool Tile::isColliding(Vector3 t_collider)
     }// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
 
 	return false;
+}
+
+bool Tile::checkFurnitureItemsCollision(BoundingBox t_player)
+{
+    bool playerHasCollided = false;
+
+    for (StreetFurniture& item : m_furnitureVec)
+    {
+        // item.
+    }
+
+    return playerHasCollided;
 }
 
 void Tile::update()

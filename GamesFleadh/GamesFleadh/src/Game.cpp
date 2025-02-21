@@ -223,9 +223,17 @@ void Game::update()
     player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL));
     player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL));
     
+    m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
+    // checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
+
+    for (Tile& item : m_terrainTileCollection)
+    {
+        item.update();
+    }
+
     player.updateBullet();
     camera.position = camPos;
-    // checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
+    
     player.update();
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
@@ -428,7 +436,7 @@ void Game::mapMove()
         m_tileNext = rand() % m_terrainTileCollection.size();
     }
     
-    std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
+    // std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
 
     for (Tile& item : m_terrainTileCollection)
     {
