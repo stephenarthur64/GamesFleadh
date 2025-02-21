@@ -21,6 +21,7 @@ Game::~Game()
     UnloadShader(skybox.materials[0].shader);// Skybox memory management
     UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
     UnloadModel(skybox);
+    
     UnloadMusicStream(bgm);
     CloseAudioDevice();
 }
@@ -51,13 +52,15 @@ void Game::init()
     camera.projection = CAMERA_PERSPECTIVE;     // Camera projection type
 
     loadAssets();
-
-    m_tileCurrent = 0;
-    m_tileNext = 1; // For finshed version, should be next tile in collection, eg. '1'
-
-    m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true);
-    m_terrainTileCollection[m_tileNext].tileIsCurrent(false);
     
+    m_tileCurrent = 0; // Initialise index for m_terrainTileCollection
+    m_tileNext = 1;
+
+    m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true); // Sets tile position in world
+    m_terrainTileCollection[m_tileNext].tileIsCurrent(false); // Sets tile position to 'next'
+    
+    std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
+
     setupSkybox();
     
     gamepadInit();
@@ -72,13 +75,12 @@ void Game::loadAssets()
     //imgPlacementTest = LoadImage("ASSETS/2D/Heightmaps/test1_EnemyPlacement01001RS.png");
 
     //heightmapImage = LoadImage("ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png");
-    //heightmapTexture = LoadTextureFromImage(heightmapImage);        // Convert image to texture (VRAM)
+    //heightmapTexture = LoadTextureFromImage(heightmapImage);        
 
-    // There should be multiples of adding tiles.
-    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01));
-    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01));
-    //m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true);
-    //m_terrainTileCollection[m_tileNext].tileIsCurrent(false);
+    // There should be a line below for every tile in the game (currently has a duplicate tile)
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
+
     
 
     healthBar = LoadTexture("ASSETS/2D/UI/HealthBar.png");
@@ -88,14 +90,7 @@ void Game::loadAssets()
     billUp = { 0.0f, 1.0f, 0.0f };
     size = { source.width / source.height, 1.0f };
     origin = Vector2Scale(size, 0.5f);
-
-    //heightmapMesh = GenMeshHeightmap(heightmapImage, mapSize); // Generate heightmap mesh (RAM and VRAM)
-    //heightmapModel = LoadModelFromMesh(heightmapMesh);         // Load model from generated mesh
-
-    //heightMapBounds = GetModelBoundingBox(heightmapModel); // Getting data for collision
-
-    //heightmapModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = heightmapTexture; // Set map diffuse texture
-    
+        
     player.init();
     billPositionStatic = { 2.0f,2.0f,3.0f };
 
@@ -151,7 +146,9 @@ void Game::render()
 
     DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
 
-    for (Tile tileToDraw : m_terrainTileCollection)
+    
+
+    for (Tile& tileToDraw : m_terrainTileCollection)
     {
         tileToDraw.render();
     }
@@ -222,37 +219,16 @@ void Game::update()
     }*/
     mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
-    //// RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE (Probably move into collision function)
-    //// Get Normalised Coord
-    //worldNormalX = (player.getPosition().x + abs(mapPosition.x)) / mapSize.x;
-    //worldNormalZ = ((player.getPosition().z + SeemingMagicalOffset) + abs(mapPosition.z)) / mapSize.z;
-    //texUcoord = worldNormalX * heightmapImage.width;
-    //texVcoord = worldNormalZ * heightmapImage.height;
-
-    //texUcoord = Clamp(texUcoord, 0, heightmapImage.height - 0.001f); // Avoids OOBounds error
-    //texVcoord = Clamp(texVcoord, 0, heightmapImage.width - 0.001f);
-
-    //colorFromPosition = GetImageColor(heightmapImage, texUcoord, texVcoord);
-    //worldYNormalFromCol = colorFromPosition.r / 255.0f;
-    //worldYPos = worldYNormalFromCol * mapSize.y;
-
-    //if (player.getPosition().y <= worldYPos)
-    //{
-    //    player.collision(true);
-    //    //std::cout << "\nColliding!\n";
-    //}
-    //else
-    //{
-    //    player.collision(false);
-    //    //std::cout << "\nNot Colliding!\n";
-    //}// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
-
+    player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT));
+    player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL));
+    player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL));
+    
     player.updateBullet();
     camera.position = camPos;
     // checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
     player.update();
     cameraMove();
-    UpdateCamera(&camera, CAMERA_FREE);
+    UpdateCamera(&camera, CAMERA_PERSPECTIVE);
 
 }
 
@@ -318,11 +294,6 @@ void Game::inputControl()
     {
         player.collision(true);
     }
-    else
-    {
-        //player.collision(false);
-    }
-
 
     if (IsKeyReleased(KEY_X))
     {
@@ -391,7 +362,6 @@ void Game::gamepadInit()
     rightStickDeadzoneY = 0.1f;
     leftTriggerDeadzone = -0.9f;
     rightTriggerDeadzone = -0.9f;
-
 }
 
 void Game::gameBegins()
@@ -452,9 +422,15 @@ void Game::mapMove()
     if (player.getPosition().z > -64.0f - playerZOffsetFromCamera) return;
 
     m_tileCurrent = m_tileNext;
-    m_tileNext = rand() % m_terrainTileCollection.size();
 
-    for (Tile item : m_terrainTileCollection)
+    while (m_tileNext == m_tileCurrent)
+    {
+        m_tileNext = rand() % m_terrainTileCollection.size();
+    }
+    
+    std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
+
+    for (Tile& item : m_terrainTileCollection)
     {
         item.setInPlay(false);
     }
@@ -462,24 +438,7 @@ void Game::mapMove()
     m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true);
     m_terrainTileCollection[m_tileNext].tileIsCurrent(false);
 
-    //float newMapX = mapPosition.x;
-    //float newMapX2 = mapPosition2.x;
-    //const Vector3 mainMap = { -32.0f, -0.0f, -64.0f };
-    //const Vector3 nextMap = { -32.0f, -0.0f, -128.0f };
     float mapLength = 64.0f;
-    
-    //if(activeMap == 1)
-    //{
-    //    mapPosition2 = mainMap; // These should possibly be constants
-    //    mapPosition = nextMap;
-    //    activeMap = 2;
-    //}
-    //else if (activeMap == 2)
-    //{
-    //    mapPosition = mainMap;
-    //    mapPosition2 = nextMap;
-    //    activeMap = 1;
-    //} 
 
     /*mushroomOnMap = 1;
     mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });

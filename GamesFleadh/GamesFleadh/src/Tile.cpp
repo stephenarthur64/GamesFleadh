@@ -1,28 +1,29 @@
 #include "Tile.h"
 
-Tile::Tile(std::string t_heightMapAddress = "", std::string t_furnitureMapAddress = "", std::string t_tileModelAddress = "") 
+Tile::Tile(std::string t_heightMapAddress = "", std::string t_furnitureMapAddress = "", 
+    std::string t_tileModelAddress = "", std::string t_diffuseMapAddress = "")
 {
-	m_heightMap = LoadImage(t_heightMapAddress.c_str());
-	m_furnitureMap = LoadImage(t_furnitureMapAddress.c_str());
+	m_heightMapImage = LoadImage(t_heightMapAddress.c_str());
+	m_furnitureMapImage = LoadImage(t_furnitureMapAddress.c_str());
+    m_diffuseMapImage = LoadImage(t_diffuseMapAddress.c_str()); // This is hardcoded.
 	
-	if (t_tileModelAddress == "")
-	{// Do we have a pre-built model?
-		// If no, generate model
-		Mesh heightmapMesh = GenMeshHeightmap(m_heightMap, MAP_SIZE);
+	if (t_tileModelAddress == "")// Do we have a pre-built model?
+	{// If no, generate model
+		Mesh heightmapMesh = GenMeshHeightmap(m_heightMapImage, MAP_SIZE);
 		m_body = LoadModelFromMesh(heightmapMesh);
-        m_heightMapTex = LoadTextureFromImage(m_heightMap);
-        m_body.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_heightMapTex; // Set map diffuse texture
 	}
 	else
 	{	// If yes, load model
 		m_body = LoadModel(t_tileModelAddress.c_str());
 	}
+    m_textureMapDiffuse = LoadTextureFromImage(m_diffuseMapImage); // Convert image to texture (VRAM)
+    m_body.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_textureMapDiffuse; // Set map diffuse texture
 
 	// m_furnitureVec = processFurnitureMap(m_furnitureMap);
-    processFurnitureMap(m_furnitureMap);
+    processFurnitureMap(m_furnitureMapImage);
 }
 
-Tile::~Tile(){}
+Tile::~Tile(){} // Unloading images and meshes - take from Game
 
 void Tile::rotate(int direction){}
 
@@ -38,11 +39,12 @@ void Tile::render()
 {
 	if (!m_inPlay) return;
 
-	DrawModel(m_body, m_position, 1.0f, GREEN_HILL); // m_colour - object colour should be used here
+    DrawModel(m_body, m_position, 1.0f, WHITE); // GREEN_HILL); // m_colour - object colour should be used here
 	
     // Render furniture?
-    for (StreetFurniture item : m_furnitureVec)
+    for (StreetFurniture& item : m_furnitureVec)
     {
+        
         item.render();
     }
 }
@@ -54,6 +56,12 @@ void Tile::render()
 void Tile::setInPlay(bool t_inPlay)
 {
 	m_inPlay = t_inPlay;
+
+    for (StreetFurniture& item : m_furnitureVec)
+    {
+        std::cout << "Setting item to: " << t_inPlay << "\n";
+        item.m_inPlay = t_inPlay;
+    }
 }
 
 /// <summary>
@@ -65,30 +73,65 @@ void Tile::tileIsCurrent(bool t_current)
 	if (t_current)
 	{
 		m_position = MAP_POS_CURRENT;
-		// Pass position to furniture here
+
+        for (StreetFurniture& item : m_furnitureVec)
+        {// Pass position to furniture here
+            item.setRelativePosition(MAP_POS_CURRENT);
+        }
 	}
 	else
 	{
 		m_position = MAP_POS_NEXT;
-		// Pass position to furniture here
+		
+        for (StreetFurniture& item : m_furnitureVec)
+        {// Pass position to furniture here
+            item.setRelativePosition(MAP_POS_NEXT);
+        }
 	}
 
     setInPlay(true);
 }
 
 /// <summary>
-/// @brief Returns if collision is occuring at this heightmapPoint
+/// @brief Returns true if collision is occuring at this heightMap position
 /// </summary>
 /// <param name="t_collider"></param>
 /// <returns></returns>
-bool Tile::collision(Vector3 t_collider)
+bool Tile::isColliding(Vector3 t_collider)
 {
+    // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE (Probably move into collision function)
+    // Get Normalised Coord
+    m_worldNormalX = (t_collider.x + abs(MAP_POS_CURRENT.x)) / MAP_SIZE.x;
+    m_worldNormalZ = ((t_collider.z + SEEMING_MAGICAL_Z_OFFSET) + abs(MAP_POS_CURRENT.z)) / MAP_SIZE.z;
+    m_texUcoord = m_worldNormalX * m_heightMapImage.width;
+    m_texVcoord = m_worldNormalZ * m_heightMapImage.height;
+
+    m_texUcoord = Clamp(m_texUcoord, 0, m_heightMapImage.height - 0.001f); // Avoids OOBounds error
+    m_texVcoord = Clamp(m_texVcoord, 0, m_heightMapImage.width - 0.001f);
+
+    m_colorFromPosition = GetImageColor(m_heightMapImage, m_texUcoord, m_texVcoord);
+    m_worldYNormalFromCol = m_colorFromPosition.r / 255.0f;
+    m_worldYPos = m_worldYNormalFromCol * MAP_SIZE.y;
+
+    if (t_collider.y <= m_worldYPos)
+    {
+        return true;
+        //player.collision(true);
+        //std::cout << "\nColliding!\n";
+    }
+    else
+    {
+        return false;
+        //player.collision(false);
+        //std::cout << "\nNot Colliding!\n";
+    }// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
+
 	return false;
 }
 
 void Tile::update()
 {
-    for (StreetFurniture item : m_furnitureVec)
+    for (StreetFurniture& item : m_furnitureVec)
     {
         item.update();
     }
@@ -160,15 +203,15 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
 
 void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType)
 {
-    Color heightFromCol = GetImageColor(m_heightMap, t_u, t_v);
+    Color heightFromCol = GetImageColor(m_heightMapImage, t_u, t_v);
 
     float placementTexUcoord = static_cast<float>(t_u);
     float placementColYcoord = static_cast<float>(heightFromCol.r);
     float placementTexVcoord = static_cast<float>(t_v);
 
-    float placeWorldNormX = placementTexUcoord / m_heightMap.width;
+    float placeWorldNormX = placementTexUcoord / m_heightMapImage.width;
     float placeWorldNormY = placementColYcoord / 255.0f; // Divide by max col value
-    float placeWorldNormZ = placementTexVcoord / m_heightMap.height;
+    float placeWorldNormZ = placementTexVcoord / m_heightMapImage.height;
 
     float placeWorldCoordX = (placeWorldNormX * MAP_SIZE.x) - abs(m_position.x);
     float placeWorldCoordY = placeWorldNormY * MAP_SIZE.y;
@@ -179,7 +222,7 @@ void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType)
 
 
 
-    StreetFurniture article(false, t_furnitureType);
+    StreetFurniture article(false, t_furnitureType, furniturePos);
 
     m_furnitureVec.push_back(article);
 }

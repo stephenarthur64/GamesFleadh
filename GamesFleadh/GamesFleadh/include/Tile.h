@@ -9,7 +9,8 @@
 class Tile : public GameObject
 {
 public:
-	Tile(std::string t_heightMapAddress, std::string t_furnitureMapAddress, std::string t_tileModelAddress);
+	Tile(std::string t_heightMapAddress, std::string t_furnitureMapAddress,
+		std::string t_tileModelAddress, std::string t_diffuseMapAddress);
 	~Tile();
 
 	void rotate(int direction) override;
@@ -19,17 +20,29 @@ public:
 	void setInPlay(bool t_exists);
 	void tileIsCurrent(bool t_current); 
 
-	bool collision(Vector3 t_collider);
+	bool isColliding(Vector3 t_collider);
+
+	std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
 
 	void update();
 
 private:
-	Image m_heightMap;
-	Texture2D m_heightMapTex;
+	Image m_heightMapImage;
+	Texture2D m_textureMapDiffuse;
 	Mesh m_heightMapMesh;
-	Image m_furnitureMap;
+	Image m_furnitureMapImage;
+	Image m_diffuseMapImage;
 	// Model m_tileModel;
 	std::vector<StreetFurniture> m_furnitureVec;
+
+	float m_worldNormalX;
+	float m_worldNormalZ;
+	float m_texUcoord;
+	float m_texVcoord;
+
+	Color m_colorFromPosition;
+	float m_worldYNormalFromCol;
+	float m_worldYPos;
 
 	int max_furniture = 0;
 

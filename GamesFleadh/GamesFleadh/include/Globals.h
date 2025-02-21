@@ -7,7 +7,13 @@ enum Direction {NORTH, SOUTH, EAST, WEST};
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 
-const Color GREEN_HILL = { 147, 204, 147, 255 };
+const Vector3 PLAYER_COLLISION_OFFSET_FRONT = Vector3{ 0.0f, -0.25f, -3.0f };
+const Vector3 PLAYER_COLLISION_OFFSET_LATERAL = Vector3{ 2.0f,-0.25f,0.0f };
+
+
+const Color GREEN_HILL = { 147, 204, 147, 255 }; // Green tint for generated terrain
+
+const std::string GULLY_DIFFUSE_01 = "ASSETS/2D/GullyTextures/HeightmapPaint.png";
 
 
 const std::string FURNITURE_BATCH_MUSH = "ASSETS/3D/StreetFurniture/Mushrooms/BatchMushroom.glb";

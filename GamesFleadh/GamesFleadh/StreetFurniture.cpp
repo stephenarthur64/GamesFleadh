@@ -1,9 +1,10 @@
 #include "StreetFurniture.h"
+#include <iostream>
 
 StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos)
 {
 	//m_position = { 1.0f, 1.0f, -13.0f };
-	m_position = t_startPos;
+	m_placementOffset = t_startPos;
 
 	//m_body = LoadModel("ASSETS/3D/StreetFurniture/Mushrooms/ChunkyMushroom.glb");
 	m_body = LoadModel(t_furnitureType.c_str());
@@ -36,6 +37,8 @@ void StreetFurniture::init()
 void StreetFurniture::render()
 {
 	if (!m_inPlay) return; // Not in gameplay: early out.
+
+	std::cout << "Item in play set to: " << m_inPlay << "\n";
 
 	DrawModel(m_body, m_position, 0.5f, WHITE);
 	DrawBoundingBox(m_hitbox, BLUE);
@@ -86,4 +89,9 @@ void StreetFurniture::setHitBox()
 
 	m_hitbox.min.z = m_position.z - 1.0f;
 	m_hitbox.max.z = m_position.z - 3.0f;
+}
+
+void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
+{
+	m_position = t_mapPos + m_placementOffset;
 }
