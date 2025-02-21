@@ -457,9 +457,10 @@ void Game::checkCollisions()
         player.collision(true);
     }
 
-    if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 2.0f))
+    if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 0.5f))
     {
         player.collision(true);
+        swarmer[0].collision(true);
     }
 
     for (int i = 0; i < player.getBulletMax(); i++)
