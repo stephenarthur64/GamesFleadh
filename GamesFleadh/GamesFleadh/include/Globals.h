@@ -14,6 +14,7 @@ const Vector3 PLAYER_COLLISION_OFFSET_LATERAL = Vector3{ 2.0f,-0.25f,0.0f };
 const Color GREEN_HILL = { 147, 204, 147, 255 }; // Green tint for generated terrain
 
 const std::string GULLY_DIFFUSE_01 = "ASSETS/2D/GullyTextures/HeightmapPaint.png";
+const std::string GULLY_DIFFUSE_RIVERTEST01 = "ASSETS/2D/GullyTextures/river_test3.png";
 
 
 const std::string FURNITURE_BATCH_MUSH = "ASSETS/3D/StreetFurniture/Mushrooms/BatchMushroom.glb";

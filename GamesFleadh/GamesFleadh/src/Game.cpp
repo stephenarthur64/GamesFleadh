@@ -79,7 +79,7 @@ void Game::loadAssets()
     //heightmapTexture = LoadTextureFromImage(heightmapImage);        
 
     // There should be a line below for every tile in the game (currently has a duplicate tile)
-    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_RIVERTEST01));
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
 
     
@@ -520,9 +520,9 @@ void Game::mapMove()
     mushroom[0].spawn({ -1.0f, 2.0f, -mapLength - 15.0f});
     mushroom[0].spawnFeeder();
     mushroom[0].playerDetected(false, {0,0,0});
-
-    camPos.z = 0.0f;
     */
+    camPos.z = 0.0f;
+    
 }
 
 void Game::cameraMove()
