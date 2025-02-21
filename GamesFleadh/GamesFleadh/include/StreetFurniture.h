@@ -28,7 +28,7 @@ public:
 	void setRelativePosition(Vector3 t_mapPos);
 
 private:
-	Enemy* m_feeder{}; // Starts as null pointer
+	Feeder* m_feeder{}; // Starts as null pointer
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
 };

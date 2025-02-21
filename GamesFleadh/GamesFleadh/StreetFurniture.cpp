@@ -40,7 +40,7 @@ void StreetFurniture::render()
 
 	// std::cout << "Item in play set to: " << m_inPlay << "\n";
 
-	DrawModel(m_body, m_position, 0.5f, WHITE);
+	DrawModel(m_body, m_position, 1.0f, WHITE);
 	DrawBoundingBox(m_hitbox, BLUE);
 
 	if (m_feeder == nullptr) return;

@@ -141,7 +141,7 @@ bool Tile::checkFurnitureItemsCollision(BoundingBox t_player)
     return playerHasCollided;
 }
 
-void Tile::update()
+void Tile::update(Vector3 t_target)
 {
     for (StreetFurniture& item : m_furnitureVec)
     {
