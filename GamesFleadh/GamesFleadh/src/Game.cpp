@@ -40,7 +40,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
-    ToggleFullscreen();
+   // ToggleFullscreen();
     InitAudioDevice();
 
     // Define our custom camera to look into our 3d world
@@ -274,7 +274,7 @@ void Game::update()
 
     player.updateBullet();
     camera.position = camPos;
-    
+    checkCollisions();
     player.update();
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
@@ -443,11 +443,17 @@ void Game::gamepadUpdate()
     }
 }
 
-void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
+void Game::checkCollisions()
 {
     int collide = 0;
 
-    player.collision(CheckCollisionBoxes(t_a, t_b));   
+    BoundingBox one = player.getHitbox();
+    BoundingBox two = swarmer[0].getHitbox();
+
+    if (CheckCollisionBoxSphere(player.getHitbox(), swarmer[0].getPosition(), 2.0f))
+    {
+        player.collision(true);
+    }
 
     /*for (int i = 0; i < player.getBulletMax(); i++)
     {
@@ -482,7 +488,7 @@ void Game::mapMove()
     {
         m_tileNext = rand() % m_terrainTileCollection.size();
     }
-    
+
     // std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
 
     for (Tile& item : m_terrainTileCollection)
@@ -505,6 +511,7 @@ void Game::mapMove()
     mushroom[0].playerDetected(false, {0,0,0});
     */
     camPos.z = 0.0f;
+    */
 }
 
 void Game::cameraMove()
@@ -539,5 +546,6 @@ void Game::cameraMove()
     camera.target = billPositionRotating;
     camera.target.z = billPositionRotating.z - 15.0f;
 }
+
 
 

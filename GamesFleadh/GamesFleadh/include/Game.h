@@ -42,9 +42,7 @@ public:
 	void gameBegins();
 
 	void gamepadUpdate();
-
-
-	void checkCollisions(BoundingBox t_a, BoundingBox t_b);
+	void checkCollisions();
 
 	void mapMove();
 	void cameraMove();
