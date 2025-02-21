@@ -51,9 +51,6 @@
     <ClInclude Include="include\Bullet.h">
       <Filter>Header Files\GO</Filter>
     </ClInclude>
-    <ClInclude Include="include\Enemy.h">
-      <Filter>Header Files\GO</Filter>
-    </ClInclude>
     <ClInclude Include="include\gameobject.h">
       <Filter>Header Files\GO</Filter>
     </ClInclude>
@@ -93,6 +90,21 @@
     <ClInclude Include="include\StreetFurniture.h">
       <Filter>Header Files\GO</Filter>
     </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Feeder.h">
+      <Filter>Header Files\GO</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerSpottedState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Swarmer.h">
+      <Filter>Header Files\GO</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StateChase.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -111,9 +123,6 @@
       <Filter>Source Files\FSM</Filter>
     </ClCompile>
     <ClCompile Include="src\Bullet.cpp">
-      <Filter>Source Files\GO</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Enemy.cpp">
       <Filter>Source Files\GO</Filter>
     </ClCompile>
     <ClCompile Include="src\gameobject.cpp">
@@ -154,6 +163,21 @@
     </ClCompile>
     <ClCompile Include="StreetFurniture.cpp">
       <Filter>Source Files\GO</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Feeder.cpp">
+      <Filter>Source Files\GO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Swarmer.cpp">
+      <Filter>Source Files\GO</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerSpottedState.cpp">
+      <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StateChase.cpp">
+      <Filter>Source Files\FSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

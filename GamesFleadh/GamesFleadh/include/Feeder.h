@@ -8,10 +8,10 @@
 #define NUM_FRAMES_PER_LINE     5
 #define NUM_LINES               5
 
-class Enemy : public GameObject
+class Feeder : public GameObject
 {
 public:
-	Enemy();
+	Feeder();
 
 	void setHitBox();
 	void updateHitBox();
@@ -26,7 +26,7 @@ public:
 	Vector3 getBulletPositon(int count) { return m_mudBomb.getPosition(); }
 	BoundingBox getBulletHitBox(int count) { return m_mudBomb.getHitbox(); }
 
-	void shootBullet();
+	void shootBullet(Vector3 t_target);
 	void despawnBullet();
 	void disableShooting();
 
@@ -35,7 +35,7 @@ public:
 
 	void kill();
 
-	void update();
+	void update(Vector3 t_target);
 
 	virtual void rotate(int t_direction) override;
 
@@ -64,6 +64,8 @@ private:
 
 	bool active = false;
 	int framesCounter = 0;
+
+	Vector3 m_target;
 
 };
 

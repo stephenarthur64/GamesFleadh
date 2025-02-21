@@ -40,6 +40,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
+    ToggleFullscreen();
     InitAudioDevice();
 
     // Define our custom camera to look into our 3d world
@@ -93,6 +94,29 @@ void Game::loadAssets()
         
     player.init();
     billPositionStatic = { 2.0f,2.0f,3.0f };
+
+    for (int i = 0; i < maxSwarmer; i++)
+    {
+        swarmer[i].init();
+    }
+    
+    // placeObjectsFromImage(imgPlacementTest);
+
+    /*for (int i = 0; i < maxStreetFurniture; i++)
+    {
+        streetF[i].init();
+    }*/
+
+    /*for (int i = 0; i < MAX_MUSHROOMS; i++)
+    {
+        mushroom[i].init();
+        if (i != mushroomOnMap)
+        {
+            mushroom[i].spawn({ -1.0f, 2.0f, -79.0f });
+        }
+        mushroom[i].spawnFeeder();
+    }
+    mushroom[0].playerDetected(true, player.getPosition());*/
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
@@ -153,8 +177,16 @@ void Game::render()
         tileToDraw.render();
     }
 
-    //DrawModel(heightmapModel, mapPosition, 1.0f, { 147, 204, 147, 255 });
-    //DrawModel(heightmapModel, mapPosition2, 1.0f, { 147, 204, 147, 255 });
+    for (int i = 0; i < maxSwarmer; i++)
+    {
+        swarmer[0].render();
+        swarmer[0].renderBoom(camera);
+    }
+
+    /*for (int i = 0; i < maxStreetFurniture; i++)
+    {
+        streetF[i].render();
+    }*/
     
     //DrawSphereWires(Vector3{ 0.0f, 0.0f, 0.0f }, 0.25f, 8, 8, ORANGE); // Marks origin.
     //DrawSphereWires(Vector3{ 0.0f, 4.0f, 0.0f }, 0.25f, 8, 8, ORANGE);
@@ -173,7 +205,9 @@ void Game::render()
     DrawGrid(20, 1.0f);
     EndMode3D();
 
+    DrawRectangleRec(player.getHealthBar(), GREEN);
     DrawTexture(healthBar, 0, 1000, WHITE);
+   
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
@@ -184,7 +218,11 @@ void Game::render()
         {
             DrawText(TextFormat("FEEDER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
         }
-    }*/
+    }
+    if (swarmer[0].isActive())
+    {
+        DrawText(TextFormat("SWARMER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
+    }
     DrawFPS(10, 30);
 
     /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
@@ -209,6 +247,9 @@ void Game::update()
     inputControl();
     player.updateZPos(camPos.z - playerZOffsetFromCamera);
     player.faceCrosshair(billPositionRotating);
+
+    swarmer->checkDistanceFromPlayer(player.getPosition());
+    swarmer->update();
 
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
     distanceStatic += 2.0f;
@@ -410,10 +451,16 @@ void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
 
     /*for (int i = 0; i < player.getBulletMax(); i++)
     {
-        if (CheckCollisionBoxSphere(mushroom[mushroomOnMap].getEnemyHitbox(), player.getBulletPositon(i), 1.0f))
+        if (CheckCollisionBoxSphere(mushroom[mushroomOnMap].getFeederHitbox(), player.getBulletPositon(i), 1.0f))
         {
             collide = 1;
             mushroom[mushroomOnMap].setCollisions(true);
+            player.despawnBullet(i);
+            score += 10;
+        }
+        if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getBulletPositon(i), 1.0f))
+        {
+            swarmer[0].collision(true);
             player.despawnBullet(i);
             score += 10;
         }
@@ -450,12 +497,12 @@ void Game::mapMove()
 
     /*mushroomOnMap = 1;
     mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });
-    mushroom[1].spawnEnemy();
-    mushroom[1].playerDetected(true);
+    mushroom[1].spawnFeeder();
+    mushroom[1].playerDetected(true, player.getPosition());
 
     mushroom[0].spawn({ -1.0f, 2.0f, -mapLength - 15.0f});
-    mushroom[0].spawnEnemy();
-    mushroom[0].playerDetected(false);*/
+    mushroom[0].spawnFeeder();
+    mushroom[0].playerDetected(false, {0,0,0});
 
     camPos.z = 0.0f;
 }

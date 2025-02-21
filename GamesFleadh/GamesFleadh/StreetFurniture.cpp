@@ -12,7 +12,7 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 
 	if (t_hasFeeder)
 	{
-		m_feeder = new Enemy;
+		m_feeder = new Feeder;
 		m_feeder->init();
 	}
 }
@@ -53,13 +53,13 @@ void StreetFurniture::renderBoom(Camera& t_camera)
 	m_feeder->renderBoom(t_camera);
 }
 
-void StreetFurniture::playerDetected(bool t_spotted)
+void StreetFurniture::playerDetected(bool t_spotted, Vector3 t_target)
 {
 	if (m_feeder == nullptr) return;
 
 	if (t_spotted)
 	{
-		m_feeder->shootBullet();
+		m_feeder->shootBullet(t_target);
 	}
 	else
 	{
@@ -67,11 +67,11 @@ void StreetFurniture::playerDetected(bool t_spotted)
 	}
 }
 
-void StreetFurniture::update()
+void StreetFurniture::update(Vector3 t_target)
 {
 	std::cout << "I am updating!\n";
 	if (m_feeder == nullptr) return;
-	m_feeder->update();
+	m_feeder->update(t_target);
 }
 
 void StreetFurniture::spawnEnemy()

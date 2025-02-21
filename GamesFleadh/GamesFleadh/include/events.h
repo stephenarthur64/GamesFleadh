@@ -14,6 +14,8 @@ typedef enum
     EVENT_MOVE_DOWNLEFT,
     EVENT_DAMAGE,
     EVENT_SHOOT,
+    EVENT_SPOTTED,
+    EVENT_CHASE,
     EVENT_DIE,    // Represents a die event
     EVENT_RESPAWN,// Represents a respawn event
     EVENT_COUNT   // Represents the total number of events (for counting purposes)

@@ -145,7 +145,7 @@ void Tile::update()
 {
     for (StreetFurniture& item : m_furnitureVec)
     {
-        item.update();
+        item.update(t_target);
     }
 }
 

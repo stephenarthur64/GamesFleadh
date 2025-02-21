@@ -25,7 +25,7 @@ public:
 
 	std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
 
-	void update();
+	void update(Vector3 t_target);
 
 private:
 	Image m_heightMapImage;

@@ -1,6 +1,6 @@
 #pragma once
 #include "gameobject.h"
-#include "Enemy.h"
+#include "Feeder.h"
 #include "Globals.h"
 #include <string>
 
@@ -17,9 +17,9 @@ public:
 
 	void renderBoom(Camera& t_camera);
 
-	void playerDetected(bool t_spotted);
+	void playerDetected(bool t_spotted, Vector3 t_target);
 
-	void update();
+	void update(Vector3 t_target);
 
 	void spawnEnemy();
 

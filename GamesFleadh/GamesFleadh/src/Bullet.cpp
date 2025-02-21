@@ -28,7 +28,6 @@ void Bullet::despawn()
 
 void Bullet::move()
 {
-	
 	if (m_active)
 	{
 		distance += 0.5f;
@@ -37,6 +36,15 @@ void Bullet::move()
 
 		m_position = Vector3MoveTowards(m_position, m_velocity, distance);
 		//m_position += m_velocity;
+	}
+}
+
+void Bullet::follow(Vector3 t_target)
+{
+	if (m_active)
+	{
+		distance += 0.001f;
+		m_position = Vector3MoveTowards(m_position, t_target, distance);
 	}
 }
 
