@@ -20,14 +20,11 @@ void Player::move(Vector3 t_velocity)
 
 void Player::setHitBox()
 {
-	m_hitbox.min.x = m_position.x - hitboxOffsetMin;
-	m_hitbox.max.x = m_position.x - hitboxOffsetMax;
+	Vector3 minOffset = { -hitboxOffsetMin, -0.1f, 0.5f };
+	Vector3 maxOffset = { -hitboxOffsetMax, 1.1f, -1.0f };
 
-	m_hitbox.min.y = m_position.y - 0.1f;
-	m_hitbox.max.y = m_position.y + 1.1f;
-
-	m_hitbox.min.z = m_position.z + 0.5f;
-	m_hitbox.max.z = m_position.z - 1.0f;
+	m_hitbox.min = m_position + minOffset;
+	m_hitbox.max = m_position + maxOffset;
 }
 
 void Player::updateHitBox(float t_z)
@@ -50,10 +47,6 @@ void Player::worldCollision(bool collide)
 	if (collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
-	}
-	else
-	{
-		m_colour = WHITE;
 	}
 }
 
@@ -116,13 +109,6 @@ void Player::resetToOrigin()
 	std::cout << "\nResetting player's position.";
 	m_position.z = 16.0f;
 	setHitBox();
-}
-
-void lookat_angles(Vector3* target, float* yaw, float* pitch) 
-{
-	*yaw = -(atan2(target->x, target->y) * RAD2DEG) + 90.0f;
-	float distance = sqrt(target->x * target->x + target->z * target->z);
-	*pitch = -(-atan2(target->y, distance) * RAD2DEG);
 }
 
 void Player::faceCrosshair(Vector3 t_crosshairPos)

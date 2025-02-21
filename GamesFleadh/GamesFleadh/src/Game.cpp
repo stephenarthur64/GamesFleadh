@@ -439,7 +439,7 @@ void Game::gamepadUpdate()
         if (leftTrigger < leftTriggerDeadzone) leftTrigger = -1.0f;
         if (rightTrigger < rightTriggerDeadzone) rightTrigger = -1.0f;
 
-        SetGamepadVibration(gamepad, 1.0f, 1.0f, 100.0f);
+      //  SetGamepadVibration(gamepad, 1.0f, 1.0f, 100.0f);
     }
 }
 
@@ -448,15 +448,23 @@ void Game::checkCollisions()
     int collide = 0;
 
     BoundingBox one = player.getHitbox();
+    BoundingBox one2 = player.getHitbox();
     BoundingBox two = swarmer[0].getHitbox();
+    BoundingBox two2 = swarmer[0].getHitbox();
 
-    if (CheckCollisionBoxSphere(player.getHitbox(), swarmer[0].getPosition(), 2.0f))
+    if (CheckCollisionBoxes(one, one2))
     {
         player.collision(true);
     }
 
-    /*for (int i = 0; i < player.getBulletMax(); i++)
+    if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 2.0f))
     {
+        player.collision(true);
+    }
+
+    for (int i = 0; i < player.getBulletMax(); i++)
+    {
+        /*
         if (CheckCollisionBoxSphere(mushroom[mushroomOnMap].getFeederHitbox(), player.getBulletPositon(i), 1.0f))
         {
             collide = 1;
@@ -464,6 +472,7 @@ void Game::checkCollisions()
             player.despawnBullet(i);
             score += 10;
         }
+        */
         if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getBulletPositon(i), 1.0f))
         {
             swarmer[0].collision(true);
@@ -472,10 +481,12 @@ void Game::checkCollisions()
         }
     }
 
+    /*
     if (collide != 1)
     {
         mushroom[mushroomOnMap].setCollisions(false);
-    }*/
+    }
+    */
 }
 
 void Game::mapMove()
