@@ -41,10 +41,7 @@ void Player::collision(bool collide)
 	if (collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
-	}
-	else
-	{
-		m_colour = WHITE;
+		m_health--;
 	}
 }
 

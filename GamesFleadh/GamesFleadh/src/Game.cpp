@@ -39,7 +39,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
-    ToggleFullscreen();
+   // ToggleFullscreen();
     InitAudioDevice();
 
     // Define our custom camera to look into our 3d world
@@ -348,7 +348,7 @@ void Game::update()
 
     player.updateBullet();
     camera.position = camPos;
-    checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getFeederHitbox());
+    checkCollisions();
     player.update();
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
@@ -518,11 +518,17 @@ void Game::gamepadUpdate()
     }
 }
 
-void Game::checkCollisions(BoundingBox t_a, BoundingBox t_b)
+void Game::checkCollisions()
 {
     int collide = 0;
 
-    player.collision(CheckCollisionBoxes(t_a, t_b));   
+    BoundingBox one = player.getHitbox();
+    BoundingBox two = swarmer[0].getHitbox();
+
+    if (CheckCollisionBoxSphere(player.getHitbox(), swarmer[0].getPosition(), 2.0f))
+    {
+        player.collision(true);
+    }
 
     for (int i = 0; i < player.getBulletMax(); i++)
     {
