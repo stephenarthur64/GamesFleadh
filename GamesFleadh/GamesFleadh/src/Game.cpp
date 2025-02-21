@@ -269,7 +269,7 @@ void Game::update()
 
     for (Tile& item : m_terrainTileCollection)
     {
-        item.update();
+        item.update(player.getPosition());
     }
 
     player.updateBullet();
@@ -482,7 +482,7 @@ void Game::mapMove()
     {
         m_tileNext = rand() % m_terrainTileCollection.size();
     }
-    
+
     // std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
 
     for (Tile& item : m_terrainTileCollection)
@@ -505,6 +505,7 @@ void Game::mapMove()
     mushroom[0].playerDetected(false, {0,0,0});
 
     camPos.z = 0.0f;
+    */
 }
 
 void Game::cameraMove()
@@ -539,5 +540,6 @@ void Game::cameraMove()
     camera.target = billPositionRotating;
     camera.target.z = billPositionRotating.z - 15.0f;
 }
+
 
 
