@@ -20,8 +20,8 @@ void Player::move(Vector3 t_velocity)
 
 void Player::setHitBox()
 {
-	Vector3 minOffset = { -hitboxOffsetMin, -0.1f, 0.5f };
-	Vector3 maxOffset = { -hitboxOffsetMax, 1.1f, -1.0f };
+	Vector3 minOffset = { -hitboxOffsetMin, -0.1f, -1.0f };
+	Vector3 maxOffset = { hitboxOffsetMax, 1.1f, 0.5f };
 
 	m_hitbox.min = m_position + minOffset;
 	m_hitbox.max = m_position + maxOffset;
@@ -38,7 +38,7 @@ void Player::collision(bool collide)
 	if (collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
-		m_health--;
+		if(m_health > 0) m_health--;
 	}
 }
 
@@ -69,6 +69,8 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
+	m_position.y += 2.0f;
+
 	m_healthbar.x = 40;
 	m_healthbar.y = 1015;
 	m_healthbar.width = HEALTHBAR_MAX;
@@ -96,6 +98,10 @@ void Player::update()
 	currentState->update(this);
 	updateHealthbar();
 	//m_weapon.update(m_position);
+
+	m_position.y = Clamp(m_position.y, -0.2f, 13.0f);
+
+	//std::cout << "Y position is: " << m_position.y << "\n";
 }
 
 void Player::updateHealthbar()

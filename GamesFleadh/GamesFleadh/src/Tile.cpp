@@ -19,7 +19,6 @@ Tile::Tile(std::string t_heightMapAddress = "", std::string t_furnitureMapAddres
     m_textureMapDiffuse = LoadTextureFromImage(m_diffuseMapImage); // Convert image to texture (VRAM)
     m_body.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_textureMapDiffuse; // Set map diffuse texture
 
-	// m_furnitureVec = processFurnitureMap(m_furnitureMap);
     processFurnitureMap(m_furnitureMapImage);
 }
 
@@ -38,13 +37,12 @@ void Tile::init(){} // Turns out most of this is done in the constructor. =/
 void Tile::render()
 {
 	if (!m_inPlay) return;
-
-    DrawModel(m_body, m_position, 1.0f, WHITE); // GREEN_HILL); // m_colour - object colour should be used here
-	
+    // GREEN_HILL); // m_colour - object colour should be used here
+    DrawModel(m_body, m_position, 1.0f, WHITE);
     // Render furniture?
-    for (StreetFurniture& item : m_furnitureVec)
+
+    for (StreetFurniture item : m_furnitureVec)
     {
-        
         item.render();
     }
 }
@@ -68,7 +66,7 @@ void Tile::setInPlay(bool t_inPlay)
 /// @brief Sets position for tile and furniture (see consts below)
 /// </summary>
 /// <param name="t_current"></param>
-void Tile::tileIsCurrent(bool t_current)
+void Tile::makeTileCurrent(bool t_current)
 {
 	if (t_current)
 	{
@@ -88,7 +86,6 @@ void Tile::tileIsCurrent(bool t_current)
             item.setRelativePosition(MAP_POS_NEXT);
         }
 	}
-
     setInPlay(true);
 }
 
@@ -99,9 +96,7 @@ void Tile::tileIsCurrent(bool t_current)
 /// <returns></returns>
 bool Tile::isColliding(Vector3 t_collider)
 {
-    // RoB'S HEIGHT MAP COLLISION STUFF STARTS HERE (Probably move into collision function)
-    // Get Normalised Coord
-    m_worldNormalX = (t_collider.x + abs(MAP_POS_CURRENT.x)) / MAP_SIZE.x;
+    m_worldNormalX = (t_collider.x + abs(MAP_POS_CURRENT.x)) / MAP_SIZE.x; // Get Normalised Coord
     m_worldNormalZ = ((t_collider.z + SEEMING_MAGICAL_Z_OFFSET) + abs(MAP_POS_CURRENT.z)) / MAP_SIZE.z;
     m_texUcoord = m_worldNormalX * m_heightMapImage.width;
     m_texVcoord = m_worldNormalZ * m_heightMapImage.height;
@@ -116,29 +111,24 @@ bool Tile::isColliding(Vector3 t_collider)
     if (t_collider.y <= m_worldYPos)
     {
         return true;
-        //player.collision(true);
-        //std::cout << "\nColliding!\n";
     }
     else
     {
         return false;
-        //player.collision(false);
-        //std::cout << "\nNot Colliding!\n";
-    }// RoB's HEIGHT MAP COLLISION STUFF ENDS HERE
-
+    }
 	return false;
 }
 
 bool Tile::checkFurnitureItemsCollision(BoundingBox t_player)
 {
-    bool playerHasCollided = false;
-
     for (StreetFurniture& item : m_furnitureVec)
-    {
-        // item.
+    {        
+        if (item.checkPlayerFurnitureCollision(t_player))
+        {
+            return true;
+        }
     }
-
-    return playerHasCollided;
+    return false;
 }
 
 void Tile::update(Vector3 t_target)
@@ -157,10 +147,6 @@ void Tile::update(Vector3 t_target)
 // std::vector<StreetFurniture> Tile::processFurnitureMap(Image t_furnitureMap)
 void Tile::processFurnitureMap(Image t_furnitureMap)
 {
-	// std::vector<StreetFurniture> furn;
-
-    // int furnitureCount = 0;
-
     for (int u = 0; u < t_furnitureMap.width; u++)
     {
         for (int v = 0; v < t_furnitureMap.height; v++)
@@ -209,8 +195,6 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
             }
         }
     }
-
-	// return furn;
 }
 
 void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType)
@@ -229,12 +213,13 @@ void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType)
     float placeWorldCoordY = placeWorldNormY * MAP_SIZE.y;
     float placeWorldCoordZ = ((placeWorldNormZ * MAP_SIZE.y) - abs(m_position.z) - SEEMING_MAGICAL_Z_OFFSET); // Not sure I need the last offset for objects
 
-    //objectPlacementTest = { placeWorldCoordX, placeWorldCoordY, placeWorldCoordZ };
     Vector3 furniturePos = { placeWorldCoordX, placeWorldCoordY, placeWorldCoordZ };
 
+    int randomChance = rand() % 3;
 
+    StreetFurniture article(randomChance != 0, t_furnitureType, furniturePos);
 
-    StreetFurniture article(false, t_furnitureType, furniturePos);
+    // StreetFurniture article(true, t_furnitureType, furniturePos); // SWITCH BACK TO TRUE FOR FIXING
 
     m_furnitureVec.push_back(article);
 }

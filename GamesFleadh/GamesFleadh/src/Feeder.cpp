@@ -4,8 +4,8 @@ Feeder::Feeder()
 {
 	currentState = new IdleState;
 	m_health = 1;
-	m_position = { 2.0f, 2.0f, -10.0f };
-	m_colour = RED;
+	m_position = { 2.0f, 2.0f, -10.0f }; // Position is set from Tile (TileIsCurrent) -> StreetFurniture (SetRelativePosition) -> Feeder (Spawn)
+	m_colour = WHITE;
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Enemy/Feeder/Feeder.glb", &animsCount);// <------------ Here for Animation of Feeder
@@ -32,15 +32,15 @@ void Feeder::updateHitBox()
 }
 
 void Feeder::spawn(Vector3 t_position)
-{
+{// Position is set from Tile (TileIsCurrent) -> StreetFurniture (SetRelativePosition) -> Feeder (Spawn)
 	m_health = 1;
 
 	m_position.x = t_position.x - 1.0f;
-	m_position.y = t_position.y + 5.0f;
+	m_position.y = t_position.y + 0.0f;
 	m_position.z = t_position.z + 1.0f;
 
-	m_hitbox.min.y = t_position.y + 5.0f;
-	m_hitbox.max.y = t_position.y + 6.0f;
+	m_hitbox.min.y = t_position.y + 0.0f;
+	m_hitbox.max.y = t_position.y + 1.0f;
 
 	m_hitbox.min.x = t_position.x - 1.5f;
 	m_hitbox.max.x = t_position.x - 0.5f;
@@ -55,7 +55,7 @@ void Feeder::collision(bool t_collision)
 	{
 		damageTick = 0;
 
-		//m_colour = BLUE;
+		m_colour = RED;
 		m_health--;
 		handleInput(Event::EVENT_DAMAGE);
 

@@ -57,10 +57,10 @@ void Game::init()
     m_tileCurrent = 0; // Initialise index for m_terrainTileCollection
     m_tileNext = 1;
 
-    m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true); // Sets tile position in world
-    m_terrainTileCollection[m_tileNext].tileIsCurrent(false); // Sets tile position to 'next'
+    m_terrainTileCollection[m_tileCurrent].makeTileCurrent(true); // Sets tile position in world
+    m_terrainTileCollection[m_tileNext].makeTileCurrent(false); // Sets tile position to 'next'
     
-    std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
+    // std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
 
     setupSkybox();
     
@@ -265,6 +265,7 @@ void Game::update()
     player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL));
     
     m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
+    
     // checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
 
     for (Tile& item : m_terrainTileCollection)
@@ -339,10 +340,10 @@ void Game::inputControl()
         autoScroll = !autoScroll;
     }
 
-    if (IsKeyPressed(KEY_Z))
+    /*if (IsKeyPressed(KEY_Z))
     {
         player.collision(true);
-    }
+    }*/
 
     if (IsKeyReleased(KEY_X))
     {
@@ -352,6 +353,11 @@ void Game::inputControl()
     if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         player.shootBullet(billPositionRotating);
+    }
+
+    if (IsKeyReleased(KEY_BACKSPACE))
+    {
+        player.addHealth(10);
     }
 
     Vector3 normVelocity = Vector3Normalize({ leftStickX, leftStickY, 0 });
@@ -452,11 +458,6 @@ void Game::checkCollisions()
     BoundingBox two = swarmer[0].getHitbox();
     BoundingBox two2 = swarmer[0].getHitbox();
 
-    if (CheckCollisionBoxes(one, one2))
-    {
-        player.collision(true);
-    }
-
     if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 2.0f))
     {
         player.collision(true);
@@ -481,6 +482,15 @@ void Game::checkCollisions()
         }
     }
 
+    if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
+    {
+        player.collision(true);
+    }
+    else
+    {
+        player.collision(false);
+    }
+
     /*
     if (collide != 1)
     {
@@ -500,18 +510,16 @@ void Game::mapMove()
         m_tileNext = rand() % m_terrainTileCollection.size();
     }
 
-    // std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
-
     for (Tile& item : m_terrainTileCollection)
     {
         item.setInPlay(false);
     }
 
-    m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true);
-    m_terrainTileCollection[m_tileNext].tileIsCurrent(false);
+    m_terrainTileCollection[m_tileCurrent].makeTileCurrent(true);
+    m_terrainTileCollection[m_tileNext].makeTileCurrent(false);
 
     float mapLength = 64.0f;
-
+    
     /*mushroomOnMap = 1;
     mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });
     mushroom[1].spawnFeeder();
