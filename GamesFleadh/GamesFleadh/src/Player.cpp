@@ -38,7 +38,7 @@ void Player::collision(bool collide)
 	if (collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
-		if(m_health > 0) m_health--;
+		if(m_health > 0) m_health -= 10;
 	}
 }
 

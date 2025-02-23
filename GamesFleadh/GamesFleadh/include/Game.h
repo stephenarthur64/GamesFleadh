@@ -65,6 +65,8 @@ private:
 	Vector3 camTopDownPos;
 	
 	Texture2D healthBar;
+	Texture2D fogBar;
+	Texture2D fogGradient;
 
 	float camSpeed = 0.2f;
 	float camDirection;
