@@ -14,6 +14,7 @@ void Player::move(Vector3 t_velocity)
 {
 	t_velocity *= {m_speed, -m_speed, m_speed};
 	m_position += t_velocity;
+
 	m_hitbox.min += t_velocity;
 	m_hitbox.max += t_velocity;
 }
@@ -99,6 +100,13 @@ void Player::update()
 	updateHealthbar();
 	//m_weapon.update(m_position);
 
+	if (m_reboundCounter > 0)
+	{
+		float frameTime = GetFrameTime();
+		m_reboundCounter -= frameTime;
+		m_position += m_reboundDirection * m_reboundForce * frameTime;
+	}
+
 	m_position.y = Clamp(m_position.y, -0.2f, 13.0f);
 
 	//std::cout << "Y position is: " << m_position.y << "\n";
@@ -158,5 +166,13 @@ void Player::updateBullet()
 void Player::despawnBullet(int bulletNum)
 {
 	bullet[bulletNum].despawn();
+}
+
+void Player::rebound(Vector3 t_impactPoint)
+{
+	std::cout << "Rebound triggered.\n";
+	m_reboundCounter = m_reboundCountMax;
+	m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
+
 }
 

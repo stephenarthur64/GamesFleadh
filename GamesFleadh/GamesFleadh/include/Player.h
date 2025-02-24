@@ -44,6 +44,9 @@ public:
 	void updateBullet();
 	void despawnBullet(int bulletNum);
 
+	void rebound(Vector3 t_impactPoint);
+	
+
 private:
 	//Weapon m_weapon;
 
@@ -59,5 +62,11 @@ private:
 	Rectangle m_healthbar;
 
 	const float HEALTHBAR_MAX;
+
+	Vector3 m_reboundDirection = Vector3Zero();
+	float m_reboundCounter = 0.0f;
+	const float m_reboundCountMax = 0.125f; // 33f;
+	const float m_reboundForce = 20.0f;
+
 };
 

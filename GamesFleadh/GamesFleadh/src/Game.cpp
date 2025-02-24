@@ -257,9 +257,23 @@ void Game::update()
 
     mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
-    player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT));
-    player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL));
-    player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL));
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
+    {// Colliding with terrain on the right
+        player.collision(true);
+        player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+    }
+
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
+    {// Colliding with terrain on the left
+        player.collision(true);
+        player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+    }
+
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
+    {// Colliding with terrain in front
+        player.collision(true);
+        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+    }    
     
     m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
 
@@ -364,8 +378,15 @@ void Game::inputControl()
     billPositionRotating.z = player.getPosition().z - 3.0f;
 
     if (autoScroll)
-    {
+    {// RS: How are we not doing this stuff with GETFRAMETIME(), are we barbarians?
         camPos.z += -0.1f;
+    }
+
+    if (m_reboundCounter > 0)
+    {// RS: Shit be fucked up that I have to put this in INPUT.
+        float frameTime = GetFrameTime();
+        m_reboundCounter -= frameTime;
+        camPos -= M_REBOUND_DIRECTION * m_reboundForce * frameTime;
     }
 }
 
@@ -399,6 +420,13 @@ void Game::crosshairMove()
 
     billPositionRotating.x += billSpeed * (rightStickX + keyboardX);
     billPositionRotating.y += billSpeed * (- (rightStickY + keyboardY));
+}
+
+void Game::reboundZ(Vector3 t_impactPoint)
+{
+    std::cout << "Rebound triggered.\n";
+    m_reboundCounter = m_reboundCountMax;
+    // m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
 }
 
 void Game::gamepadInit()
