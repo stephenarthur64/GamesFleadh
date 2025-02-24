@@ -177,17 +177,28 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
             {
                 std::cout << "\nFound an active pixel.\n";
 
-                std::string furnType = FURNITURE_DEFAULT_MUSH;
+                std::string furnType = FURNITURE_DUMMY_ZERO;
                 
                 if (col.r == 255 && col.b == 0 && col.g == 0) furnType = FURNITURE_DEFAULT_MUSH;
                 if (col.r == 0 && col.b == 255 && col.g == 0) furnType = FURNITURE_BATCH_MUSH;
                 if (col.r == 0 && col.b == 0 && col.g == 255) furnType = FURNITURE_BUMPY_MUSH;
                 if (col.r == 255 && col.b == 255 && col.g == 0) furnType = FURNITURE_CHUNKY_MUSH;
                 if (col.r == 255 && col.b == 0 && col.g == 255) furnType = FURNITURE_POINTY_MUSH;
-                // if (col.r == 0 && col.b == 255 && col.g == 255) furnType = FURNITURE_POINTY_MUSH;
-                // if (col.r == 255 && col.b == 255 && col.g == 255) furnType = FURNITURE_POINTY_MUSH;
+                
+                if (col.r == 0 && col.b == 255 && col.g == 255) furnType = FURNITURE_GRASS;
+                
+                if (col.r == 5 && col.b == 0 && col.g == 0) furnType = FURNITURE_STONE_SMALL01;
+                if (col.r == 10 && col.b == 0 && col.g == 0) furnType = FURNITURE_STONE_SMALL01;
+                if (col.r == 100 && col.b == 0 && col.g == 0) furnType = FURNITURE_STONE_MED_FLAT01;
+                if (col.r == 100 && col.b == 0 && col.g == 0)
+                {
+                    std::cout << "!!!!!!!!!!!!Found r15!!!!!!!!!!!!\n!!!!!!!!!!!!Found r15!!!!!!!!!!!!\n!!!!!!!!!!!!Found r15!!!!!!!!!!!!\n";
+                }
+                if (col.r == 20 && col.b == 0 && col.g == 0) furnType = FURNITURE_STONE_MED_FLAT02;
+                if (col.r == 25 && col.b == 0 && col.g == 0) furnType = FURNITURE_STONE_MED_POINTY;
+                if (col.r == 30 && col.b == 0 && col.g == 0) furnType = FURNITURE_STONE_LARGE;
 
-                assignFurniture(u, v, furnType);
+                if(furnType != FURNITURE_DUMMY_ZERO) assignFurniture(u, v, furnType);
 
                 //if (furnitureCount < max_furniture)
                 //{
