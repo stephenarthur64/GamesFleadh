@@ -18,6 +18,8 @@ public:
 	virtual void render();
 	void renderBoom(Camera t_camera);
 
+	void spawn(Vector3 t_position, float limitMax, float limitMin);
+
 	void boom();
 
 	void setLimits(float t_upperLimit, float t_lowerLimit);
@@ -49,7 +51,7 @@ private:
 	Vector3 m_velocity;
 
 	const float MAX_DISTANCE;
-
+	//we bring the boom-jamie cullen
 	Sound fxBoom;
 
 	// Load explosion texture

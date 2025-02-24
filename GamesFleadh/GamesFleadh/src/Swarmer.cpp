@@ -41,6 +41,15 @@ void Swarmer::renderBoom(Camera t_camera)
 	}
 }
 
+void Swarmer::spawn(Vector3 t_position, float limitMax, float limitMin)
+{
+	m_position = t_position;
+	setLimits(limitMax, limitMin);
+	setHitbox();
+	m_health = 1;
+	currentState = new IdleState;
+}
+
 void Swarmer::setLimits(float t_upperLimit, float t_lowerLimit)
 {
 	m_upperLimit = t_upperLimit;
@@ -99,6 +108,7 @@ void Swarmer::boom()
 				{
 					currentLine = 0;
 					active = false;
+					m_position.x = 1000.0f;
 				}
 			}
 

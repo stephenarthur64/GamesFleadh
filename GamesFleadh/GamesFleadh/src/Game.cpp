@@ -539,6 +539,8 @@ void Game::mapMove()
     m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
     m_terrainTileCollection[m_tileNext].makeFeederSeekPlayer(false, player);
 
+    swarmer->spawn({ -2.0f, 3.0f, -12.0f }, 5, 0);
+
     float mapLength = 64.0f;
     
     camPos.z = 0.0f;
