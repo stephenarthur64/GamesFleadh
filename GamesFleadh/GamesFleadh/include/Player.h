@@ -33,6 +33,7 @@ public:
 	virtual void init() override;
 	virtual void render() override;
 	Rectangle getHealthBar() { return m_healthbar; }
+	Color getHealthBarColour() { return m_hpColour; }
 
 	void update();
 	void updateHealthbar();
@@ -47,6 +48,7 @@ public:
 	void rebound(Vector3 t_impactPoint);
 	
 	void poisonPlayer(bool t_poison);
+	bool isPoisoned() { return m_poisoned; }
 
 private:
 	//Weapon m_weapon;
@@ -61,6 +63,7 @@ private:
 
 	Quaternion crosshairRotation;
 	Rectangle m_healthbar;
+	Color m_hpColour;
 
 	const float HEALTHBAR_MAX;
 
@@ -70,6 +73,7 @@ private:
 	const float m_reboundForce = 20.0f;
 
 	bool m_poisoned;
-
+	int m_poisonTick;
+	const int MAX_POISON_TICK;
 };
 

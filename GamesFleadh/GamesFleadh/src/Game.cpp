@@ -205,7 +205,7 @@ void Game::render()
     DrawGrid(20, 1.0f);
     EndMode3D();
 
-    DrawRectangleRec(player.getHealthBar(), GREEN);
+    DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
     DrawTexture(healthBar, 0, 1000, WHITE);
    
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);

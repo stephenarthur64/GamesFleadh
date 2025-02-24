@@ -1,7 +1,8 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false)
+Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false), m_poisonTick(-1), MAX_POISON_TICK(30),
+					m_hpColour(GREEN)
 {
 	currentState = new IdleState;
 	m_health = 100;
@@ -98,7 +99,20 @@ void Player::update()
 {
 	currentState->update(this);
 	updateHealthbar();
-	//m_weapon.update(m_position);
+	if (m_poisoned && m_health > 10 && m_poisonTick > MAX_POISON_TICK)
+	{
+		m_health -= 5;
+		m_poisonTick = 0;
+	}
+	else if (m_health <= 10)
+	{
+		m_poisoned = false;
+		m_hpColour = GREEN;
+	}
+	else
+	{
+		m_poisonTick++;
+	}
 
 	if (m_reboundCounter > 0)
 	{
@@ -179,9 +193,8 @@ void Player::rebound(Vector3 t_impactPoint)
 
 void Player::poisonPlayer(bool t_poison)
 {
-	if (t_poison && m_health > 10)
-	{
-		m_health--;
-	}
+	m_poisoned = t_poison;
+	m_poisonTick = 0;
+	m_hpColour = ORANGE;
 }
 
