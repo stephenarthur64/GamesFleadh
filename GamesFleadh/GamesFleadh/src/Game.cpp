@@ -82,8 +82,9 @@ void Game::loadAssets()
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_RIVERTEST01));
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
 
-    
-
+    fogOpacity = WHITE;
+    fogOpacity.a = 0;
+    fogVignette = LoadTexture("ASSETS/2D/Fog/OrangeVignette.png");
     healthBar = LoadTexture("ASSETS/2D/UI/HealthBar.png");
 
     bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
@@ -207,6 +208,8 @@ void Game::render()
 
     DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
     DrawTexture(healthBar, 0, 1000, WHITE);
+
+    DrawTexture(fogVignette, 0, 0, fogOpacity);
    
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
@@ -290,7 +293,7 @@ void Game::update()
     player.update();
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
-
+    //fogVisibility();
 }
 
 void Game::inputControl()
@@ -429,6 +432,11 @@ void Game::reboundZ(Vector3 t_impactPoint)
     std::cout << "Rebound triggered.\n";
     m_reboundCounter = m_reboundCountMax;
     // m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
+}
+
+void Game::fogVisibility()
+{
+    fogOpacity.a++;
 }
 
 void Game::gamepadInit()

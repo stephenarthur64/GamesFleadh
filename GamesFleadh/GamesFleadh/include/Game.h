@@ -50,6 +50,8 @@ public:
 
 	void reboundZ(Vector3 t_impactPoint);
 
+	void fogVisibility();
+
 private:
 	Camera camera;
 	Camera camTopDown;
@@ -69,6 +71,9 @@ private:
 	Texture2D healthBar;
 	Texture2D fogBar;
 	Texture2D fogGradient;
+	Texture2D fogVignette;
+
+	Color fogOpacity;
 
 	float camSpeed = 0.2f;
 	float camDirection;
