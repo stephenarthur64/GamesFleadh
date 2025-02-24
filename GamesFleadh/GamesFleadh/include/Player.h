@@ -18,6 +18,7 @@ public:
 	Vector3 getBulletPositon(int count) { return bullet[count].getPosition(); }
 	BoundingBox getBulletHitBox(int count) { return bullet[count].getHitbox(); }
 	const int getBulletMax() { return MAX_BULLETS; }
+	void addHealth(int t_amt) { m_health += t_amt; }
 	int currentBullet() { return bulletCount; }
 	void setHitBox();
 	void updateHitBox(float t_x);
@@ -32,6 +33,7 @@ public:
 	virtual void init() override;
 	virtual void render() override;
 	Rectangle getHealthBar() { return m_healthbar; }
+	Color getHealthBarColour() { return m_hpColour; }
 
 	void update();
 	void updateHealthbar();
@@ -43,12 +45,17 @@ public:
 	void updateBullet();
 	void despawnBullet(int bulletNum);
 
+	void rebound(Vector3 t_impactPoint);
+	
+	void poisonPlayer(bool t_poison);
+	bool isPoisoned() { return m_poisoned; }
+
 private:
 	//Weapon m_weapon;
 
 	float m_speed;
 	float hitboxOffsetMin = 1.0f;
-	float hitboxOffsetMax = 3.0f;
+	float hitboxOffsetMax = 1.0f;
 
 	Bullet bullet[10];
 	int bulletCount;
@@ -56,7 +63,17 @@ private:
 
 	Quaternion crosshairRotation;
 	Rectangle m_healthbar;
+	Color m_hpColour;
 
 	const float HEALTHBAR_MAX;
+
+	Vector3 m_reboundDirection = Vector3Zero();
+	float m_reboundCounter = 0.0f;
+	const float m_reboundCountMax = 0.125f; // 33f;
+	const float m_reboundForce = 20.0f;
+
+	bool m_poisoned;
+	int m_poisonTick;
+	const int MAX_POISON_TICK;
 };
 

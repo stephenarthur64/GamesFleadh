@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-Bullet::Bullet()
+Bullet::Bullet() : m_radius(0.5f)
 {
 }
 
@@ -18,6 +18,11 @@ void Bullet::spawn(Vector3 t_pos, float t_speed, Vector3 t_velocity)
 	m_velocity = t_velocity;
 	distance = 0;
 	//m_velocity *= {m_speed, m_speed, m_speed};
+
+	// Heere come de RoB code:
+	m_direction = t_velocity - t_pos;
+	m_direction = Vector3Normalize(m_direction);
+
 }
 
 void Bullet::despawn()
@@ -30,12 +35,15 @@ void Bullet::move()
 {
 	if (m_active)
 	{
-		distance += 0.5f;
+		/*distance += 0.5f;
 		m_velocity.z -= 0.5f;
 
 
-		m_position = Vector3MoveTowards(m_position, m_velocity, distance);
+		m_position = Vector3MoveTowards(m_position, m_velocity, distance);*/
+		
 		//m_position += m_velocity;
+
+		m_position += m_direction * m_speed;
 	}
 }
 
@@ -55,7 +63,7 @@ void Bullet::init()
 
 void Bullet::render()
 {
-	DrawModel(m_body, m_position, 0.5f, BLUE);
+	DrawModel(m_body, m_position, m_radius, BLUE);
 	DrawBoundingBox(m_hitbox, RED);
 }
 

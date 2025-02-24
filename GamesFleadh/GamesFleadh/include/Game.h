@@ -30,7 +30,7 @@ public:
 	~Game();
 	void run();
 	void init();
-	void placeObjectsFromImage(Image placementMap);
+	// void placeObjectsFromImage(Image placementMap);
 	void render();
 	void update();
 	void loadAssets();
@@ -47,6 +47,8 @@ public:
 	void mapMove();
 	void cameraMove();
 	void crosshairMove();
+
+	void reboundZ(Vector3 t_impactPoint);
 
 private:
 	Camera camera;
@@ -155,6 +157,11 @@ private:
 	int m_tileCurrent = 0;
 
 	int m_tileNext = 0;
+
+	const Vector3 M_REBOUND_DIRECTION = { 0.0f, 0.0f, -1.0f };
+	float m_reboundCounter = 0.0f;
+	const float m_reboundCountMax = 0.125f; // 33f;
+	const float m_reboundForce = 20.0f;
 
 };
 

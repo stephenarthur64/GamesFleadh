@@ -2,9 +2,11 @@
 #include <string>
 #include <vector>
 #include <iostream>
+//#include <memory>
 #include "gameobject.h"
 #include "StreetFurniture.h"
 #include "Globals.h"
+#include "Player.h"
 
 class Tile : public GameObject
 {
@@ -18,12 +20,20 @@ public:
 	void render() override;
 
 	void setInPlay(bool t_exists);
-	void tileIsCurrent(bool t_current); 
+	void makeTileCurrent(bool t_current);
+
+	// void makeTileFeedersActive()
 
 	bool isColliding(Vector3 t_collider);
 	bool checkFurnitureItemsCollision(BoundingBox t_player);
+	
+	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
-	std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
+	bool checkMudBombPlayerCollision(BoundingBox t_player);
+
+	void makeFeederSeekPlayer(bool t_seeking, Player player);
+
+	// std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
 
 	void update(Vector3 t_target);
 
@@ -34,6 +44,7 @@ private:
 	Image m_furnitureMapImage;
 	Image m_diffuseMapImage;
 	// Model m_tileModel;
+	
 	std::vector<StreetFurniture> m_furnitureVec;
 
 	float m_worldNormalX;
@@ -52,9 +63,10 @@ private:
 	const Vector3 MAP_POS_NEXT = { -32.0f, -0.0f, -128.0f };
 	const float SEEMING_MAGICAL_Z_OFFSET = 2.0f;
 
-	// std::vector<StreetFurniture> processFurnitureMap(Image t_furnitureMap);
 	void processFurnitureMap(Image t_furnitureMap);
 
 	void assignFurniture(float t_u, float t_v, std::string t_furnitureType);
+
+
 };
 

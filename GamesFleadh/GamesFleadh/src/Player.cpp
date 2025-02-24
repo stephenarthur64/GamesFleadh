@@ -1,7 +1,8 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450)
+Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false), m_poisonTick(-1), MAX_POISON_TICK(30),
+					m_hpColour(GREEN)
 {
 	currentState = new IdleState;
 	m_health = 100;
@@ -14,14 +15,15 @@ void Player::move(Vector3 t_velocity)
 {
 	t_velocity *= {m_speed, -m_speed, m_speed};
 	m_position += t_velocity;
+
 	m_hitbox.min += t_velocity;
 	m_hitbox.max += t_velocity;
 }
 
 void Player::setHitBox()
 {
-	Vector3 minOffset = { -hitboxOffsetMin, -0.1f, 0.5f };
-	Vector3 maxOffset = { -hitboxOffsetMax, 1.1f, -1.0f };
+	Vector3 minOffset = { -hitboxOffsetMin, -0.1f, -1.0f };
+	Vector3 maxOffset = { hitboxOffsetMax, 1.1f, 0.5f };
 
 	m_hitbox.min = m_position + minOffset;
 	m_hitbox.max = m_position + maxOffset;
@@ -38,6 +40,7 @@ void Player::worldCollision(bool collide)
 	if (collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
+		if(m_health > 0) m_health -= 10;
 	}
 }
 
@@ -69,6 +72,8 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
+	m_position.y += 2.0f;
+
 	m_healthbar.x = 40;
 	m_healthbar.y = 1015;
 	m_healthbar.width = HEALTHBAR_MAX;
@@ -95,7 +100,32 @@ void Player::update()
 {
 	currentState->update(this);
 	updateHealthbar();
-	//m_weapon.update(m_position);
+	if (m_poisoned && m_health > 10 && m_poisonTick > MAX_POISON_TICK)
+	{
+		m_health -= 5;
+		m_poisonTick = 0;
+	}
+	else if (m_health <= 10)
+	{
+		m_poisoned = false;
+		m_hpColour = GREEN;
+	}
+	else
+	{
+		m_poisonTick++;
+	}
+
+	if (m_reboundCounter > 0)
+	{
+		float frameTime = GetFrameTime();
+		m_reboundCounter -= frameTime;
+		m_position += m_reboundDirection * m_reboundForce * frameTime;
+	}
+
+	m_position.y = Clamp(m_position.y, -0.2f, 13.0f);
+
+	//std::cout << "Y position is: " << m_position.y << "\n";
+
 }
 
 void Player::updateHealthbar()
@@ -152,5 +182,20 @@ void Player::updateBullet()
 void Player::despawnBullet(int bulletNum)
 {
 	bullet[bulletNum].despawn();
+}
+
+void Player::rebound(Vector3 t_impactPoint)
+{
+	std::cout << "Rebound triggered.\n";
+	m_reboundCounter = m_reboundCountMax;
+	m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
+
+}
+
+void Player::poisonPlayer(bool t_poison)
+{
+	m_poisoned = t_poison;
+	m_poisonTick = 0;
+	m_hpColour = ORANGE;
 }
 

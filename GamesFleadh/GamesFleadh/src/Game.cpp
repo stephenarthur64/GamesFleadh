@@ -57,10 +57,10 @@ void Game::init()
     m_tileCurrent = 0; // Initialise index for m_terrainTileCollection
     m_tileNext = 1;
 
-    m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true); // Sets tile position in world
-    m_terrainTileCollection[m_tileNext].tileIsCurrent(false); // Sets tile position to 'next'
+    m_terrainTileCollection[m_tileCurrent].makeTileCurrent(true); // Sets tile position in world
+    m_terrainTileCollection[m_tileNext].makeTileCurrent(false); // Sets tile position to 'next'
     
-    std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
+    // std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
 
     setupSkybox();
     
@@ -99,10 +99,8 @@ void Game::loadAssets()
     {
         swarmer[i].init();
     }
-    
-    // placeObjectsFromImage(imgPlacementTest);
-
-    /*for (int i = 0; i < maxStreetFurniture; i++)
+    //RS: Can we get rid of this now?
+    /*for (int i = 0; i < maxStreetFurniture; i++) 
     {
         streetF[i].init();
     }*/
@@ -117,6 +115,8 @@ void Game::loadAssets()
         mushroom[i].spawnFeeder();
     }
     mushroom[0].playerDetected(true, player.getPosition());*/
+
+    m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
@@ -205,13 +205,14 @@ void Game::render()
     DrawGrid(20, 1.0f);
     EndMode3D();
 
-    DrawRectangleRec(player.getHealthBar(), GREEN);
+    DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
     DrawTexture(healthBar, 0, 1000, WHITE);
    
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
+    
     /*for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         if (mushroom[i].isActive())
@@ -223,6 +224,7 @@ void Game::render()
     {
         DrawText(TextFormat("SWARMER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
     }
+
     DrawFPS(10, 30);
 
     /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
@@ -254,18 +256,28 @@ void Game::update()
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
     distanceStatic += 2.0f;
     distanceRotating = Vector3Distance(camera.position, billPositionRotating);
-    /*for (int i = 0; i < MAX_MUSHROOMS; i++)
-    {
-        mushroom[i].update();
-    }*/
+
     mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
-    player.worldCollision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT));
-    player.worldCollision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL));
-    player.worldCollision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL));
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
+    {// Colliding with terrain on the right
+        player.worldCollision(true);
+        player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+    }
+
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
+    {// Colliding with terrain on the left
+        player.worldCollision(true);
+        player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+    }
+
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
+    {// Colliding with terrain in front
+        player.worldCollision(true);
+        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+    }    
     
     m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
-    // checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
 
     for (Tile& item : m_terrainTileCollection)
     {
@@ -339,10 +351,10 @@ void Game::inputControl()
         autoScroll = !autoScroll;
     }
 
-    if (IsKeyPressed(KEY_Z))
+    /*if (IsKeyPressed(KEY_Z))
     {
-        player.worldCollision(true);
-    }
+        player.collision(true);
+    }*/
 
     if (IsKeyReleased(KEY_X))
     {
@@ -354,6 +366,11 @@ void Game::inputControl()
         player.shootBullet(billPositionRotating);
     }
 
+    if (IsKeyReleased(KEY_BACKSPACE))
+    {
+        player.addHealth(10);
+    }
+
     Vector3 normVelocity = Vector3Normalize({ leftStickX, leftStickY, 0 });
 
     player.move(normVelocity);
@@ -363,8 +380,15 @@ void Game::inputControl()
     billPositionRotating.z = player.getPosition().z - 3.0f;
 
     if (autoScroll)
-    {
+    {// RS: How are we not doing this stuff with GETFRAMETIME(), are we barbarians?
         camPos.z += -0.1f;
+    }
+
+    if (m_reboundCounter > 0)
+    {// RS: Shit be fucked up that I have to put this in INPUT.
+        float frameTime = GetFrameTime();
+        m_reboundCounter -= frameTime;
+        camPos -= M_REBOUND_DIRECTION * m_reboundForce * frameTime;
     }
 }
 
@@ -398,6 +422,13 @@ void Game::crosshairMove()
 
     billPositionRotating.x += billSpeed * (rightStickX + keyboardX);
     billPositionRotating.y += billSpeed * (- (rightStickY + keyboardY));
+}
+
+void Game::reboundZ(Vector3 t_impactPoint)
+{
+    std::cout << "Rebound triggered.\n";
+    m_reboundCounter = m_reboundCountMax;
+    // m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
 }
 
 void Game::gamepadInit()
@@ -447,33 +478,27 @@ void Game::checkCollisions()
 {
     int collide = 0;
 
+    player.enemyCollision(false); // RS: At the start of the collision check, set collision to false.
+
     BoundingBox one = player.getHitbox();
     BoundingBox one2 = player.getHitbox();
     BoundingBox two = swarmer[0].getHitbox();
     BoundingBox two2 = swarmer[0].getHitbox();
 
-    if (CheckCollisionBoxes(one, one2))
+    if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 2.0f))
     {
-        player.worldCollision(true);
-    }
-
-    if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 0.5f))
-    {
-        player.worldCollision(true);
+        player.enemyCollision(true);
         swarmer[0].collision(true);
     }
 
     for (int i = 0; i < player.getBulletMax(); i++)
     {
-        /*
-        if (CheckCollisionBoxSphere(mushroom[mushroomOnMap].getFeederHitbox(), player.getBulletPositon(i), 1.0f))
-        {
-            collide = 1;
-            mushroom[mushroomOnMap].setCollisions(true);
+        if (m_terrainTileCollection[m_tileCurrent].checkFeederBulletCollision(player.getBulletPositon(i), 1.0f))
+        {// Feeder collision set to true in Furniture (follow if statement above)
             player.despawnBullet(i);
             score += 10;
         }
-        */
+
         if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getBulletPositon(i), 1.0f))
         {
             swarmer[0].collision(true);
@@ -482,12 +507,14 @@ void Game::checkCollisions()
         }
     }
 
-    /*
-    if (collide != 1)
+    if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
     {
-        mushroom[mushroomOnMap].setCollisions(false);
+        player.enemyCollision(true);
     }
-    */
+    if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
+    {
+        player.poisonPlayer(true);
+    }
 }
 
 void Game::mapMove()
@@ -501,29 +528,22 @@ void Game::mapMove()
         m_tileNext = rand() % m_terrainTileCollection.size();
     }
 
-    // std::cout << "Furniture is set to: " << m_terrainTileCollection[0].getFurniture()[0].m_inPlay << "\n";
-
     for (Tile& item : m_terrainTileCollection)
     {
         item.setInPlay(false);
     }
 
-    m_terrainTileCollection[m_tileCurrent].tileIsCurrent(true);
-    m_terrainTileCollection[m_tileNext].tileIsCurrent(false);
+    m_terrainTileCollection[m_tileCurrent].makeTileCurrent(true);
+    m_terrainTileCollection[m_tileNext].makeTileCurrent(false);
+
+    m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
+    m_terrainTileCollection[m_tileNext].makeFeederSeekPlayer(false, player);
+
+    swarmer->spawn({ -2.0f, 3.0f, -12.0f }, 5, 0);
 
     float mapLength = 64.0f;
-
-    /*mushroomOnMap = 1;
-    mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });
-    mushroom[1].spawnFeeder();
-    mushroom[1].playerDetected(true, player.getPosition());
-
-    mushroom[0].spawn({ -1.0f, 2.0f, -mapLength - 15.0f});
-    mushroom[0].spawnFeeder();
-    mushroom[0].playerDetected(false, {0,0,0});
-    */
-    camPos.z = 0.0f;
     
+    camPos.z = 0.0f;
 }
 
 void Game::cameraMove()

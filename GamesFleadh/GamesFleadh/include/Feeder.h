@@ -25,17 +25,23 @@ public:
 	Model* getBulletModel(int count) { return m_mudBomb.getModel(); }
 	Vector3 getBulletPositon(int count) { return m_mudBomb.getPosition(); }
 	BoundingBox getBulletHitBox(int count) { return m_mudBomb.getHitbox(); }
+	
+	bool checkBulletCollisions(BoundingBox t_player);
 
 	void shootBullet(Vector3 t_target);
 	void despawnBullet();
 	void disableShooting();
 
 	void boom();
-	bool isActive() { return active; }
+	bool isActive() { return boomActive; }
+
+	void makeActive() { m_active = true; }
 
 	void kill();
 
 	void update(Vector3 t_target);
+
+	void checkDistanceFromPlayer(Vector3 t_playerPos);
 
 	virtual void rotate(int t_direction) override;
 
@@ -47,6 +53,9 @@ private:
 
 	int bulletTick = -1;
 	int damageTick = -1;
+
+	const int BULLET_TICK_MAX;
+	const int DAMAGE_TICK_MAX;
 
 	Sound fxBoom;
 
@@ -62,10 +71,13 @@ private:
 	Rectangle frameRec;
 	Vector2 position = { 0.0f, 0.0f };
 
-	bool active = false;
+	bool boomActive = false;
 	int framesCounter = 0;
 
 	Vector3 m_target;
 
+	bool m_active;
+	bool m_spotted;
+	const float MAX_DISTANCE;
 };
 
