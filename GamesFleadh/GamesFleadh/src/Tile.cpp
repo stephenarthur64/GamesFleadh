@@ -143,6 +143,14 @@ bool Tile::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius)
     return false;
 }
 
+void Tile::makeFeederSeekPlayer(bool t_seeking, Player player)
+{
+    for (StreetFurniture& item : m_furnitureVec)
+    {
+        item.makeFeederSeekPlayer(t_seeking, player);
+    }
+}
+
 void Tile::update(Vector3 t_target)
 {
     for (StreetFurniture& item : m_furnitureVec)

@@ -3,6 +3,7 @@
 #include "Feeder.h"
 #include "Globals.h"
 #include <string>
+#include "Player.h"
 // #include <memory>
 
 class StreetFurniture :
@@ -32,6 +33,8 @@ public:
 	bool checkPlayerFurnitureCollision(BoundingBox t_player);
 
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
+
+	void makeFeederSeekPlayer(bool t_seeking, Player player);
 
 private:
 	//// Feeder* m_feeder{}; // Starts as null pointer

@@ -6,6 +6,7 @@
 #include "gameobject.h"
 #include "StreetFurniture.h"
 #include "Globals.h"
+#include "Player.h"
 
 class Tile : public GameObject
 {
@@ -27,6 +28,8 @@ public:
 	bool checkFurnitureItemsCollision(BoundingBox t_player);
 	
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
+
+	void makeFeederSeekPlayer(bool t_seeking, Player player);
 
 	// std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
 

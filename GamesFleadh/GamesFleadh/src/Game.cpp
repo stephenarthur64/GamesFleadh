@@ -511,20 +511,12 @@ void Game::mapMove()
     m_terrainTileCollection[m_tileCurrent].makeTileCurrent(true);
     m_terrainTileCollection[m_tileNext].makeTileCurrent(false);
 
+    m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
+    m_terrainTileCollection[m_tileNext].makeFeederSeekPlayer(false, player);
+
     float mapLength = 64.0f;
     
-    /*
-    mushroomOnMap = 1;
-    mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });
-    mushroom[1].spawnFeeder();
-    mushroom[1].playerDetected(true, player.getPosition());
-
-    mushroom[0].spawn({ -1.0f, 2.0f, -mapLength - 15.0f});
-    mushroom[0].spawnFeeder();
-    mushroom[0].playerDetected(false, {0,0,0});
-    */
     camPos.z = 0.0f;
-    
 }
 
 void Game::cameraMove()

@@ -110,3 +110,18 @@ bool StreetFurniture::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bu
 	}
 	return false;
 }
+
+void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
+{
+	if (m_hasFeeder)
+	{
+		if (t_seeking)
+		{
+			m_feeder.shootBullet(player.getPosition());
+		}
+		else
+		{
+			m_feeder.disableShooting();
+		}
+	}
+}
