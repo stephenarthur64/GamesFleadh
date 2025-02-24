@@ -24,6 +24,12 @@ Game::~Game()
     
     UnloadMusicStream(bgm);
     CloseAudioDevice();
+
+    // !!!!!!!!!! RAYLIB SHADERS BASIC LIGHTING STARTS HERE !!!!!!!!!!!!!
+
+    UnloadShader(m_basicLightShader);   // Unload shader
+
+    // !!!!!!!!!! RAYLIB SHADERS BASIC LIGHTING ENDS HERE !!!!!!!!!!!!!
 }
 
 void Game::run()
@@ -39,6 +45,7 @@ void Game::run()
 
 void Game::init()
 {
+    SetConfigFlags(FLAG_MSAA_4X_HINT);  // Enable Multi Sampling Anti Aliasing 4x (if available)
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
    // ToggleFullscreen();
     InitAudioDevice();
@@ -51,6 +58,34 @@ void Game::init()
     camera.up = { 0.0f, 1.0f, 0.0f };           // Camera up vector (rotation towards target)
     camera.fovy = 60.0f;                        // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;     // Camera projection type
+
+    // !!!!!!!!!! RAYLIB SHADERS BASIC LIGHTING STARTS HERE !!!!!!!!!!!!!
+ 
+    // Load basic lighting shader
+    m_basicLightShader = LoadShader(TextFormat("ASSETS/shaders/glsl%i/lighting.vs", GLSL_VERSION),
+        TextFormat("ASSETS/shaders/glsl%i/lighting.fs", GLSL_VERSION));
+    // Get some required shader locations
+    m_basicLightShader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(m_basicLightShader, "viewPos");
+    // NOTE: "matModel" location name is automatically assigned on shader loading, 
+    // no need to get the location again if using that uniform name
+    //shader.locs[SHADER_LOC_MATRIX_MODEL] = GetShaderLocation(shader, "matModel");
+
+    // Ambient light level (some basic lighting)
+    int ambientLoc = GetShaderLocation(m_basicLightShader, "ambient");
+    float floatVal[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    SetShaderValue(m_basicLightShader, ambientLoc, floatVal, SHADER_UNIFORM_VEC4);
+
+    // Create lights
+    
+    m_lights[0] = CreateLight(LIGHT_POINT, Vector3{ -2, 1, -2 }, Vector3Zero(), YELLOW, m_basicLightShader);
+    m_lights[1] = CreateLight(LIGHT_POINT, Vector3{ 2, 1, 2 }, Vector3Zero(), RED, m_basicLightShader);
+    m_lights[2] = CreateLight(LIGHT_POINT, Vector3{ -2, 1, 2 }, Vector3Zero(), GREEN, m_basicLightShader);
+    m_lights[3] = CreateLight(LIGHT_POINT, Vector3{ 2, 1, -2 }, Vector3Zero(), BLUE, m_basicLightShader);
+
+    // Next code will be at UpdateCamera
+
+    // !!!!!!!!!! RAYLIB SHADERS BASIC LIGHTING ENDS HERE !!!!!!!!!!!!!!!
+
 
     loadAssets();
     
@@ -155,6 +190,24 @@ void Game::render()
     ClearBackground({ RAYWHITE });
 
     BeginMode3D(camera);
+
+    // !!!!!!!!!! RAYLIB SHADERS BASIC LIGHTING STARTS HERE !!!!!!!!!!!!!
+
+    BeginShaderMode(m_basicLightShader);
+
+    DrawPlane(Vector3Zero(), Vector2{ 10.0, 10.0 }, WHITE);
+    DrawCube(Vector3Zero(), 2.0, 4.0, 2.0, WHITE);
+
+    EndShaderMode();
+
+    // Draw spheres to show where the lights are
+    for (int i = 0; i < MAX_LIGHTS; i++)
+    {
+        if (m_lights[i].enabled) DrawSphereEx(m_lights[i].position, 0.2f, 8, 8, m_lights[i].color);
+        else DrawSphereWires(m_lights[i].position, 0.2f, 8, 8, ColorAlpha(m_lights[i].color, 0.3f));
+    }
+
+    // !!!!!!!!!! RAYLIB SHADERS BASIC LIGHTING ENDS HERE !!!!!!!!!!!!!
 
     // SKYBOX RENDER 
     rlDisableBackfaceCulling(); // We are inside the cube, we need to disable backface culling!
@@ -288,6 +341,25 @@ void Game::update()
     player.update();
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
+
+    // !!!!!!!!!! RAYLIB SHADERS BASIC LIGHTING STARTS HERE !!!!!!!!!!!!!
+
+    // Update the shader with the camera view vector (points towards { 0.0f, 0.0f, 0.0f })
+    float cameraPos[3] = { camera.position.x, camera.position.y, camera.position.z };
+    SetShaderValue(m_basicLightShader, m_basicLightShader.locs[SHADER_LOC_VECTOR_VIEW], cameraPos, SHADER_UNIFORM_VEC3);
+
+    // Check key inputs to enable/disable lights
+    if (IsKeyPressed(KEY_Y)) { m_lights[0].enabled = !m_lights[0].enabled; }
+    if (IsKeyPressed(KEY_R)) { m_lights[1].enabled = !m_lights[1].enabled; }
+    if (IsKeyPressed(KEY_G)) { m_lights[2].enabled = !m_lights[2].enabled; }
+    if (IsKeyPressed(KEY_B)) { m_lights[3].enabled = !m_lights[3].enabled; }
+
+    // Update light values (actually, only enable/disable them)
+    for (int i = 0; i < MAX_LIGHTS; i++) UpdateLightValues(m_basicLightShader, m_lights[i]);
+
+    // Next code is in Draw function...!
+
+    // !!!!!!!!!! RAYLIB SHADERS BASIC LIGHTING ENDS HERE !!!!!!!!!!!!!
 
 }
 

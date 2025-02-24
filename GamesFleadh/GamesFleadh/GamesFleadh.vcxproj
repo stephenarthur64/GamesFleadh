@@ -38,6 +38,7 @@
     <ClInclude Include="include\Mushroom.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\PlayerSpottedState.h" />
+    <ClInclude Include="include\rlights.h" />
     <ClInclude Include="include\ShootState.h" />
     <ClInclude Include="include\State.h" />
     <ClInclude Include="include\StateChase.h" />

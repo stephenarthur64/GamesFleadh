@@ -5,6 +5,9 @@
 #include "rlgl.h" // RS: Added for skybox
 #include <vector>
 
+#define RLIGHTS_IMPLEMENTATION
+#include "rlights.h"
+
 // RS: Again, added for skybox - shader for skybox depends on platform.
 #if defined(PLATFORM_DESKTOP)
 #define GLSL_VERSION            330
@@ -162,6 +165,9 @@ private:
 	float m_reboundCounter = 0.0f;
 	const float m_reboundCountMax = 0.125f; // 33f;
 	const float m_reboundForce = 20.0f;
+
+	Shader m_basicLightShader;
+	Light m_lights[MAX_LIGHTS] = { 0 };
 
 };
 
