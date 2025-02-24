@@ -85,6 +85,12 @@ void Game::loadAssets()
     fogOpacity = WHITE;
     fogOpacity.a = 0;
     fogVignette = LoadTexture("ASSETS/2D/Fog/OrangeVignette.png");
+    fogBar = LoadTexture("ASSETS/2D/UI/FogBar.png");
+    fogGradient = LoadTexture("ASSETS/2D/UI/FogGradient.png");
+
+    gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
+    gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
+
     healthBar = LoadTexture("ASSETS/2D/UI/HealthBar.png");
 
     bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
@@ -210,6 +216,10 @@ void Game::render()
     DrawTexture(healthBar, 0, 1000, WHITE);
 
     DrawTexture(fogVignette, 0, 0, fogOpacity);
+    //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
+    //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
+    DrawTexturePro(fogGradient, gradientSource, gradientDest, {(float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
+    DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
    
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
@@ -293,7 +303,7 @@ void Game::update()
     player.update();
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
-    //fogVisibility();
+    fogVisibility();
 }
 
 void Game::inputControl()
@@ -434,11 +444,6 @@ void Game::reboundZ(Vector3 t_impactPoint)
     // m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
 }
 
-void Game::fogVisibility()
-{
-    fogOpacity.a++;
-}
-
 void Game::gamepadInit()
 {
     TextFindIndex(TextToLower(GetGamepadName(gamepad)), PS_ALIAS);
@@ -518,6 +523,7 @@ void Game::checkCollisions()
     if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
     {
         player.enemyCollision(true);
+        //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
     {
@@ -587,5 +593,13 @@ void Game::cameraMove()
     camera.target.z = billPositionRotating.z - 15.0f;
 }
 
+void Game::fogVisibility()
+{
+    float heightPercent;
 
+    fogOpacity.a += 0.1f;
+    heightPercent = gradientDest.height / 100.0f;
+
+    
+}
 
