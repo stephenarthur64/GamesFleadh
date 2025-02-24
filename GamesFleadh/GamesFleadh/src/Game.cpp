@@ -260,9 +260,9 @@ void Game::update()
     }*/
     mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
-    player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT));
-    player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL));
-    player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL));
+    player.worldCollision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT));
+    player.worldCollision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL));
+    player.worldCollision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL));
     
     m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
     // checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
@@ -341,7 +341,7 @@ void Game::inputControl()
 
     if (IsKeyPressed(KEY_Z))
     {
-        player.collision(true);
+        player.worldCollision(true);
     }
 
     if (IsKeyReleased(KEY_X))
@@ -454,12 +454,12 @@ void Game::checkCollisions()
 
     if (CheckCollisionBoxes(one, one2))
     {
-        player.collision(true);
+        player.worldCollision(true);
     }
 
     if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 0.5f))
     {
-        player.collision(true);
+        player.worldCollision(true);
         swarmer[0].collision(true);
     }
 

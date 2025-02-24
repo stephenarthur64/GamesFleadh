@@ -33,20 +33,20 @@ void Player::updateHitBox(float t_z)
 	m_hitbox.max.z += t_z;
 }
 
-void Player::collision(bool collide)
-{
-	if (collide)
-	{
-		handleInput(Event::EVENT_DAMAGE);
-		m_health -= 10;
-	}
-}
-
 void Player::worldCollision(bool collide)
 {
 	if (collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
+	}
+}
+
+void Player::enemyCollision(bool collide)
+{
+	if (collide)
+	{
+		handleInput(Event::EVENT_DAMAGE);
+		m_health -= 10;
 	}
 }
 

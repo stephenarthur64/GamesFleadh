@@ -24,8 +24,8 @@ public:
 
 	Quaternion getCrosshairRotation() { return crosshairRotation; }
 	
-	void collision(bool collide);
 	void worldCollision(bool collide);
+	void enemyCollision(bool collide);
 
 	void updateZPos(float newXPos);
 	virtual void rotate(int t_direction) override;
