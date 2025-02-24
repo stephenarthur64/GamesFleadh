@@ -69,14 +69,27 @@ void StreetFurniture::spawnFeeder()
 
 void StreetFurniture::setHitBox()
 {
-	m_hitbox.min.x = m_position.x - 1.0f;
+	/*m_hitbox.min.x = m_position.x - 1.0f; // Original code here!
 	m_hitbox.max.x = m_position.x + 1.0f;
 
 	m_hitbox.min.y = m_position.y - 2.5;
 	m_hitbox.max.y = m_position.y + 9.5f;
 
 	m_hitbox.min.z = m_position.z - 3.0f;
-	m_hitbox.max.z = m_position.z - 1.0f;
+	m_hitbox.max.z = m_position.z - 1.0f;*/
+
+	BoundingBox localSpaceBoundingBox = GetMeshBoundingBox(m_body.meshes[0]);
+
+	m_hitbox.min.x = localSpaceBoundingBox.min.x + m_position.x;
+	m_hitbox.max.x = localSpaceBoundingBox.max.x + m_position.x;
+
+	m_hitbox.min.y = localSpaceBoundingBox.min.y + m_position.y;
+	m_hitbox.max.y = localSpaceBoundingBox.max.y + m_position.y;
+
+	m_hitbox.min.z = localSpaceBoundingBox.min.z + m_position.z;
+	m_hitbox.max.z = localSpaceBoundingBox.max.z + m_position.z;
+
+	
 }
 
 void StreetFurniture::setRelativePosition(Vector3 t_mapPos)

@@ -110,6 +110,7 @@ void Player::update()
 	m_position.y = Clamp(m_position.y, -0.2f, 13.0f);
 
 	//std::cout << "Y position is: " << m_position.y << "\n";
+
 }
 
 void Player::updateHealthbar()
