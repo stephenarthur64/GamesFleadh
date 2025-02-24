@@ -30,7 +30,7 @@ public:
 	~Game();
 	void run();
 	void init();
-	void placeObjectsFromImage(Image placementMap);
+	// void placeObjectsFromImage(Image placementMap);
 	void render();
 	void update();
 	void loadAssets();

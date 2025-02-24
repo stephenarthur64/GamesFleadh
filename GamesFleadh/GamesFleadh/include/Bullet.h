@@ -21,6 +21,7 @@ private:
 	float m_speed;
 	bool m_active;
 	Vector3 m_velocity;
+	Vector3 m_direction;
 	float distance;
 };
 

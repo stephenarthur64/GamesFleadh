@@ -210,6 +210,7 @@ void Game::render()
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
+    
     /*for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
         if (mushroom[i].isActive())
@@ -221,6 +222,7 @@ void Game::render()
     {
         DrawText(TextFormat("SWARMER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
     }
+
     DrawFPS(10, 30);
 
     /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
@@ -252,10 +254,7 @@ void Game::update()
     distanceStatic = Vector3Distance(camera.position, billPositionStatic);
     distanceStatic += 2.0f;
     distanceRotating = Vector3Distance(camera.position, billPositionRotating);
-    /*for (int i = 0; i < MAX_MUSHROOMS; i++)
-    {
-        mushroom[i].update();
-    }*/
+
     mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
     player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT));
