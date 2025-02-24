@@ -46,6 +46,7 @@ public:
 
 	void rebound(Vector3 t_impactPoint);
 	
+	void poisonPlayer(bool t_poison);
 
 private:
 	//Weapon m_weapon;
@@ -67,6 +68,8 @@ private:
 	float m_reboundCounter = 0.0f;
 	const float m_reboundCountMax = 0.125f; // 33f;
 	const float m_reboundForce = 20.0f;
+
+	bool m_poisoned;
 
 };
 

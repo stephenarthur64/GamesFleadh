@@ -34,6 +34,8 @@ public:
 
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
+	bool checkMudbombPlayerCollision(BoundingBox t_player);
+
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
 
 private:

@@ -495,7 +495,6 @@ void Game::checkCollisions()
     {
         if (m_terrainTileCollection[m_tileCurrent].checkFeederBulletCollision(player.getBulletPositon(i), 1.0f))
         {// Feeder collision set to true in Furniture (follow if statement above)
-            collide = 1; // Not sure what the 'collide' var is for...!
             player.despawnBullet(i);
             score += 10;
         }
@@ -512,13 +511,10 @@ void Game::checkCollisions()
     {
         player.collision(true);
     }
-
-    /* RS: Not sure what this is for!
-    if (collide != 1)
+    if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
     {
-        mushroom[mushroomOnMap].setCollisions(false);
+        player.poisonPlayer(true);
     }
-    */
 }
 
 void Game::mapMove()

@@ -124,6 +124,19 @@ bool StreetFurniture::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bu
 	return false;
 }
 
+bool StreetFurniture::checkMudbombPlayerCollision(BoundingBox t_player)
+{
+	if (m_hasFeeder)
+	{
+		if (m_feeder.checkBulletCollisions(t_player))
+		{
+			m_feeder.collision(true);
+			return true;
+		}
+	}
+	return false;
+}
+
 void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
 {
 	if (m_hasFeeder)

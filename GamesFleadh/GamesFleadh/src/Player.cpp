@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450)
+Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false)
 {
 	currentState = new IdleState;
 	m_health = 100;
@@ -175,5 +175,13 @@ void Player::rebound(Vector3 t_impactPoint)
 	m_reboundCounter = m_reboundCountMax;
 	m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
 
+}
+
+void Player::poisonPlayer(bool t_poison)
+{
+	if (t_poison && m_health > 10)
+	{
+		m_health--;
+	}
 }
 

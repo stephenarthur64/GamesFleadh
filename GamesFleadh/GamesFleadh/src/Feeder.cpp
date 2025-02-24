@@ -1,6 +1,6 @@
 #include "Feeder.h"
 
-Feeder::Feeder() : MAX_DISTANCE(8.0f), m_spotted(false), m_active(false)
+Feeder::Feeder() : MAX_DISTANCE(8.0f), m_spotted(false), m_active(false), BULLET_TICK_MAX(120), DAMAGE_TICK_MAX(60)
 {
 	currentState = new IdleState;
 	m_health = 1;
@@ -101,6 +101,11 @@ void Feeder::renderBoom(Camera &t_camera)
 	}
 }
 
+bool Feeder::checkBulletCollisions(BoundingBox t_player)
+{
+	return CheckCollisionBoxSphere(t_player, m_mudBomb.getPosition(), m_mudBomb.getRadius());
+}
+
 void Feeder::shootBullet(Vector3 t_target)
 {
 	checkDistanceFromPlayer(t_target);
@@ -116,6 +121,7 @@ void Feeder::shootBullet(Vector3 t_target)
 void Feeder::despawnBullet()
 {
 	m_mudBomb.despawn();
+	m_active = false;
 }
 
 void Feeder::disableShooting()
@@ -176,13 +182,13 @@ void Feeder::update(Vector3 t_target)
 
 	boom();
 
-	if (bulletTick >= 180 && t_target.z > m_position.z)
+	if (bulletTick >= BULLET_TICK_MAX && t_target.z > m_position.z)
 	{
 		m_mudBomb.despawn();
 		disableShooting();
 	}
 
-	if (bulletTick >= 180)
+	if (bulletTick >= BULLET_TICK_MAX)
 	{
 		bulletTick = 0;
 		shootBullet(t_target);
@@ -192,7 +198,7 @@ void Feeder::update(Vector3 t_target)
 		bulletTick++;
 	}
 
-	if (damageTick >= 60)
+	if (damageTick >= DAMAGE_TICK_MAX)
 	{
 		if (m_health > 0)
 		{

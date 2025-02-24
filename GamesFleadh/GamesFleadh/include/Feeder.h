@@ -25,6 +25,8 @@ public:
 	Model* getBulletModel(int count) { return m_mudBomb.getModel(); }
 	Vector3 getBulletPositon(int count) { return m_mudBomb.getPosition(); }
 	BoundingBox getBulletHitBox(int count) { return m_mudBomb.getHitbox(); }
+	
+	bool checkBulletCollisions(BoundingBox t_player);
 
 	void shootBullet(Vector3 t_target);
 	void despawnBullet();
@@ -51,6 +53,9 @@ private:
 
 	int bulletTick = -1;
 	int damageTick = -1;
+
+	const int BULLET_TICK_MAX;
+	const int DAMAGE_TICK_MAX;
 
 	Sound fxBoom;
 

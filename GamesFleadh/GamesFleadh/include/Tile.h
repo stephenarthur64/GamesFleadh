@@ -29,6 +29,8 @@ public:
 	
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
+	bool checkMudBombPlayerCollision(BoundingBox t_player);
+
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
 
 	// std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
