@@ -43,5 +43,6 @@ private:
 	Feeder m_feeder;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
+	float collisionRadius = 3.0f;
 };
 

@@ -53,6 +53,7 @@ private:
 	float m_speed;
 	float hitboxOffsetMin = 1.0f;
 	float hitboxOffsetMax = 1.0f;
+	float collisionRadius = 1.0f;
 
 	Bullet bullet[10];
 	int bulletCount;
