@@ -1,6 +1,6 @@
 #include "Feeder.h"
 
-Feeder::Feeder()
+Feeder::Feeder() : MAX_DISTANCE(8.0f), m_spotted(false), m_active(false)
 {
 	currentState = new IdleState;
 	m_health = 1;
@@ -94,7 +94,7 @@ void Feeder::render()
 
 void Feeder::renderBoom(Camera &t_camera)
 {
-	if (active)
+	if (boomActive)
 	{
 		DrawBillboard(t_camera, explosion, m_position, 2.0f, WHITE);
 		//DrawTextureRec(explosion, frameRec, position, WHITE);
@@ -103,9 +103,14 @@ void Feeder::renderBoom(Camera &t_camera)
 
 void Feeder::shootBullet(Vector3 t_target)
 {
-	m_target = t_target;
-	bulletTick = 0;
-	m_mudBomb.spawn(m_position, 0.3f, m_target);
+	checkDistanceFromPlayer(t_target);
+
+	if (m_spotted)
+	{
+		m_target = t_target;
+		bulletTick = 0;
+		m_mudBomb.spawn(m_position, 0.3f, m_target);
+	}
 }
 
 void Feeder::despawnBullet()
@@ -120,7 +125,7 @@ void Feeder::disableShooting()
 
 void Feeder::boom()
 {
-	if (active)
+	if (boomActive)
 	{
 		framesCounter++;
 
@@ -136,7 +141,7 @@ void Feeder::boom()
 				if (currentLine >= NUM_LINES)
 				{
 					currentLine = 0;
-					active = false;
+					boomActive = false;
 				}
 			}
 
@@ -150,7 +155,7 @@ void Feeder::kill()
 	m_hitbox.min.x = 1000.0f;
 	m_hitbox.max.x = 1001.0f;
 	disableShooting();
-	active = true;
+	boomActive = true;
 
 	position.x = m_position.x;
 	position.y = m_position.y;
@@ -164,6 +169,10 @@ void Feeder::update(Vector3 t_target)
 {
 	currentState->update(this);
 	m_mudBomb.follow(t_target);
+	if (m_active && bulletTick < 0)
+	{
+		shootBullet(t_target);
+	}
 
 	boom();
 
@@ -197,6 +206,33 @@ void Feeder::update(Vector3 t_target)
 	else if (damageTick > -1)
 	{
 		damageTick++;
+	}
+}
+
+void Feeder::checkDistanceFromPlayer(Vector3 t_playerPos)
+{
+	if (!m_spotted)
+	{
+		m_target = t_playerPos;
+	}
+
+	float xDistance = (m_target.x - m_position.x) * (m_target.x - m_position.x);
+	float zDistance = (m_target.z - m_position.z) * (m_target.z - m_position.z);
+
+	float distance = sqrtf(xDistance + zDistance);
+
+	if (distance <= MAX_DISTANCE)
+	{
+		m_spotted = true;
+	}
+	else
+	{
+		m_spotted = false;
+	}
+
+	if (distance <= 0.5f)
+	{
+		m_spotted = false;
 	}
 }
 

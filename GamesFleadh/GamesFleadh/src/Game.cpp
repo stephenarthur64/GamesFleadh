@@ -116,6 +116,8 @@ void Game::loadAssets()
     }
     mushroom[0].playerDetected(true, player.getPosition());*/
 
+    m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
+
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.2);
    // PlayMusicStream(bgm);

@@ -31,11 +31,15 @@ public:
 	void disableShooting();
 
 	void boom();
-	bool isActive() { return active; }
+	bool isActive() { return boomActive; }
+
+	void makeActive() { m_active = true; }
 
 	void kill();
 
 	void update(Vector3 t_target);
+
+	void checkDistanceFromPlayer(Vector3 t_playerPos);
 
 	virtual void rotate(int t_direction) override;
 
@@ -62,10 +66,13 @@ private:
 	Rectangle frameRec;
 	Vector2 position = { 0.0f, 0.0f };
 
-	bool active = false;
+	bool boomActive = false;
 	int framesCounter = 0;
 
 	Vector3 m_target;
 
+	bool m_active;
+	bool m_spotted;
+	const float MAX_DISTANCE;
 };
 

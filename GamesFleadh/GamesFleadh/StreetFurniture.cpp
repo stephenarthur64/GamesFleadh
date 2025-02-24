@@ -130,7 +130,7 @@ void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
 	{
 		if (t_seeking)
 		{
-			m_feeder.shootBullet(player.getPosition());
+			m_feeder.makeActive();
 		}
 		else
 		{
