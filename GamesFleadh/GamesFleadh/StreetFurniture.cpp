@@ -1,7 +1,11 @@
 #include "StreetFurniture.h"
 #include <iostream>
 
-StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos) : m_hasFeeder(t_hasFeeder)
+StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos) : m_hasFeeder(t_hasFeeder), 
+																									m_colourDecrease(0),
+																									m_colourVal(255), eatTick(0), 
+																									MAX_EAT_TICK(60)
+																									
 {
 	m_placementOffset = t_startPos;
 
@@ -12,6 +16,7 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 	{
 		m_feeder.init();
 	}
+	m_health = 255;
 }
 
 StreetFurniture::~StreetFurniture()
@@ -28,7 +33,7 @@ void StreetFurniture::render()
 {
 	if (!m_inPlay) return; // Not in gameplay: early out.
 
-	DrawModel(m_body, m_position, 1.0f, WHITE);
+	DrawModel(m_body, m_position, 1.0f, m_colour);
 	DrawBoundingBox(m_hitbox, BLUE);
 
 	if (!m_hasFeeder) return;
@@ -149,5 +154,25 @@ void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
 		{
 			m_feeder.disableShooting();
 		}
+	}
+}
+
+void StreetFurniture::makeFeederEat()
+{
+	if (m_hasFeeder && eatTick >= MAX_EAT_TICK)
+	{
+		m_colourDecrease += 20;
+		m_colourVal -= m_colourDecrease;
+
+		m_colour.r = m_colourVal;
+		m_colour.g = m_colourVal;
+		m_colour.b = m_colourVal;
+		m_colour.a = m_colourVal;
+
+		eatTick = 0;
+	}
+	else
+	{
+		eatTick++;
 	}
 }

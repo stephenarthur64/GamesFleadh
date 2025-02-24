@@ -38,6 +38,8 @@ public:
 
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
 
+	void makeFeederEat();
+
 private:
 	//// Feeder* m_feeder{}; // Starts as null pointer
 	//std::unique_ptr<Feeder> m_feeder;
@@ -45,5 +47,9 @@ private:
 	Feeder m_feeder;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
+	int m_colourDecrease;
+	float m_colourVal;
+	int eatTick;
+	const int MAX_EAT_TICK;
 };
 

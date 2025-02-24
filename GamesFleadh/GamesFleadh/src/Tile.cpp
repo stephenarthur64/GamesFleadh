@@ -168,6 +168,7 @@ void Tile::update(Vector3 t_target)
     for (StreetFurniture& item : m_furnitureVec)
     {
         item.update(t_target);
+        item.makeFeederEat();
     }
 }
 
