@@ -5,7 +5,7 @@
 #include "rlgl.h" // RS: Added for skybox
 #include <vector>
 
-#define RLIGHTS_IMPLEMENTATION
+//#define RLIGHTS_IMPLEMENTATION
 #include "rlights.h"
 
 // RS: Again, added for skybox - shader for skybox depends on platform.
