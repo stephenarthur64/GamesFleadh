@@ -17,7 +17,7 @@ void Swarmer::rotate(int t_direction)
 void Swarmer::init()
 {
 	m_body = LoadModel("ASSETS/3D/Enemy/Swarmer/Swarmer.glb");
-	setLimits(5, -5);
+	setLimits(3, 0);
 	setHitbox();
 	fxBoom = LoadSound("ASSETS/boom.wav");
 	SetSoundVolume(fxBoom, 0.3);
@@ -155,27 +155,43 @@ void Swarmer::playerSpotted(bool t_spotted)
 
 void Swarmer::hover()
 {
+	Vector3 movement = { 0.0f, 0.0f, 0.0f };
+	Vector3 newPosition = { 0.0f, 0.0f, 0.0f };
+
 	if (m_direction == NORTH)
 	{
-		m_position.x += m_speed;
-		m_hitbox.min.x += m_speed;
-		m_hitbox.max.x += m_speed;
 
-		if (m_upperLimit < m_position.x)
+		newPosition.x = EaseElasticOut(hoverTick, m_lowerLimit, m_upperLimit - m_lowerLimit, 300);
+		movement.x = newPosition.x - m_position.x;
+		m_position.x = newPosition.x;
+
+		m_hitbox.min += movement;
+		m_hitbox.max += movement;
+
+		hoverTick++;
+
+		if (hoverTick >= 140)
 		{
 			m_direction = SOUTH;
+			hoverTick = 0;
 		}
 	}
 
 	if (m_direction == SOUTH)
 	{
-		m_position.x -= m_speed;
-		m_hitbox.min.x -= m_speed;
-		m_hitbox.max.x -= m_speed;
+		newPosition.x = EaseElasticOut(hoverTick, m_upperLimit, m_lowerLimit - m_upperLimit, 300);
+		movement.x = newPosition.x - m_position.x;
+		m_position.x = newPosition.x;
 
-		if (m_lowerLimit > m_position.x)
+		m_hitbox.min += movement;
+		m_hitbox.max += movement;
+
+		hoverTick++;
+
+		if (hoverTick >= 140)
 		{
 			m_direction = NORTH;
+			hoverTick = 0;
 		}
 	}
 }

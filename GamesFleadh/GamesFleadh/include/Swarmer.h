@@ -2,6 +2,7 @@
 #include "gameobject.h"
 #include "IdleState.h"
 #include "Globals.h"
+#include "reasings.h"
 #include <raymath.h>
 
 #define NUM_FRAMES_PER_LINE     5
@@ -39,6 +40,7 @@ public:
 
 private:
 	int spottedTick = 0;
+	int hoverTick = 0;
 
 	float m_upperLimit;
 	float m_lowerLimit;

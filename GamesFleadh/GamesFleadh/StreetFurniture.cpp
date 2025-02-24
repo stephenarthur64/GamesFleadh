@@ -159,20 +159,20 @@ void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
 
 void StreetFurniture::makeFeederEat()
 {
-	if (m_hasFeeder && eatTick >= MAX_EAT_TICK)
+	if (m_hasFeeder)
 	{
-		m_colourDecrease += 20;
+		/*m_colourDecrease += 20;
 		m_colourVal -= m_colourDecrease;
 
+		if (m_colourVal < 130)
+		{
+			m_colourVal = 130;
+		}*/
+		m_colourVal = EaseElasticOut((float)eatTick, 255, -125, 300);
 		m_colour.r = m_colourVal;
 		m_colour.g = m_colourVal;
 		m_colour.b = m_colourVal;
-		m_colour.a = m_colourVal;
 
-		eatTick = 0;
-	}
-	else
-	{
 		eatTick++;
 	}
 }

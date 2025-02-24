@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include <string>
 #include "Player.h"
+#include "reasings.h"
 // #include <memory>
 
 class StreetFurniture :
