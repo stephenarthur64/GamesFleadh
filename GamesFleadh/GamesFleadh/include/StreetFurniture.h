@@ -31,6 +31,8 @@ public:
 
 	bool checkPlayerFurnitureCollision(BoundingBox t_player);
 
+	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
+
 private:
 	//// Feeder* m_feeder{}; // Starts as null pointer
 	//std::unique_ptr<Feeder> m_feeder;

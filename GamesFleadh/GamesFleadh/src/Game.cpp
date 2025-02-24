@@ -99,10 +99,8 @@ void Game::loadAssets()
     {
         swarmer[i].init();
     }
-    
-    // placeObjectsFromImage(imgPlacementTest);
-
-    /*for (int i = 0; i < maxStreetFurniture; i++)
+    //RS: Can we get rid of this now?
+    /*for (int i = 0; i < maxStreetFurniture; i++) 
     {
         streetF[i].init();
     }*/
@@ -265,8 +263,6 @@ void Game::update()
     player.collision(m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL));
     
     m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
-    
-    // checkCollisions(player.getHitbox(), mushroom[mushroomOnMap].getEnemyHitbox());
 
     for (Tile& item : m_terrainTileCollection)
     {
@@ -453,6 +449,8 @@ void Game::checkCollisions()
 {
     int collide = 0;
 
+    player.collision(false); // RS: At the start of the collision check, set collision to false.
+
     BoundingBox one = player.getHitbox();
     BoundingBox one2 = player.getHitbox();
     BoundingBox two = swarmer[0].getHitbox();
@@ -466,15 +464,13 @@ void Game::checkCollisions()
 
     for (int i = 0; i < player.getBulletMax(); i++)
     {
-        /*
-        if (CheckCollisionBoxSphere(mushroom[mushroomOnMap].getFeederHitbox(), player.getBulletPositon(i), 1.0f))
-        {
-            collide = 1;
-            mushroom[mushroomOnMap].setCollisions(true);
+        if (m_terrainTileCollection[m_tileCurrent].checkFeederBulletCollision(player.getBulletPositon(i), 1.0f))
+        {// Feeder collision set to true in Furniture (follow if statement above)
+            collide = 1; // Not sure what the 'collide' var is for...!
             player.despawnBullet(i);
             score += 10;
         }
-        */
+
         if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getBulletPositon(i), 1.0f))
         {
             swarmer[0].collision(true);
@@ -487,12 +483,8 @@ void Game::checkCollisions()
     {
         player.collision(true);
     }
-    else
-    {
-        player.collision(false);
-    }
 
-    /*
+    /* RS: Not sure what this is for!
     if (collide != 1)
     {
         mushroom[mushroomOnMap].setCollisions(false);
@@ -521,7 +513,8 @@ void Game::mapMove()
 
     float mapLength = 64.0f;
     
-    /*mushroomOnMap = 1;
+    /*
+    mushroomOnMap = 1;
     mushroom[1].spawn({ -1.0f, 2.0f, -15.0f });
     mushroom[1].spawnFeeder();
     mushroom[1].playerDetected(true, player.getPosition());

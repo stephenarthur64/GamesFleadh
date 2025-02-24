@@ -97,3 +97,16 @@ bool StreetFurniture::checkPlayerFurnitureCollision(BoundingBox t_player)
 {
 	if (CheckCollisionBoxes(m_hitbox, t_player)){return true;}
 }
+
+bool StreetFurniture::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius)
+{
+	if (m_hasFeeder)
+	{
+		if (CheckCollisionBoxSphere(m_feeder.getHitbox(), t_bulletPos, t_bulletRadius))
+		{
+			m_feeder.collision(true);
+			return true;
+		}
+	}
+	return false;
+}

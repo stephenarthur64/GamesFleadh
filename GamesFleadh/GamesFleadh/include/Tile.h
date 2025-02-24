@@ -19,10 +19,14 @@ public:
 	void render() override;
 
 	void setInPlay(bool t_exists);
-	void makeTileCurrent(bool t_current); 
+	void makeTileCurrent(bool t_current);
+
+	// void makeTileFeedersActive()
 
 	bool isColliding(Vector3 t_collider);
 	bool checkFurnitureItemsCollision(BoundingBox t_player);
+	
+	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
 	// std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
 

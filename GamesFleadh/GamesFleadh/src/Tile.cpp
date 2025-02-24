@@ -131,6 +131,18 @@ bool Tile::checkFurnitureItemsCollision(BoundingBox t_player)
     return false;
 }
 
+bool Tile::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius)
+{
+    for (StreetFurniture& item : m_furnitureVec)
+    {
+        if (item.checkFeederBulletCollision(t_bulletPos, t_bulletRadius))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void Tile::update(Vector3 t_target)
 {
     for (StreetFurniture& item : m_furnitureVec)
