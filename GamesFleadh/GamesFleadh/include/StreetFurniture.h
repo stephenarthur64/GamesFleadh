@@ -32,6 +32,8 @@ public:
 
 	bool checkPlayerFurnitureCollision(BoundingBox t_player);
 
+	bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
+
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
@@ -43,6 +45,6 @@ private:
 	Feeder m_feeder;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
-	float collisionRadius = 3.0f;
+	float m_collisionRadius = 3.0f;
 };
 

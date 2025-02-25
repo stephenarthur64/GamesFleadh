@@ -26,7 +26,9 @@ public:
 
 	bool isColliding(Vector3 t_collider);
 	bool checkFurnitureItemsCollision(BoundingBox t_player);
-	
+	bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
+
+
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
 	void makeFeederSeekPlayer(bool t_seeking, Player player);

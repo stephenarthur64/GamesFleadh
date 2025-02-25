@@ -508,7 +508,12 @@ void Game::checkCollisions()
         }
     }
 
-    if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
+    //if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
+    //{
+    //    player.collision(true);
+    //}
+
+    if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
     {
         player.collision(true);
     }
