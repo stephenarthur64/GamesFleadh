@@ -18,6 +18,7 @@ public:
 	Vector3 getBulletPositon(int count) { return bullet[count].getPosition(); }
 	BoundingBox getBulletHitBox(int count) { return bullet[count].getHitbox(); }
 	const int getBulletMax() { return MAX_BULLETS; }
+	const float getCollisionRadius() { return m_collisionRadius; }
 	void addHealth(int t_amt) { m_health += t_amt; }
 	int currentBullet() { return bulletCount; }
 	void setHitBox();
@@ -53,7 +54,7 @@ private:
 	float m_speed;
 	float hitboxOffsetMin = 1.0f;
 	float hitboxOffsetMax = 1.0f;
-	float collisionRadius = 1.0f;
+	float m_collisionRadius = 1.0f;
 
 	Bullet bullet[10];
 	int bulletCount;
