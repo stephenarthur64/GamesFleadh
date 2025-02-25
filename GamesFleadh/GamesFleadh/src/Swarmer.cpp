@@ -19,7 +19,7 @@ void Swarmer::init()
 	m_body = LoadModel("ASSETS/3D/Enemy/Swarmer/Swarmer.glb");
 	setLimits(3, 0);
 	setHitbox();
-	fxBoom = LoadSound("ASSETS/boom.wav");
+	fxBoom = LoadSound("ASSETS/Audio/SFX/buzzBlastImpactRedux.mp3");
 	SetSoundVolume(fxBoom, 0.3);
 	explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width

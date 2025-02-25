@@ -11,6 +11,11 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 	m_placementOffset = t_startPos;
 	currentState = new IdleState;
 	m_body = LoadModel(t_furnitureType.c_str());
+	/*for (int i = 0; i < m_body.materialCount; i++)
+	{
+		m_body.materials[i].shader = LoadShader(TextFormat("ASSETS/shaders/glsl%i/discard_alpha.fs", GLSL_VERSION),
+			TextFormat("ASSETS/shaders/glsl%i/discard_alpha.fs", GLSL_VERSION));
+	}*/
 	// setHitBox();	
 	animsCount = 0;
 	animCurrentFrame = 0;

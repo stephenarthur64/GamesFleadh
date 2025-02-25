@@ -61,6 +61,8 @@ private:
 	int bulletCount;
 	const int MAX_BULLETS = 10;
 
+	Sound shootingSFX;
+
 	Quaternion crosshairRotation;
 	Rectangle m_healthbar;
 	Color m_hpColour;

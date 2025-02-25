@@ -23,7 +23,7 @@ const std::string GULLY_DIFFUSE_RIVERTEST01 = "ASSETS/2D/GullyTextures/river_tes
 const std::string FURNITURE_DUMMY_ZERO = "If this dummy is found, ignore it!";
 
 const std::string FURNITURE_BATCH_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";
-const std::string FURNITURE_BUMPY_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";
+const std::string FURNITURE_BUMPY_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/BumpyMushroomAnimated.glb";
 const std::string FURNITURE_CHUNKY_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";
 const std::string FURNITURE_DEFAULT_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";
 const std::string FURNITURE_POINTY_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";

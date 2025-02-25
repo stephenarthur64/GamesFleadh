@@ -174,7 +174,7 @@ void Tile::update(Vector3 t_target)
 
 /// <summary>
 /// @brief Reads through image, identifies types of furniture and places them in level
-/// </summary>
+/// </summary>   
 /// <param name="t_furnitureMap"></param>
 /// <returns></returns>
 // std::vector<StreetFurniture> Tile::processFurnitureMap(Image t_furnitureMap)

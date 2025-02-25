@@ -9,6 +9,8 @@ Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisone
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Player/Buzzz/Buzz.glb", &animsCount);
+	shootingSFX = LoadSound("ASSETS/Audio/SFX/buzzHasThatThangOnHim.mp3");
+	SetSoundVolume(shootingSFX, 0.3);
 }
 
 void Player::move(Vector3 t_velocity)
