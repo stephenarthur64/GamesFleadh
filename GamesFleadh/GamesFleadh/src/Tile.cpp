@@ -119,17 +119,17 @@ bool Tile::isColliding(Vector3 t_collider)
 	return false;
 }
 
-bool Tile::checkFurnitureItemsCollision(BoundingBox t_player)
-{
-    for (StreetFurniture& item : m_furnitureVec)
-    {        
-        if (item.checkPlayerFurnitureCollision(t_player))
-        {
-            return true;
-        }
-    }
-    return false;
-}
+//bool Tile::checkFurnitureItemsCollision(BoundingBox t_player)
+//{
+//    for (StreetFurniture& item : m_furnitureVec)
+//    {        
+//        if (item.checkPlayerFurnitureCollision(t_player))
+//        {
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
 bool Tile::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
 {

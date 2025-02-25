@@ -259,26 +259,6 @@ void Game::update()
 
     mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
-    {// Colliding with terrain on the right
-        player.collision(true);
-        player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
-    }
-
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
-    {// Colliding with terrain on the left
-        player.collision(true);
-        player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
-    }
-
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
-    {// Colliding with terrain in front
-        player.collision(true);
-        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
-    }    
-    
-    m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
-
     for (Tile& item : m_terrainTileCollection)
     {
         item.update(player.getPosition());
@@ -349,6 +329,7 @@ void Game::inputControl()
     if (IsKeyReleased(KEY_SPACE) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
     {// RS: Toggle! Is nice, you like.
         autoScroll = !autoScroll;
+        std::cout << "Good god.";
     }
 
     /*if (IsKeyPressed(KEY_Z))
@@ -356,11 +337,11 @@ void Game::inputControl()
         player.collision(true);
     }*/
 
-    if (IsKeyReleased(KEY_X))
-    {
-        std::cout << "\nPlacing objects.\n";
-        // placeObjectsFromImage(imgPlacementTest);
-    }
+    //if (IsKeyReleased(KEY_X))
+    //{
+    //    std::cout << "\nPlacing objects.\n";
+    //    // placeObjectsFromImage(imgPlacementTest);
+    //}
     if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         player.shootBullet(billPositionRotating);
@@ -368,6 +349,7 @@ void Game::inputControl()
 
     if (IsKeyReleased(KEY_BACKSPACE))
     {
+        std::cout << "Is this even working?";
         player.addHealth(10);
     }
 
@@ -508,6 +490,25 @@ void Game::checkCollisions()
         }
     }
 
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
+    {// Colliding with terrain on the right
+        player.collision(true);
+        player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+    }
+
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
+    {// Colliding with terrain on the left
+        player.collision(true);
+        player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+    }
+
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
+    {// Colliding with terrain in front
+        player.collision(true);
+        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+    } 
+
+    // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
     //if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
     //{
     //    player.collision(true);
@@ -517,6 +518,10 @@ void Game::checkCollisions()
     {
         player.collision(true);
     }
+
+    
+
+    // m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius());
 
     /* RS: Not sure what this is for!
     if (collide != 1)

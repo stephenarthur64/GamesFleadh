@@ -30,6 +30,8 @@ void StreetFurniture::render()
 
 	DrawModel(m_body, m_position, 1.0f, WHITE);
 	DrawBoundingBox(m_hitbox, BLUE);
+	
+	DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
 
 	if (!m_hasFeeder) return;
 	m_feeder.render();
@@ -89,7 +91,10 @@ void StreetFurniture::setHitBox()
 	m_hitbox.min.z = localSpaceBoundingBox.min.z + m_position.z;
 	m_hitbox.max.z = localSpaceBoundingBox.max.z + m_position.z;
 
+	m_overallHeightOnGround = m_hitbox.max.y - m_hitbox.min.y;
+	m_overallHeightOnGround += m_position.y;
 	
+	//m_collisionRadiusMax = m_hitbox.max.x
 }
 
 void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
@@ -106,14 +111,26 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 	}
 }
 
-bool StreetFurniture::checkPlayerFurnitureCollision(BoundingBox t_player)
-{
-	if (CheckCollisionBoxes(m_hitbox, t_player)){return true;}
-}
+//bool StreetFurniture::checkPlayerFurnitureCollision(BoundingBox t_player)
+//{
+//	if (CheckCollisionBoxes(m_hitbox, t_player)){return true;}
+//}
 
 bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
 {
-	if (Vector3Distance(t_playerPos, m_position) < t_playerRad + m_collisionRadius);
+	Vector3 posWithPlayerHeight = m_position;
+	posWithPlayerHeight.y = t_playerPos.y;
+
+	float distance = Vector3Distance(t_playerPos, posWithPlayerHeight);
+
+	float combinedRad = t_playerRad + m_collisionRadiusMin;
+
+	if (distance < combinedRad)	
+	{
+		bool returnValue = true;
+		return returnValue; 
+	}
+	return false;
 }
 
 bool StreetFurniture::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius)
