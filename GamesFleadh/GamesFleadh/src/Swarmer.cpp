@@ -84,8 +84,6 @@ void Swarmer::kill()
 	m_hitbox.max.x = 1001.0f;
 	active = true;
 
-	m_health = 1;
-
 	PlaySound(fxBoom);
 
 	handleInput(EVENT_NONE);

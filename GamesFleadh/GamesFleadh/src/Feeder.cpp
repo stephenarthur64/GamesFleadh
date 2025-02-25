@@ -47,6 +47,9 @@ void Feeder::spawn(Vector3 t_position)
 
 	m_hitbox.min.z = t_position.z + 0.5f;
 	m_hitbox.max.z = t_position.z - 0.5f;
+	despawnBullet(); 
+	disableShooting();
+	m_colour = WHITE;
 }
 
 void Feeder::collision(bool t_collision)
