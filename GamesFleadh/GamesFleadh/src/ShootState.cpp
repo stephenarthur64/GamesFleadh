@@ -1,11 +1,12 @@
 #include "ShootState.h"
 #include "DeathState.h"
-#include "DamageState.h"
 #include "IdleState.h"
 #include "MovingUpState.h"
 #include "MovingDownState.h"
 #include "MovingLeftState.h"
 #include "MovingRightState.h"
+#include "DamageLState.h"
+#include "DamageRState.h"
 
 State* ShootState::handleInput(Event t_event)
 {
@@ -19,9 +20,13 @@ State* ShootState::handleInput(Event t_event)
 		return new NoInputState;
 	}
 
-	if (t_event == Event::EVENT_DAMAGE)
+	if (t_event == EVENT_HIT_L)
 	{
-		return new DamageState;
+		return new DamageLState;
+	}
+	if (t_event == EVENT_HIT_R)
+	{
+		return new DamageRState;
 	}
 
 	return nullptr;

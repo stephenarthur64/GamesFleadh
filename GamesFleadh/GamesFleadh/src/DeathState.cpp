@@ -1,10 +1,6 @@
 #include "DeathState.h"
 #include "DamageState.h"
 #include "IdleState.h"
-#include "MovingUpState.h"
-#include "MovingDownState.h"
-#include "MovingLeftState.h"
-#include "MovingRightState.h"
 #include "ShootState.h"
 
 

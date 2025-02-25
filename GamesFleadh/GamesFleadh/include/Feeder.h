@@ -3,6 +3,7 @@
 #include "gameobject.h"
 #include "IdleState.h"
 #include "Bullet.h"
+#include "Globals.h"
 #include <raymath.h>
 
 #define NUM_FRAMES_PER_LINE     5

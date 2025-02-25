@@ -53,3 +53,5 @@ const std::string ASSET_TILE_MODEL_03 = "";
 const std::string ASSET_HEIGHTMAP_04 = "";
 const std::string ASSET_FURNITUREMAP_04 = "";
 const std::string ASSET_TILE_MODEL_04  = "";
+
+static float mudBombPosition; // This is awful, I know, but there was no other way besides MAJOR refactoring

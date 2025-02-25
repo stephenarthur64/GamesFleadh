@@ -108,6 +108,7 @@ bool Feeder::checkBulletCollisions(BoundingBox t_player)
 {
 	if (CheckCollisionBoxSphere(t_player, m_mudBomb.getPosition(), m_mudBomb.getRadius()))
 	{
+		mudBombPosition = m_mudBomb.getPosition().x; // DON'T LOOK AT ME
 		m_mudBomb.despawn();
 		return true;
 	}

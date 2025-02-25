@@ -4,20 +4,14 @@
 typedef enum
 {
     EVENT_MOVE,   // Represents no event
-    EVENT_MOVE_UP,   // Represents a move event
-    EVENT_MOVE_DOWN,
-    EVENT_MOVE_LEFT,
-    EVENT_MOVE_RIGHT,
-    EVENT_MOVE_UPRIGHT,
-    EVENT_MOVE_UPLEFT,
-    EVENT_MOVE_DOWNRIGHT,
-    EVENT_MOVE_DOWNLEFT,
     EVENT_DAMAGE,
     EVENT_SHOOT,
     EVENT_SPOTTED,
     EVENT_CHASE,
     EVENT_NONE,
     EVENT_INPUT,
+    EVENT_HIT_L,
+    EVENT_HIT_R,
     EVENT_DIE,    // Represents a die event
     EVENT_RESPAWN,// Represents a respawn event
     EVENT_COUNT   // Represents the total number of events (for counting purposes)
