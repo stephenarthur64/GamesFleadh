@@ -596,10 +596,19 @@ void Game::cameraMove()
 void Game::fogVisibility()
 {
     float heightPercent;
+    const float MAX_HEIGHT = 427.0f;
+    const int MAX_TICK = 500;
+    float heightVal = 0;
 
-    fogOpacity.a += 0.1f;
-    heightPercent = gradientDest.height / 100.0f;
+    gradientDest.height = EaseLinearInOut(fogTick, heightVal, MAX_HEIGHT, MAX_TICK);
+    heightPercent = gradientDest.height / MAX_HEIGHT;
 
+    fogOpacity.a = 255.0f * heightPercent;
+
+    if (fogTick <= MAX_TICK)
+    {
+        fogTick++;
+    }
     
 }
 

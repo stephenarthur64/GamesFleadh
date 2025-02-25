@@ -80,6 +80,8 @@ private:
 
 	Color fogOpacity;
 
+	int fogTick = 0;
+
 	float camSpeed = 0.2f;
 	float camDirection;
 
