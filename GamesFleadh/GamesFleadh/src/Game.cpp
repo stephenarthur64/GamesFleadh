@@ -303,7 +303,7 @@ void Game::update()
     player.update();
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
-    fogVisibility();
+    //fogVisibility();
 }
 
 void Game::inputControl()

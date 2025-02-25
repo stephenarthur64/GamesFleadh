@@ -72,6 +72,10 @@ void StreetFurniture::update(Vector3 t_target)
 	{
 		currentState->update(this);
 	}
+	else if (m_hasFeeder)
+	{
+		int hi = 0;
+	}
 }
 
 void StreetFurniture::spawnFeeder()
@@ -168,6 +172,7 @@ void StreetFurniture::makeFeederEat()
 {
 	if (m_hasFeeder)
 	{
+		handleInput(EVENT_DAMAGE);
 		/*m_colourDecrease += 20;
 		m_colourVal -= m_colourDecrease;
 
