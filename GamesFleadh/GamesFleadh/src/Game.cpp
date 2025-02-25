@@ -509,12 +509,14 @@ void Game::checkCollisions()
         if (m_terrainTileCollection[m_tileCurrent].checkFeederBulletCollision(player.getBulletPositon(i), 1.0f))
         {// Feeder collision set to true in Furniture (follow if statement above)
             player.despawnBullet(i);
+            reduceFog();
             score += 10;
         }
 
         if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getBulletPositon(i), 1.0f))
         {
             swarmer[0].collision(true);
+            reduceFog();
             player.despawnBullet(i);
             score += 10;
         }
@@ -597,8 +599,7 @@ void Game::fogVisibility()
 {
     float heightPercent;
     const float MAX_HEIGHT = 427.0f;
-    const int MAX_TICK = 500;
-    float heightVal = 0;
+    const int MAX_TICK = 700;
 
     gradientDest.height = EaseLinearInOut(fogTick, heightVal, MAX_HEIGHT, MAX_TICK);
     heightPercent = gradientDest.height / MAX_HEIGHT;
@@ -610,5 +611,14 @@ void Game::fogVisibility()
         fogTick++;
     }
     
+}
+
+void Game::reduceFog()
+{
+    fogTick -= 100;
+    if (fogTick < 0)
+    {
+        fogTick = 0;
+    }
 }
 

@@ -53,6 +53,7 @@ public:
 	void reboundZ(Vector3 t_impactPoint);
 
 	void fogVisibility();
+	void reduceFog();
 
 private:
 	Camera camera;
@@ -81,6 +82,7 @@ private:
 	Color fogOpacity;
 
 	int fogTick = 0;
+	float heightVal = 0;
 
 	float camSpeed = 0.2f;
 	float camDirection;
