@@ -4,6 +4,8 @@
 
 enum Direction {NORTH, SOUTH, EAST, WEST};
 
+enum FurnitureType {NONE, MUSHROOM, NOT_MUSHROOM}; // temp values
+
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
 
@@ -20,11 +22,11 @@ const std::string GULLY_DIFFUSE_RIVERTEST01 = "ASSETS/2D/GullyTextures/river_tes
 
 const std::string FURNITURE_DUMMY_ZERO = "If this dummy is found, ignore it!";
 
-const std::string FURNITURE_BATCH_MUSH = "ASSETS/3D/StreetFurniture/Mushrooms/BatchMushroom.glb";
-const std::string FURNITURE_BUMPY_MUSH = "ASSETS/3D/StreetFurniture/Mushrooms/BumpyMushroom.glb";
-const std::string FURNITURE_CHUNKY_MUSH = "ASSETS/3D/StreetFurniture/Mushrooms/ChunkyMushroom.glb";
-const std::string FURNITURE_DEFAULT_MUSH = "ASSETS/3D/StreetFurniture/Mushrooms/DefaultMushroom.glb";
-const std::string FURNITURE_POINTY_MUSH = "ASSETS/3D/StreetFurniture/Mushrooms/PointyMushroom.glb";
+const std::string FURNITURE_BATCH_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";
+const std::string FURNITURE_BUMPY_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";
+const std::string FURNITURE_CHUNKY_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";
+const std::string FURNITURE_DEFAULT_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";
+const std::string FURNITURE_POINTY_MUSH = "ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb";
 
 const std::string FURNITURE_STONE_LARGE = "ASSETS/3D/StreetFurniture/Stones/stoneLarge.glb";
 const std::string FURNITURE_STONE_MED_FLAT01 = "ASSETS/3D/StreetFurniture/Stones/stoneMediumFlat.glb";

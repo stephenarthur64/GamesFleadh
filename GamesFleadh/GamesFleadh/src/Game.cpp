@@ -40,7 +40,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
-   // ToggleFullscreen();
+    //ToggleFullscreen();
     InitAudioDevice();
 
     // Define our custom camera to look into our 3d world

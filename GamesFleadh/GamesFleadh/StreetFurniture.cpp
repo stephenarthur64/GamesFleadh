@@ -1,17 +1,20 @@
 #include "StreetFurniture.h"
 #include <iostream>
 
-StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos) : m_hasFeeder(t_hasFeeder), 
-																									m_colourDecrease(0),
-																									m_colourVal(255), eatTick(0), 
-																									MAX_EAT_TICK(60)
+StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos, FurnitureType t_type) : m_hasFeeder(t_hasFeeder),
+																															m_colourDecrease(0),
+																															m_colourVal(255), eatTick(0), 
+																															MAX_EAT_TICK(60),
+																															m_type(t_type)
 																									
 {
 	m_placementOffset = t_startPos;
-
+	currentState = new IdleState;
 	m_body = LoadModel(t_furnitureType.c_str());
 	// setHitBox();	
-
+	animsCount = 0;
+	animCurrentFrame = 0;
+	modelAnimations = LoadModelAnimations("ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb", &animsCount);
 	if (t_hasFeeder)
 	{
 		m_feeder.init();
@@ -64,6 +67,11 @@ void StreetFurniture::update(Vector3 t_target)
 {
 	if (!m_hasFeeder) return;
 	m_feeder.update(t_target);
+
+	if (m_type == MUSHROOM)
+	{
+		currentState->update(this);
+	}
 }
 
 void StreetFurniture::spawnFeeder()
