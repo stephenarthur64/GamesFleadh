@@ -6,7 +6,7 @@
 #include "raymath.h"
 #include "gameobject.h"
 #include "State.h"
-#include "IdleState.h"
+#include "NoInputState.h"
 #include "Weapon.h"
 
 class Player : public GameObject

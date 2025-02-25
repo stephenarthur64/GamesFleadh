@@ -338,12 +338,6 @@ void Game::inputControl()
         player.updateHitBox(camDirection);
         camPos.z += camDirection;
     }
-    
-    Command* command = Input::getInstance()->handleInput();
-    if (command)
-    {
-        command->execute(&player);
-    }
 
     if (IsKeyDown(KEY_UP))
     {
@@ -405,6 +399,20 @@ void Game::inputControl()
         float frameTime = GetFrameTime();
         m_reboundCounter -= frameTime;
         camPos -= M_REBOUND_DIRECTION * m_reboundForce * frameTime;
+    }
+
+    Command* command = nullptr;
+    if (leftStickX == 0 && rightStickX == 0 && leftStickY == 0 && rightStickY == 0)
+    {
+        command = new NoInputCommand;
+    }
+    else
+    {
+        command = Input::getInstance()->handleInput();
+    }
+    if (command)
+    {
+        command->execute(&player);
     }
 }
 

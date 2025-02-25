@@ -26,6 +26,11 @@ State* IdleState::handleInput(Event t_event)
 		return new MovingRightState;
 	}
 
+	if (t_event == EVENT_NONE)
+	{
+		return new NoInputState;
+	}
+
 	if (t_event == EVENT_SHOOT)
 	{
 		return new ShootState;

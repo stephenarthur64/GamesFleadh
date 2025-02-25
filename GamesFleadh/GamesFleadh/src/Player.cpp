@@ -4,7 +4,7 @@
 Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false), m_poisonTick(-1), MAX_POISON_TICK(30),
 					m_hpColour(GREEN)
 {
-	currentState = new IdleState;
+	currentState = new NoInputState;
 	m_health = 100;
 	animsCount = 0;
 	animCurrentFrame = 0;
@@ -187,13 +187,13 @@ void Player::shootBullet(Vector3 t_target)
 {
 	if (bulletCount < 10)
 	{
-		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
+		bullet[bulletCount].spawn(m_position, 0.8f, t_target);
 		bulletCount++;
 	}
 	else
 	{
 		bulletCount = 0;
-		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
+		bullet[bulletCount].spawn(m_position, 0.8f, t_target);
 	}
 }
 

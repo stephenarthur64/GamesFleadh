@@ -10,7 +10,7 @@
 
 State* DeathState::handleInput(Event t_event)
 {
-	if (t_event == Event::EVENT_NONE)
+	if (t_event == Event::EVENT_MOVE)
 	{
 		return new IdleState;
 	}

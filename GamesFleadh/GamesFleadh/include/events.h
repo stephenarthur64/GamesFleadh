@@ -3,7 +3,7 @@
 // Define an enumeration for different event types
 typedef enum
 {
-    EVENT_NONE,   // Represents no event
+    EVENT_MOVE,   // Represents no event
     EVENT_MOVE_UP,   // Represents a move event
     EVENT_MOVE_DOWN,
     EVENT_MOVE_LEFT,
@@ -16,6 +16,8 @@ typedef enum
     EVENT_SHOOT,
     EVENT_SPOTTED,
     EVENT_CHASE,
+    EVENT_NONE,
+    EVENT_INPUT,
     EVENT_DIE,    // Represents a die event
     EVENT_RESPAWN,// Represents a respawn event
     EVENT_COUNT   // Represents the total number of events (for counting purposes)

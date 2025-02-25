@@ -213,7 +213,7 @@ void Feeder::update(Vector3 t_target)
 	{
 		if (m_health > 0)
 		{
-			handleInput(Event::EVENT_NONE);
+			handleInput(Event::EVENT_MOVE);
 		}
 		else
 		{

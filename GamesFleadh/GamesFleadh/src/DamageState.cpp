@@ -8,7 +8,7 @@
 
 State* DamageState::handleInput(Event t_event)
 {
-    if (t_event == EVENT_NONE)
+    if (t_event == EVENT_MOVE)
     {
         return new IdleState;
     }

@@ -86,7 +86,7 @@ void Swarmer::kill()
 
 	PlaySound(fxBoom);
 
-	handleInput(EVENT_NONE);
+	handleInput(EVENT_MOVE);
 }
 
 void Swarmer::boom()
@@ -149,7 +149,7 @@ void Swarmer::playerSpotted(bool t_spotted)
 	{
 		m_speed = 0.05f;
 		spottedTick = 0;
-		handleInput(Event::EVENT_NONE);
+		handleInput(Event::EVENT_MOVE);
 	}
 }
 
