@@ -9,8 +9,6 @@ Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisone
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Player/Buzzz/Buzz.glb", &animsCount);
-	shootingSFX = LoadSound("ASSETS/Audio/SFX/buzzHasThatThangOnHim.mp3");
-	SetSoundVolume(shootingSFX, 0.3);
 }
 
 void Player::move(Vector3 t_velocity)
@@ -74,6 +72,15 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
+	shootingSFX = LoadSound("ASSETS/Audio/SFX/buzzHasThatThangOnHim.mp3");
+	SetSoundVolume(shootingSFX, 0.3);
+
+	environmentHitSFX = LoadSound("ASSETS/Audio/SFX/buzzEnvironmentHitRedux.mp3");
+	SetSoundVolume(environmentHitSFX, 0.3);
+
+	enemyHitSFX = LoadSound("ASSETS/Audio/SFX/buzzGetHitRedux.mp3");
+	SetSoundVolume(enemyHitSFX, 0.3);
+
 	m_position.y += 2.0f;
 
 	m_healthbar.x = 40;
@@ -95,6 +102,23 @@ void Player::render()
 	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].render();
+	}
+}
+
+void Player::shootSound()
+{
+	PlaySound(shootingSFX);
+}
+
+void Player::hitSound(int t_type)
+{
+	if (t_type == 0)
+	{
+		PlaySound(environmentHitSFX);
+	}
+	else if (t_type == 1)
+	{
+		PlaySound(enemyHitSFX);
 	}
 }
 

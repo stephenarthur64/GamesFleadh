@@ -32,7 +32,7 @@ Command* Input::handleInput()
     {
         return new MovingRightCommand();
     }
-    else if (IsKeyDown(KEY_ENTER))
+    else if (IsKeyDown(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         return new ShootCommand();
     }

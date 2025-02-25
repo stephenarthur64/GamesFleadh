@@ -33,7 +33,7 @@ void GameObject::animation(int index)
 	animIndex = index;
 	ModelAnimation anim = modelAnimations[animIndex]; // if index must be changed, go here (not over 1, breaks Buzzz)
 	animCurrentFrame = (animCurrentFrame + 1) % anim.frameCount;
- 	//UpdateModelAnimation(m_body, anim, animCurrentFrame);
+ 	UpdateModelAnimation(m_body, anim, animCurrentFrame);
 }
 
 void GameObject::rotateYaw(int t_direction)

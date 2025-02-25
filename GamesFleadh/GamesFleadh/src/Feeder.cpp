@@ -106,7 +106,13 @@ void Feeder::renderBoom(Camera &t_camera)
 
 bool Feeder::checkBulletCollisions(BoundingBox t_player)
 {
-	return CheckCollisionBoxSphere(t_player, m_mudBomb.getPosition(), m_mudBomb.getRadius());
+	if (CheckCollisionBoxSphere(t_player, m_mudBomb.getPosition(), m_mudBomb.getRadius()))
+	{
+		m_mudBomb.despawn();
+		return true;
+	}
+
+	return false;
 }
 
 void Feeder::shootBullet(Vector3 t_target)

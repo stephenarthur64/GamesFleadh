@@ -20,6 +20,7 @@ public:
 	virtual void rotate(int t_direction) = 0;
 	virtual void init() = 0;
 	virtual void render() = 0;
+	virtual void shootSound() {};
 	void animation(int index);
 	void rotateYaw(int t_direction);
 

@@ -9,7 +9,7 @@
 
 State* ShootState::handleInput(Event t_event)
 {
-	if (t_event == Event::EVENT_NONE && tick >= 60)
+	if (t_event == Event::EVENT_NONE && tick >= 30)
 	{
 		return new IdleState;
 	}
@@ -32,6 +32,7 @@ void ShootState::update(GameObject* obj)
 void ShootState::enter(GameObject* obj)
 {
 	obj->resetAnimation();
+	obj->shootSound();
 }
 
 void ShootState::exit(GameObject* obj)

@@ -32,6 +32,8 @@ public:
 	virtual void rotate(int t_direction) override;
 	virtual void init() override;
 	virtual void render() override;
+	void shootSound() override;
+	void hitSound(int t_type);
 	Rectangle getHealthBar() { return m_healthbar; }
 	Color getHealthBarColour() { return m_hpColour; }
 
@@ -62,6 +64,8 @@ private:
 	const int MAX_BULLETS = 10;
 
 	Sound shootingSFX;
+	Sound environmentHitSFX;
+	Sound enemyHitSFX;
 
 	Quaternion crosshairRotation;
 	Rectangle m_healthbar;

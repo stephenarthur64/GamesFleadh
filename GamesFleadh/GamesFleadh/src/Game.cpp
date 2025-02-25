@@ -275,18 +275,21 @@ void Game::update()
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
     {// Colliding with terrain on the right
         player.worldCollision(true);
+        player.hitSound(0);
         player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
     {// Colliding with terrain on the left
         player.worldCollision(true);
+        player.hitSound(0);
         player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
     {// Colliding with terrain in front
         player.worldCollision(true);
+        player.hitSound(0);
         reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
     }    
     
@@ -500,6 +503,7 @@ void Game::checkCollisions()
 
     if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 2.0f))
     {
+        player.hitSound(1);
         player.enemyCollision(true);
         swarmer[0].collision(true);
     }
@@ -524,11 +528,13 @@ void Game::checkCollisions()
 
     if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
     {
+        player.hitSound(0);
         player.enemyCollision(true);
         //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
     {
+        player.hitSound(1);
         player.poisonPlayer(true);
     }
 }
