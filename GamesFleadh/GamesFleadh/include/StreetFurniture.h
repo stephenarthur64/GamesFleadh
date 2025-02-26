@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include <string>
 #include "Player.h"
+#include <cmath> // For the pow() function
 // #include <memory>
 
 class StreetFurniture :
@@ -37,6 +38,8 @@ public:
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
+
+	float exponentialScale(float scalar, float minimum, float maximum, float base);
 
 private:
 	//// Feeder* m_feeder{}; // Starts as null pointer

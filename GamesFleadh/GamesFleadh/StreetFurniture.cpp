@@ -29,7 +29,7 @@ void StreetFurniture::render()
 	if (!m_inPlay) return; // Not in gameplay: early out.
 
 	DrawModel(m_body, m_position, 1.0f, WHITE);
-	DrawBoundingBox(m_hitbox, BLUE);
+	// DrawBoundingBox(m_hitbox, BLUE);
 	
 	// DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
 
@@ -163,14 +163,21 @@ bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, fl
 	float distance = Vector3Distance(playerTest, mushTest);
 	// float distance = Vector3Distance(t_playerPos, m_posWithPlayerHeight);
 
-	m_interpolatedColRadius = Lerp(m_collisionRadiusMin, m_collisionRadiusMax, m_posWPlyrHeightNorm.y);
+	// m_interpolatedColRadius = Lerp(m_collisionRadiusMin, m_collisionRadiusMax, m_posWPlyrHeightNorm.y);
+
+	m_interpolatedColRadius = exponentialScale(m_posWPlyrHeightNorm.y, m_collisionRadiusMin, m_collisionRadiusMax - 2.0f, 2.0f); // Note magic literal 2.0f =(
 
 	float combinedRad = t_playerRad + m_interpolatedColRadius;
 
+	// float yDelta = t_playerPos.y - m_overallHeightOnGround;
+
 	if (distance < combinedRad)	
 	{
-		bool returnValue = true;
-		return returnValue; 
+		if (t_playerPos.y < m_overallHeightOnGround)
+		{
+			bool returnValue = true;
+			return returnValue;
+		}
 	}
 	return false;
 }
@@ -201,4 +208,9 @@ void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
 			m_feeder.disableShooting();
 		}
 	}
+}
+
+float StreetFurniture::exponentialScale(float scalar, float minimum, float maximum, float base)
+{
+	return minimum + (maximum - minimum) * (pow(base, scalar) - 1) / (base - 1);
 }
