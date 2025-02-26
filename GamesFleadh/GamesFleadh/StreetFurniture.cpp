@@ -193,6 +193,8 @@ bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, fl
 	{
 		if (t_playerPos.y < m_overallHeightOnGround)
 		{
+			g_lastFurnitureCollision = m_posWithPlayerHeight;
+			g_lastFurnitureRadius = m_interpolatedColRadius;
 			bool returnValue = true;
 			return returnValue;
 		}

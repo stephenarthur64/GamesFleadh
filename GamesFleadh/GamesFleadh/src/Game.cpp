@@ -79,7 +79,9 @@ void Game::loadAssets()
     //heightmapTexture = LoadTextureFromImage(heightmapImage);        
 
     // There should be a line below for every tile in the game (currently has a duplicate tile)
-    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_RIVERTEST01));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_02, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_02));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_03, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_03));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_04, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_04));
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
 
     fogOpacity = WHITE;
@@ -550,9 +552,10 @@ void Game::checkCollisions()
 
     if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
     {
+        std::cout << "Is this calling?\n\n";
         player.hitSound(0);
         player.enemyCollision(true);
-        //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+        player.reboundFurniture(g_lastFurnitureCollision);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
@@ -579,6 +582,7 @@ void Game::mapMove()
     while (m_tileNext == m_tileCurrent)
     {
         m_tileNext = rand() % m_terrainTileCollection.size();
+        std::cout << "m_tileNext is " << m_tileNext << ".\n";
     }
 
     for (Tile& item : m_terrainTileCollection)

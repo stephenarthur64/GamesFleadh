@@ -18,6 +18,8 @@ void Player::move(Vector3 t_velocity)
 
 	m_hitbox.min += t_velocity;
 	m_hitbox.max += t_velocity;
+
+	m_currentVelocity = t_velocity;
 }
 
 void Player::setHitBox()
@@ -215,7 +217,25 @@ void Player::rebound(Vector3 t_impactPoint)
 	std::cout << "Rebound triggered.\n";
 	m_reboundCounter = m_reboundCountMax;
 	m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
+	if (m_position.y < 1.0f)
+	{
+		m_reboundDirection.y = 0.5f;
+	}
+	else
+	{
+		m_reboundDirection.y = 0.0f;
+	}	
+}
 
+void Player::reboundFurniture(Vector3 t_impactPoint)
+{
+	std::cout << "Rebound triggered.\n";
+	m_reboundCounter = m_reboundCountMax;
+	Vector3 normal = Vector3Normalize(t_impactPoint - m_position);
+	m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
+	//m_reboundDirection.y = 0.0f;
+	m_position.x = t_impactPoint.x + normal.x * (g_lastFurnitureRadius + 0.1f);
+	m_position.z = t_impactPoint.z + normal.z * (g_lastFurnitureRadius + 0.1f);
 }
 
 void Player::poisonPlayer(bool t_poison)
