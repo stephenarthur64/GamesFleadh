@@ -3,37 +3,30 @@
 #include "MovingDownState.h"
 #include "MovingLeftState.h"
 #include "MovingRightState.h"
-#include "DamageState.h"
 #include "ShootState.h"
 #include "PlayerSpottedState.h"
+#include "DamageLState.h"
+#include "DamageRState.h"
 
 State* IdleState::handleInput(Event t_event)
 {
-	if (t_event == Event::EVENT_MOVE_UP)
+	if (t_event == EVENT_NONE)
 	{
-		return new MovingUpState;
-	}
-	if (t_event == Event::EVENT_MOVE_DOWN)
-	{
-		return new MovingDownState;
-	}
-	if (t_event == Event::EVENT_MOVE_LEFT)
-	{
-		return new MovingLeftState;
-	}
-	if (t_event == Event::EVENT_MOVE_RIGHT)
-	{
-		return new MovingRightState;
+		return new NoInputState;
 	}
 
 	if (t_event == EVENT_SHOOT)
 	{
 		return new ShootState;
 	}
-	
-	if (t_event == Event::EVENT_DAMAGE)
+
+	if (t_event == EVENT_HIT_L)
 	{
-		return new DamageState;
+		return new DamageLState;
+	}
+	if (t_event == EVENT_HIT_R)
+	{
+		return new DamageRState;
 	}
 
 	if (t_event == Event::EVENT_SPOTTED)

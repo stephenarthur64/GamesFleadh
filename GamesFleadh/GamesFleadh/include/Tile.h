@@ -65,7 +65,7 @@ private:
 
 	void processFurnitureMap(Image t_furnitureMap);
 
-	void assignFurniture(float t_u, float t_v, std::string t_furnitureType);
+	void assignFurniture(float t_u, float t_v, std::string t_furnitureType, FurnitureType t_type);
 
 
 };

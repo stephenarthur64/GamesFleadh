@@ -1,17 +1,25 @@
 #include "StreetFurniture.h"
 #include <iostream>
 
-StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos) : m_hasFeeder(t_hasFeeder), 
-																									m_colourDecrease(0),
-																									m_colourVal(255), eatTick(0), 
-																									MAX_EAT_TICK(60)
+StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos, FurnitureType t_type) : m_hasFeeder(t_hasFeeder),
+																															m_colourDecrease(0),
+																															m_colourVal(255), eatTick(0), 
+																															MAX_EAT_TICK(60),
+																															m_type(t_type)
 																									
 {
 	m_placementOffset = t_startPos;
-
+	currentState = new IdleState;
 	m_body = LoadModel(t_furnitureType.c_str());
+	/*for (int i = 0; i < m_body.materialCount; i++)
+	{
+		m_body.materials[i].shader = LoadShader(TextFormat("ASSETS/shaders/glsl%i/discard_alpha.fs", GLSL_VERSION),
+			TextFormat("ASSETS/shaders/glsl%i/discard_alpha.fs", GLSL_VERSION));
+	}*/
 	// setHitBox();	
-
+	animsCount = 0;
+	animCurrentFrame = 0;
+	modelAnimations = LoadModelAnimations(t_furnitureType.c_str(), &animsCount);
 	if (t_hasFeeder)
 	{
 		m_feeder.init();
@@ -64,6 +72,11 @@ void StreetFurniture::update(Vector3 t_target)
 {
 	if (!m_hasFeeder) return;
 	m_feeder.update(t_target);
+
+	if (m_type == MUSHROOM)
+	{
+		currentState->update(this);
+	}
 }
 
 void StreetFurniture::spawnFeeder()
@@ -160,18 +173,6 @@ void StreetFurniture::makeFeederEat()
 {
 	if (m_hasFeeder)
 	{
-		/*m_colourDecrease += 20;
-		m_colourVal -= m_colourDecrease;
-
-		if (m_colourVal < 130)
-		{
-			m_colourVal = 130;
-		}*/
-		m_colourVal = EaseElasticOut((float)eatTick, 255, -125, 300);
-		m_colour.r = m_colourVal;
-		m_colour.g = m_colourVal;
-		m_colour.b = m_colourVal;
-
-		eatTick++;
+		handleInput(EVENT_DAMAGE);
 	}
 }

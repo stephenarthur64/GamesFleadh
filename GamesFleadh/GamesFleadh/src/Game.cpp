@@ -40,7 +40,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
-   // ToggleFullscreen();
+    //ToggleFullscreen();
     InitAudioDevice();
 
     // Define our custom camera to look into our 3d world
@@ -275,18 +275,23 @@ void Game::update()
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
     {// Colliding with terrain on the right
         player.worldCollision(true);
+        player.handleInput(EVENT_HIT_R);
+        player.hitSound(0);
         player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
     {// Colliding with terrain on the left
         player.worldCollision(true);
+        player.handleInput(EVENT_HIT_L);
+        player.hitSound(0);
         player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
     {// Colliding with terrain in front
         player.worldCollision(true);
+        player.hitSound(0);
         reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
     }    
     
@@ -303,7 +308,7 @@ void Game::update()
     player.update();
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
-    fogVisibility();
+    //fogVisibility();
 }
 
 void Game::inputControl()
@@ -334,12 +339,6 @@ void Game::inputControl()
         }
         player.updateHitBox(camDirection);
         camPos.z += camDirection;
-    }
-    
-    Command* command = Input::getInstance()->handleInput();
-    if (command)
-    {
-        command->execute(&player);
     }
 
     if (IsKeyDown(KEY_UP))
@@ -402,6 +401,20 @@ void Game::inputControl()
         float frameTime = GetFrameTime();
         m_reboundCounter -= frameTime;
         camPos -= M_REBOUND_DIRECTION * m_reboundForce * frameTime;
+    }
+
+    Command* command = nullptr;
+    if (leftStickX == 0 && rightStickX == 0 && leftStickY == 0 && rightStickY == 0)
+    {
+        command = new NoInputCommand;
+    }
+    else
+    {
+        command = Input::getInstance()->handleInput();
+    }
+    if (command)
+    {
+        command->execute(&player);
     }
 }
 
@@ -500,6 +513,15 @@ void Game::checkCollisions()
 
     if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 2.0f))
     {
+        if (swarmer[0].getPosition().x < player.getPosition().x)
+        {
+            player.handleInput(EVENT_HIT_L);
+        }
+        if (swarmer[0].getPosition().x > player.getPosition().x)
+        {
+            player.handleInput(EVENT_HIT_R);
+        }
+        player.hitSound(1);
         player.enemyCollision(true);
         swarmer[0].collision(true);
     }
@@ -524,11 +546,21 @@ void Game::checkCollisions()
 
     if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
     {
+        player.hitSound(0);
         player.enemyCollision(true);
         //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
     {
+        if (mudBombPosition < player.getPosition().x)
+        {
+            player.handleInput(EVENT_HIT_L);
+        }
+        if (mudBombPosition > player.getPosition().x)
+        {
+            player.handleInput(EVENT_HIT_R);
+        }
+        player.hitSound(1);
         player.poisonPlayer(true);
     }
 }

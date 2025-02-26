@@ -80,7 +80,7 @@ void Feeder::init()
 	//m_body = LoadModel("ASSETS/RS/animTest.glb");
 	setHitBox();
 	m_mudBomb.init();
-	fxBoom = LoadSound("ASSETS/boom.wav");
+	fxBoom = LoadSound("ASSETS/Audio/SFX/buzzBlastImpactRedux.mp3");
 	SetSoundVolume(fxBoom, 0.3);
 	explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
@@ -106,7 +106,14 @@ void Feeder::renderBoom(Camera &t_camera)
 
 bool Feeder::checkBulletCollisions(BoundingBox t_player)
 {
-	return CheckCollisionBoxSphere(t_player, m_mudBomb.getPosition(), m_mudBomb.getRadius());
+	if (CheckCollisionBoxSphere(t_player, m_mudBomb.getPosition(), m_mudBomb.getRadius()))
+	{
+		mudBombPosition = m_mudBomb.getPosition().x; // DON'T LOOK AT ME
+		m_mudBomb.despawn();
+		return true;
+	}
+
+	return false;
 }
 
 void Feeder::shootBullet(Vector3 t_target)
@@ -207,7 +214,7 @@ void Feeder::update(Vector3 t_target)
 	{
 		if (m_health > 0)
 		{
-			handleInput(Event::EVENT_NONE);
+			handleInput(Event::EVENT_MOVE);
 		}
 		else
 		{

@@ -90,9 +90,6 @@
     <ClInclude Include="include\StreetFurniture.h">
       <Filter>Header Files\GO</Filter>
     </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Feeder.h">
       <Filter>Header Files\GO</Filter>
     </ClInclude>
@@ -103,6 +100,18 @@
       <Filter>Header Files\GO</Filter>
     </ClInclude>
     <ClInclude Include="include\StateChase.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NoInputState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DamageRState.h">
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DamageLState.h">
       <Filter>Header Files\FSM</Filter>
     </ClInclude>
   </ItemGroup>
@@ -164,9 +173,6 @@
     <ClCompile Include="StreetFurniture.cpp">
       <Filter>Source Files\GO</Filter>
     </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Feeder.cpp">
       <Filter>Source Files\GO</Filter>
     </ClCompile>
@@ -177,6 +183,18 @@
       <Filter>Source Files\FSM</Filter>
     </ClCompile>
     <ClCompile Include="src\StateChase.cpp">
+      <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\NoInputState.cpp">
+      <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DamageRState.cpp">
+      <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DamageLState.cpp">
       <Filter>Source Files\FSM</Filter>
     </ClCompile>
   </ItemGroup>
