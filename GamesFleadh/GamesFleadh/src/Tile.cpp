@@ -218,7 +218,7 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                 if (col.r == 255 && col.b == 0 && col.g == 255) 
                 {
                     furnType = FURNITURE_POINTY_MUSH;
-                    type = MUSHROOM;
+                    type = POINTY_MUSHROOM;
                 }
                 
                 /*if (col.r == 0 && col.b == 255 && col.g == 255) 

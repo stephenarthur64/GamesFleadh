@@ -20,7 +20,12 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations(t_furnitureType.c_str(), &animsCount);
-	if (t_hasFeeder)
+	if (m_type == POINTY_MUSHROOM)
+	{
+		m_hasFeeder = false;
+	}
+
+	if (m_hasFeeder)
 	{
 		m_feeder.init();
 	}
