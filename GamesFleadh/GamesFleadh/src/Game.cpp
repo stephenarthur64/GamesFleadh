@@ -600,6 +600,6 @@ void Game::fogVisibility()
     fogOpacity.a += 0.1f;
     heightPercent = gradientDest.height / 100.0f;
 
-    
+    EaseLinearIn()
 }
 
