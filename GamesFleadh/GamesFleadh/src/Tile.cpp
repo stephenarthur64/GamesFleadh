@@ -197,7 +197,7 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                 if (col.r == 255 && col.b == 255 && col.g == 0) furnType = FURNITURE_CHUNKY_MUSH;
                 if (col.r == 255 && col.b == 0 && col.g == 255) furnType = FURNITURE_POINTY_MUSH;
                 
-                if (col.r == 0 && col.b == 255 && col.g == 255) furnType = FURNITURE_GRASS;
+                // if (col.r == 0 && col.b == 255 && col.g == 255) furnType = FURNITURE_GRASS;
                 
                 if (col.r == 5 && col.b == 0 && col.g == 0) furnType = FURNITURE_STONE_SMALL01;
                 if (col.r == 10 && col.b == 0 && col.g == 0) furnType = FURNITURE_STONE_SMALL01;

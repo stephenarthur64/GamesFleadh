@@ -31,7 +31,11 @@ void StreetFurniture::render()
 	DrawModel(m_body, m_position, 1.0f, WHITE);
 	DrawBoundingBox(m_hitbox, BLUE);
 	
-	DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
+	// DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
+
+	DrawCircle3D(m_posWithPlayerHeight, m_interpolatedColRadius, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, ORANGE);
+
+
 
 	if (!m_hasFeeder) return;
 	m_feeder.render();
@@ -91,10 +95,29 @@ void StreetFurniture::setHitBox()
 	m_hitbox.min.z = localSpaceBoundingBox.min.z + m_position.z;
 	m_hitbox.max.z = localSpaceBoundingBox.max.z + m_position.z;
 
-	m_overallHeightOnGround = m_hitbox.max.y - m_hitbox.min.y;
-	m_overallHeightOnGround += m_position.y;
+	m_overallHeight = m_hitbox.max.y - m_hitbox.min.y;
+	m_overallHeightOnGround = m_overallHeight + m_position.y;
+
+	Vector3 flatMinPos = localSpaceBoundingBox.min;
+	flatMinPos.y = 0.0f;
+
+	Vector3 flatMaxPos = localSpaceBoundingBox.max;
+	flatMaxPos.y = 0.0f;
+
+	Vector3 centrePoint = (flatMinPos + flatMaxPos) * 0.5f;
+
+	// m_collisionRadiusMax = Vector3Length(centrePoint - flatMinPos);
+
+	m_collisionRadiusMax = (std::max(Vector3Length(centrePoint - flatMinPos), Vector3Length(centrePoint - flatMaxPos))); // *0.5f;
+
 	
-	//m_collisionRadiusMax = m_hitbox.max.x
+
+	/*float xWidth = std::abs((localSpaceBoundingBox.min.x) - (localSpaceBoundingBox.max.x));
+	float zWidth = std::abs((localSpaceBoundingBox.min.z) - (localSpaceBoundingBox.max.z));
+	float widthAverage = (xWidth + zWidth) * 0.5f;
+	float radius = widthAverage * 0.5f;*/
+	
+	// m_collisionRadiusMax = m_hitbox.max.x
 }
 
 void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
@@ -116,14 +139,33 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 //	if (CheckCollisionBoxes(m_hitbox, t_player)){return true;}
 //}
 
+// Problems:
+// * Clamp doesn't seem to work - collision circle always higher than I want it to be. // Spherical collision?
+// * Still need to add exponential curve to collision shape 
+
 bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
-{// This file not saving is very weird.
-	Vector3 posWithPlayerHeight = m_position;
-	posWithPlayerHeight.y = t_playerPos.y;
+{
+	m_posWithPlayerHeight = m_position;
+	m_posWithPlayerHeight.y = (t_playerPos.y) - m_position.y; // Player's current height minus lowest level of furniture
+	m_posWithPlayerHeight.y = Clamp(m_posWithPlayerHeight.y, m_position.y, m_overallHeightOnGround);
 
-	float distance = Vector3Distance(t_playerPos, posWithPlayerHeight);
+	// m_posWithPlayerHeight.y -= 1.0f; // Stupid hack.
 
-	float combinedRad = t_playerRad + m_collisionRadiusMin;
+	m_posWPlyrHeightNorm = m_posWithPlayerHeight;
+	m_posWPlyrHeightNorm.y = m_posWPlyrHeightNorm.y / m_overallHeightOnGround;
+
+	Vector3 playerTest = t_playerPos;
+	playerTest.y = 0.0f;
+
+	Vector3 mushTest = m_posWithPlayerHeight;
+	mushTest.y = 0.0f;
+
+	float distance = Vector3Distance(playerTest, mushTest);
+	// float distance = Vector3Distance(t_playerPos, m_posWithPlayerHeight);
+
+	m_interpolatedColRadius = Lerp(m_collisionRadiusMin, m_collisionRadiusMax, m_posWPlyrHeightNorm.y);
+
+	float combinedRad = t_playerRad + m_interpolatedColRadius;
 
 	if (distance < combinedRad)	
 	{

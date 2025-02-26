@@ -45,10 +45,15 @@ private:
 	Feeder m_feeder;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
-	float m_collisionRadiusMin = 1.0f;
+	float m_collisionRadiusMin = 1.5f;
 	float m_collisionRadiusMax = 0.0f;
+	float m_interpolatedColRadius = 0.0f;
 
+	float m_overallHeight = 0.0f;
 	float m_overallHeightOnGround = 0.0f;
+	Vector3 m_posWithPlayerHeight = Vector3Zero();
+	Vector3 m_posWPlyrHeightNorm = Vector3Zero();
+
 
 };
 
