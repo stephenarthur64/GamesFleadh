@@ -84,7 +84,7 @@ void Game::loadAssets()
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_02, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_02));
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_03, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_03));
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_04, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_04));
-    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
+    // m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
 
     fogOpacity = WHITE;
     fogOpacity.a = 0;
