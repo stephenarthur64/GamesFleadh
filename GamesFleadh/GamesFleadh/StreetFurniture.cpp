@@ -53,7 +53,10 @@ void StreetFurniture::render()
 	{
 		DrawModel(m_stones[i].body, m_stones[i].position, 0.5f, WHITE);
 	}
-	DrawModel(m_grass, m_grassPos, 1.0f, WHITE);
+	if (m_type != CHUNKY_MUSHROOM)
+	{
+		DrawModel(m_grass, m_grassPos, 0.8f, WHITE);
+	}
 	if (!m_hasFeeder) return;
 	m_feeder.render();
 }

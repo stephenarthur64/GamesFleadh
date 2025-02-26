@@ -221,11 +221,11 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                     type = MUSHROOM;
                 }
                 
-                if (col.r == 0 && col.b == 255 && col.g == 255) 
+                /*if (col.r == 0 && col.b == 255 && col.g == 255) 
                 {
                     furnType = FURNITURE_GRASS;
                     type = NOT_MUSHROOM;
-                }
+                }*/
                 
                 if (col.r == 5 && col.b == 0 && col.g == 0) 
                 {
