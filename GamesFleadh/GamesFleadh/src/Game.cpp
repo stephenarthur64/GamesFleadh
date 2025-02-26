@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <cmath> // Used for abs()
 
-Game::Game() : score(0), activeMap(1)
+Game::Game() : score(0), activeMap(1), state(GameState::GAMEPLAY)
 {
     leftStickX = 0.0f;
     leftStickY = 0.0f;
@@ -28,6 +28,8 @@ Game::~Game()
 
 void Game::run()
 {
+    srand(time(nullptr));
+
     init();
 
     while (!WindowShouldClose())
@@ -126,8 +128,8 @@ void Game::loadAssets()
     m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
-    SetMusicVolume(bgm, 0.2);
-   // PlayMusicStream(bgm);
+    SetMusicVolume(bgm, 0.1);
+    //PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -152,7 +154,7 @@ void Game::setupSkybox()
 
     char skyboxFileName[256] = { 0 };
 
-    Image skyboxImage = LoadImage("ASSETS/3D/Skybox/skyBox.png");
+    Image skyboxImage = LoadImage("ASSETS/3D/Skybox/skybox_starry.png"); // <-------------------------------------------------------- HERE -----------------------------------------------------------
     skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = LoadTextureCubemap(skyboxImage, CUBEMAP_LAYOUT_AUTO_DETECT);    // CUBEMAP_LAYOUT_PANORAMA
     UnloadImage(skyboxImage);
 }
@@ -260,52 +262,59 @@ void Game::update()
     UpdateMusicStream(bgm);
     gamepadUpdate();
     inputControl();
-    player.updateZPos(camPos.z - playerZOffsetFromCamera);
-    player.faceCrosshair(billPositionRotating);
-
-    swarmer->checkDistanceFromPlayer(player.getPosition());
-    swarmer->update();
-
-    distanceStatic = Vector3Distance(camera.position, billPositionStatic);
-    distanceStatic += 2.0f;
-    distanceRotating = Vector3Distance(camera.position, billPositionRotating);
-
-    mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
-
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
-    {// Colliding with terrain on the right
-        player.worldCollision(true);
-        player.handleInput(EVENT_HIT_R);
-        player.hitSound(0);
-        player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
-    }
-
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
-    {// Colliding with terrain on the left
-        player.worldCollision(true);
-        player.handleInput(EVENT_HIT_L);
-        player.hitSound(0);
-        player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
-    }
-
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
-    {// Colliding with terrain in front
-        player.worldCollision(true);
-        player.hitSound(0);
-        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
-    }    
-    
-    m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
-
-    for (Tile& item : m_terrainTileCollection)
+    if (state == GameState::GAMEPLAY)
     {
-        item.update(player.getPosition());
-    }
+        player.updateZPos(camPos.z - playerZOffsetFromCamera);
+        player.faceCrosshair(billPositionRotating);
 
-    player.updateBullet();
-    camera.position = camPos;
-    checkCollisions();
-    player.update();
+        swarmer->checkDistanceFromPlayer(player.getPosition());
+        swarmer->update();
+
+        distanceStatic = Vector3Distance(camera.position, billPositionStatic);
+        distanceStatic += 2.0f;
+        distanceRotating = Vector3Distance(camera.position, billPositionRotating);
+
+        mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
+
+        if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
+        {// Colliding with terrain on the right
+            player.worldCollision(true);
+            player.handleInput(EVENT_HIT_R);
+            player.hitSound(0);
+            player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL, camPos);
+        }
+
+        if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
+        {// Colliding with terrain on the left
+            player.worldCollision(true);
+            player.handleInput(EVENT_HIT_L);
+            player.hitSound(0);
+            player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL, camPos);
+        }
+
+        if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
+        {// Colliding with terrain in front
+            player.worldCollision(true);
+            player.hitSound(0);
+            reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+        }
+
+        m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
+
+        for (Tile& item : m_terrainTileCollection)
+        {
+            item.update(player.getPosition());
+        }
+
+        player.updateBullet();
+        camera.position = camPos;
+        checkCollisions();
+        player.update(camPos);
+    }
+    else if (state == GameState::TITLE)
+    {
+        camera.target = player.getPosition();
+    }
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
     //fogVisibility();
@@ -404,7 +413,7 @@ void Game::inputControl()
     }
 
     Command* command = nullptr;
-    if (leftStickX == 0 && rightStickX == 0 && leftStickY == 0 && rightStickY == 0)
+    if ((leftStickX == 0 && rightStickX == 0 && leftStickY == 0 && rightStickY == 0) && !IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         command = new NoInputCommand;
     }
@@ -448,6 +457,8 @@ void Game::crosshairMove()
 
     billPositionRotating.x += billSpeed * (rightStickX + keyboardX);
     billPositionRotating.y += billSpeed * (- (rightStickY + keyboardY));
+    billPositionRotating.x = Clamp(billPositionRotating.x, player.getPosition().x - 5.0f, player.getPosition().x + 5.0f);
+    billPositionRotating.y = Clamp(billPositionRotating.y, player.getPosition().y - 2.0f, player.getPosition().y + 2.5f);
 }
 
 void Game::reboundZ(Vector3 t_impactPoint)
@@ -547,7 +558,6 @@ void Game::checkCollisions()
     if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
     {
         player.hitSound(0);
-        player.enemyCollision(true);
         //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
@@ -653,4 +663,5 @@ void Game::reduceFog()
         fogTick = 0;
     }
 }
+
 

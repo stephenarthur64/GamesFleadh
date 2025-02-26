@@ -19,12 +19,15 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 	// setHitBox();	
 	animsCount = 0;
 	animCurrentFrame = 0;
-	modelAnimations = LoadModelAnimations("ASSETS/3D/StreetFurniture/Animated Mushrooms/DefaultMushroomAnimated.glb", &animsCount);
+	modelAnimations = LoadModelAnimations(t_furnitureType.c_str(), &animsCount);
 	if (t_hasFeeder)
 	{
 		m_feeder.init();
 	}
 	m_health = 255;
+
+	initStones();
+	m_grass = LoadModel(FURNITURE_GRASS.c_str());
 }
 
 StreetFurniture::~StreetFurniture()
@@ -35,7 +38,9 @@ StreetFurniture::~StreetFurniture()
 
 void StreetFurniture::rotate(int t_direction){}
 
-void StreetFurniture::init(){}
+void StreetFurniture::init()
+{
+}
 
 void StreetFurniture::render()
 {
@@ -44,8 +49,48 @@ void StreetFurniture::render()
 	DrawModel(m_body, m_position, 1.0f, m_colour);
 	DrawBoundingBox(m_hitbox, BLUE);
 
+	for (int i = 0; i < 3; i++)
+	{
+		DrawModel(m_stones[i].body, m_stones[i].position, 0.5f, WHITE);
+	}
+	DrawModel(m_grass, m_grassPos, 1.0f, WHITE);
 	if (!m_hasFeeder) return;
 	m_feeder.render();
+}
+
+void StreetFurniture::initStones()
+{
+	if (m_type == CHUNKY_MUSHROOM) // Big mushroom needs large stones
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			m_stones[i].body = LoadModel(FURNITURE_STONE_LARGE.c_str());
+		}
+		return;
+	}
+
+	int randNum;
+
+	for (int i = 0; i < 3; i++)
+	{
+		randNum = rand() % 3;
+
+		switch (randNum)
+		{
+		case 0:
+			m_stones[i].body = LoadModel(FURNITURE_STONE_MED_POINTY.c_str());
+			break;
+		case 1:
+			m_stones[i].body = LoadModel(FURNITURE_STONE_MED_FLAT01.c_str());
+			break;
+		case 2:
+			m_stones[i].body = LoadModel(FURNITURE_STONE_SMALL01.c_str());
+			break;
+		default:
+			break;
+		}
+		
+	}
 }
 
 void StreetFurniture::renderBoom(Camera& t_camera)
@@ -70,17 +115,13 @@ void StreetFurniture::playerDetected(bool t_spotted, Vector3 t_target)
 
 void StreetFurniture::update(Vector3 t_target)
 {
-	if (!m_hasFeeder) return;
-	m_feeder.update(t_target);
-
-	if (m_type == MUSHROOM)
+	if (m_type == MUSHROOM || m_type == CHUNKY_MUSHROOM)
 	{
 		currentState->update(this);
 	}
-	else if (m_hasFeeder)
-	{
-		int hi = 0;
-	}
+
+	if (!m_hasFeeder) return;
+	m_feeder.update(t_target);
 }
 
 void StreetFurniture::spawnFeeder()
@@ -119,6 +160,12 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 	m_position = t_mapPos + m_placementOffset;
 
 	setHitBox(); // Update hitbox when position is set.
+
+	m_stones[0].position = m_position + Vector3{ 2.0f, 0.0f, 0.0f };
+	m_stones[1].position = m_position + Vector3{ 0.0f, 0.0f, 2.0f };
+	m_stones[2].position = m_position + Vector3{ -2.0f, 0.0f, 0.0f };
+	
+	m_grassPos = m_position;
 
 	if (m_hasFeeder)
 	{
@@ -177,19 +224,6 @@ void StreetFurniture::makeFeederEat()
 {
 	if (m_hasFeeder)
 	{
-		handleInput(EVENT_DAMAGE);
-		/*m_colourDecrease += 20;
-		m_colourVal -= m_colourDecrease;
-
-		if (m_colourVal < 130)
-		{
-			m_colourVal = 130;
-		}*/
-		m_colourVal = EaseElasticOut((float)eatTick, 255, -125, 300);
-		m_colour.r = m_colourVal;
-		m_colour.g = m_colourVal;
-		m_colour.b = m_colourVal;
-
-		eatTick++;
+		handleInput(EVENT_EAT);
 	}
 }

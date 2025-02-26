@@ -1,12 +1,11 @@
 #include "IdleState.h"
-#include "MovingUpState.h"
-#include "MovingDownState.h"
-#include "MovingLeftState.h"
-#include "MovingRightState.h"
 #include "ShootState.h"
 #include "PlayerSpottedState.h"
 #include "DamageLState.h"
 #include "DamageRState.h"
+#include "DamageState.h"
+#include "NoInputState.h"
+#include "EatenState.h"
 
 State* IdleState::handleInput(Event t_event)
 {
@@ -27,6 +26,16 @@ State* IdleState::handleInput(Event t_event)
 	if (t_event == EVENT_HIT_R)
 	{
 		return new DamageRState;
+	}
+
+	if (t_event == EVENT_DAMAGE)
+	{
+		return new DamageState;
+	}
+
+	if (t_event == EVENT_EAT)
+	{
+		return new EatenState;
 	}
 
 	if (t_event == Event::EVENT_SPOTTED)

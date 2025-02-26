@@ -12,6 +12,7 @@ typedef enum
     EVENT_INPUT,
     EVENT_HIT_L,
     EVENT_HIT_R,
+    EVENT_EAT,
     EVENT_DIE,    // Represents a die event
     EVENT_RESPAWN,// Represents a respawn event
     EVENT_COUNT   // Represents the total number of events (for counting purposes)

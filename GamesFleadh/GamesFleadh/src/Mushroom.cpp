@@ -3,7 +3,7 @@
 Mushroom::Mushroom()
 {
 	m_position = { 2.0f,1.0f,-15.0f };
-	m_colour = GRAY;
+	m_colour = RED;
 }
 
 void Mushroom::rotate(int t_direction)

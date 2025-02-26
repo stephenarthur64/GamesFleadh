@@ -26,6 +26,7 @@
     <ClInclude Include="include\DamageRState.h" />
     <ClInclude Include="include\DamageState.h" />
     <ClInclude Include="include\DeathState.h" />
+    <ClInclude Include="include\EatenState.h" />
     <ClInclude Include="include\Feeder.h" />
     <ClInclude Include="include\events.h" />
     <ClInclude Include="include\Game.h" />
@@ -56,6 +57,7 @@
     <ClCompile Include="src\DamageRState.cpp" />
     <ClCompile Include="src\DamageState.cpp" />
     <ClCompile Include="src\DeathState.cpp" />
+    <ClCompile Include="src\EatenState.cpp" />
     <ClCompile Include="src\Feeder.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\gameobject.cpp" />
