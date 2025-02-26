@@ -4,7 +4,7 @@
 Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false), m_poisonTick(-1), MAX_POISON_TICK(30),
 					m_hpColour(GREEN)
 {
-	currentState = new IdleState;
+	currentState = new NoInputState;
 	m_health = 100;
 	animsCount = 0;
 	animCurrentFrame = 0;
@@ -72,6 +72,15 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
+	shootingSFX = LoadSound("ASSETS/Audio/SFX/buzzHasThatThangOnHim.mp3");
+	SetSoundVolume(shootingSFX, 0.3);
+
+	environmentHitSFX = LoadSound("ASSETS/Audio/SFX/buzzEnvironmentHitRedux.mp3");
+	SetSoundVolume(environmentHitSFX, 0.3);
+
+	enemyHitSFX = LoadSound("ASSETS/Audio/SFX/buzzGetHitRedux.mp3");
+	SetSoundVolume(enemyHitSFX, 0.3);
+
 	m_position.y += 2.0f;
 
 	m_healthbar.x = 40;
@@ -96,7 +105,24 @@ void Player::render()
 	}
 }
 
-void Player::update()
+void Player::shootSound()
+{
+	PlaySound(shootingSFX);
+}
+
+void Player::hitSound(int t_type)
+{
+	if (t_type == 0)
+	{
+		PlaySound(environmentHitSFX);
+	}
+	else if (t_type == 1)
+	{
+		PlaySound(enemyHitSFX);
+	}
+}
+
+void Player::update(Vector3&t_cam)
 {
 	currentState->update(this);
 	updateHealthbar();
@@ -120,6 +146,7 @@ void Player::update()
 		float frameTime = GetFrameTime();
 		m_reboundCounter -= frameTime;
 		m_position += m_reboundDirection * m_reboundForce * frameTime;
+		t_cam += m_reboundDirection * m_reboundForce * frameTime;;
 	}
 
 	m_position.y = Clamp(m_position.y, -0.2f, 13.0f);
@@ -161,13 +188,13 @@ void Player::shootBullet(Vector3 t_target)
 {
 	if (bulletCount < 10)
 	{
-		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
+		bullet[bulletCount].spawn(m_position, 0.8f, t_target);
 		bulletCount++;
 	}
 	else
 	{
 		bulletCount = 0;
-		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
+		bullet[bulletCount].spawn(m_position, 0.8f, t_target);
 	}
 }
 
@@ -184,7 +211,7 @@ void Player::despawnBullet(int bulletNum)
 	bullet[bulletNum].despawn();
 }
 
-void Player::rebound(Vector3 t_impactPoint)
+void Player::rebound(Vector3 t_impactPoint, Vector3& t_cam)
 {
 	std::cout << "Rebound triggered.\n";
 	m_reboundCounter = m_reboundCountMax;

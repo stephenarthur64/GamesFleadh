@@ -25,6 +25,8 @@
 #include "Swarmer.h"
 #include "Tile.h"
 
+enum class GameState{TITLE, GAMEPLAY, GAME_OVER};
+
 class Game
 {
 public:
@@ -53,8 +55,11 @@ public:
 	void reboundZ(Vector3 t_impactPoint);
 
 	void fogVisibility();
+	void reduceFog();
 
 private:
+	GameState state;
+
 	Camera camera;
 	Camera camTopDown;
 
@@ -79,6 +84,9 @@ private:
 	Rectangle gradientDest;
 
 	Color fogOpacity;
+
+	int fogTick = 0;
+	float heightVal = 0;
 
 	float camSpeed = 0.2f;
 	float camDirection;
@@ -131,7 +139,7 @@ private:
 	float distanceStatic;
 	float distanceRotating;
 	float rotation = 0.0f;
-	Vector3 billPositionRotating = { 1.0f, 2.0f, 5.0f };
+	Vector3 billPositionRotating = { 0.0f, 6.0f, 5.0f };
 	Vector2 size;
 	Vector2 origin;
 	float billSpeed = 0.0f;

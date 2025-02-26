@@ -5,13 +5,21 @@
 #include <string>
 #include "Player.h"
 #include "reasings.h"
+#include "State.h"
+#include "IdleState.h"
 // #include <memory>
+
+#if defined(PLATFORM_DESKTOP)
+#define GLSL_VERSION            330
+#else   // PLATFORM_ANDROID, PLATFORM_WEB
+#define GLSL_VERSION            100
+#endif
 
 class StreetFurniture :
     public GameObject
 {
 public:
-	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f });
+	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f }, FurnitureType t_type = NONE);
 	// StreetFurniture(StreetFurniture&&) = default;
 	~StreetFurniture();
 
@@ -46,6 +54,8 @@ private:
 	//std::unique_ptr<Feeder> m_feeder;
 	bool m_hasFeeder;
 	Feeder m_feeder;
+
+	FurnitureType m_type;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
 	int m_colourDecrease;
