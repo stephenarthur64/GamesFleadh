@@ -126,8 +126,8 @@ void Game::loadAssets()
     m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
-    SetMusicVolume(bgm, 0.2);
-   // PlayMusicStream(bgm);
+    SetMusicVolume(bgm, 0.1);
+    //PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -411,7 +411,7 @@ void Game::inputControl()
     }
 
     Command* command = nullptr;
-    if (leftStickX == 0 && rightStickX == 0 && leftStickY == 0 && rightStickY == 0)
+    if ((leftStickX == 0 && rightStickX == 0 && leftStickY == 0 && rightStickY == 0) && !IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         command = new NoInputCommand;
     }

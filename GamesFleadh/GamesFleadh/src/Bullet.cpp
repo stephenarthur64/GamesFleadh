@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-Bullet::Bullet() : m_radius(0.5f)
+Bullet::Bullet() : m_radius(3.0f)
 {
 }
 
@@ -58,7 +58,7 @@ void Bullet::follow(Vector3 t_target)
 
 void Bullet::init()
 {
-	m_body = LoadModel("ASSETS/RS/bulletProto.glb");
+	m_body = LoadModel("ASSETS/3D/Player/Weapons/bullet.glb");
 }
 
 void Bullet::render()
