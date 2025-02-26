@@ -25,7 +25,7 @@ State* DamageLState::handleInput(Event t_event)
 
 void DamageLState::update(GameObject* obj)
 {
-    obj->animation(4);
+    obj->animation(HIT_L);
     m_tick++;
 }
 

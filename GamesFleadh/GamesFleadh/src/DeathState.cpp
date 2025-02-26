@@ -16,7 +16,7 @@ State* DeathState::handleInput(Event t_event)
 
 void DeathState::update(GameObject* obj)
 {
-	obj->animation(2);
+	obj->animation(DEATH);
 }
 
 void DeathState::enter(GameObject* obj)

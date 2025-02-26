@@ -20,7 +20,7 @@ State* PlayerSpottedState::handleInput(Event t_event)
 
 void PlayerSpottedState::update(GameObject* obj)
 {
-    obj->animation(1);
+    obj->animation(ALERT);
 }
 
 void PlayerSpottedState::enter(GameObject* obj)

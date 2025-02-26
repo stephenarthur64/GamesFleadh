@@ -39,7 +39,7 @@ State* IdleState::handleInput(Event t_event)
 
 void IdleState::update(GameObject* obj)
 {
-	obj->animation(0);	
+	obj->animation(DEFAULT);	
 }
 
 void IdleState::enter(GameObject* obj)

@@ -12,7 +12,7 @@ State* StateChase::handleInput(Event t_event)
 
 void StateChase::update(GameObject* obj)
 {
-    obj->animation(2);
+    obj->animation(CHASE);
 }
 
 void StateChase::enter(GameObject* obj)
