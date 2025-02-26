@@ -70,13 +70,13 @@ void StreetFurniture::playerDetected(bool t_spotted, Vector3 t_target)
 
 void StreetFurniture::update(Vector3 t_target)
 {
-	if (!m_hasFeeder) return;
-	m_feeder.update(t_target);
-
 	if (m_type == MUSHROOM)
 	{
 		currentState->update(this);
 	}
+
+	if (!m_hasFeeder) return;
+	m_feeder.update(t_target);
 }
 
 void StreetFurniture::spawnFeeder()

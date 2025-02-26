@@ -227,7 +227,7 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                     type = NOT_MUSHROOM;
                 }*/
                 
-                if (col.r == 5 && col.b == 0 && col.g == 0) 
+                /*if (col.r == 5 && col.b == 0 && col.g == 0) 
                 {
                     furnType = FURNITURE_STONE_SMALL01;
                     type = NOT_MUSHROOM;
@@ -261,7 +261,7 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                 {
                     furnType = FURNITURE_STONE_LARGE;
                     type = NOT_MUSHROOM;
-                }
+                }*/
 
                 if(furnType != FURNITURE_DUMMY_ZERO) assignFurniture(u, v, furnType, type);
 

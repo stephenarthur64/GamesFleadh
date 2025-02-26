@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <cmath> // Used for abs()
 
-Game::Game() : score(0), activeMap(1)
+Game::Game() : score(0), activeMap(1), state(GameState::GAMEPLAY)
 {
     leftStickX = 0.0f;
     leftStickY = 0.0f;
@@ -260,52 +260,59 @@ void Game::update()
     UpdateMusicStream(bgm);
     gamepadUpdate();
     inputControl();
-    player.updateZPos(camPos.z - playerZOffsetFromCamera);
-    player.faceCrosshair(billPositionRotating);
-
-    swarmer->checkDistanceFromPlayer(player.getPosition());
-    swarmer->update();
-
-    distanceStatic = Vector3Distance(camera.position, billPositionStatic);
-    distanceStatic += 2.0f;
-    distanceRotating = Vector3Distance(camera.position, billPositionRotating);
-
-    mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
-
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
-    {// Colliding with terrain on the right
-        player.worldCollision(true);
-        player.handleInput(EVENT_HIT_R);
-        player.hitSound(0);
-        player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
-    }
-
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
-    {// Colliding with terrain on the left
-        player.worldCollision(true);
-        player.handleInput(EVENT_HIT_L);
-        player.hitSound(0);
-        player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
-    }
-
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
-    {// Colliding with terrain in front
-        player.worldCollision(true);
-        player.hitSound(0);
-        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
-    }    
-    
-    m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
-
-    for (Tile& item : m_terrainTileCollection)
+    if (state == GameState::GAMEPLAY)
     {
-        item.update(player.getPosition());
-    }
+        player.updateZPos(camPos.z - playerZOffsetFromCamera);
+        player.faceCrosshair(billPositionRotating);
 
-    player.updateBullet();
-    camera.position = camPos;
-    checkCollisions();
-    player.update();
+        swarmer->checkDistanceFromPlayer(player.getPosition());
+        swarmer->update();
+
+        distanceStatic = Vector3Distance(camera.position, billPositionStatic);
+        distanceStatic += 2.0f;
+        distanceRotating = Vector3Distance(camera.position, billPositionRotating);
+
+        mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
+
+        if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
+        {// Colliding with terrain on the right
+            player.worldCollision(true);
+            player.handleInput(EVENT_HIT_R);
+            player.hitSound(0);
+            player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+        }
+
+        if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
+        {// Colliding with terrain on the left
+            player.worldCollision(true);
+            player.handleInput(EVENT_HIT_L);
+            player.hitSound(0);
+            player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+        }
+
+        if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
+        {// Colliding with terrain in front
+            player.worldCollision(true);
+            player.hitSound(0);
+            reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+        }
+
+        m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
+
+        for (Tile& item : m_terrainTileCollection)
+        {
+            item.update(player.getPosition());
+        }
+
+        player.updateBullet();
+        camera.position = camPos;
+        checkCollisions();
+        player.update();
+    }
+    else if (state == GameState::TITLE)
+    {
+        camera.target = player.getPosition();
+    }
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
     //fogVisibility();
