@@ -37,7 +37,7 @@ public:
 	Rectangle getHealthBar() { return m_healthbar; }
 	Color getHealthBarColour() { return m_hpColour; }
 
-	void update();
+	void update(Vector3& t_cam);
 	void updateHealthbar();
 
 	void resetToOrigin();
@@ -47,7 +47,7 @@ public:
 	void updateBullet();
 	void despawnBullet(int bulletNum);
 
-	void rebound(Vector3 t_impactPoint);
+	void rebound(Vector3 t_impactPoint, Vector3& t_cam);
 	
 	void poisonPlayer(bool t_poison);
 	bool isPoisoned() { return m_poisoned; }

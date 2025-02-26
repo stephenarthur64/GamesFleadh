@@ -279,7 +279,7 @@ void Game::update()
             player.worldCollision(true);
             player.handleInput(EVENT_HIT_R);
             player.hitSound(0);
-            player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+            player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL, camPos);
         }
 
         if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
@@ -287,7 +287,7 @@ void Game::update()
             player.worldCollision(true);
             player.handleInput(EVENT_HIT_L);
             player.hitSound(0);
-            player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+            player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL, camPos);
         }
 
         if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
@@ -307,7 +307,7 @@ void Game::update()
         player.updateBullet();
         camera.position = camPos;
         checkCollisions();
-        player.update();
+        player.update(camPos);
     }
     else if (state == GameState::TITLE)
     {
@@ -661,4 +661,5 @@ void Game::reduceFog()
         fogTick = 0;
     }
 }
+
 
