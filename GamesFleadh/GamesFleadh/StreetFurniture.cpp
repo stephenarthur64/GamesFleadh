@@ -117,7 +117,7 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 //}
 
 bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
-{
+{// This file not saving is very weird.
 	Vector3 posWithPlayerHeight = m_position;
 	posWithPlayerHeight.y = t_playerPos.y;
 
