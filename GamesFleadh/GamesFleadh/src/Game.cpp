@@ -455,6 +455,8 @@ void Game::crosshairMove()
 
     billPositionRotating.x += billSpeed * (rightStickX + keyboardX);
     billPositionRotating.y += billSpeed * (- (rightStickY + keyboardY));
+    billPositionRotating.x = Clamp(billPositionRotating.x, player.getPosition().x - 5.0f, player.getPosition().x + 5.0f);
+    billPositionRotating.y = Clamp(billPositionRotating.y, player.getPosition().y - 2.0f, player.getPosition().y + 2.5f);
 }
 
 void Game::reboundZ(Vector3 t_impactPoint)
@@ -554,7 +556,6 @@ void Game::checkCollisions()
     if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
     {
         player.hitSound(0);
-        player.enemyCollision(true);
         //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
