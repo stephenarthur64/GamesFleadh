@@ -40,7 +40,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
-   // ToggleFullscreen();
+    //ToggleFullscreen();
     InitAudioDevice();
 
     // Define our custom camera to look into our 3d world
@@ -82,7 +82,14 @@ void Game::loadAssets()
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_RIVERTEST01));
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
 
-    
+    fogOpacity = WHITE;
+    fogOpacity.a = 0;
+    fogVignette = LoadTexture("ASSETS/2D/Fog/OrangeVignette.png");
+    fogBar = LoadTexture("ASSETS/2D/UI/FogBar.png");
+    fogGradient = LoadTexture("ASSETS/2D/UI/FogGradient.png");
+
+    gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
+    gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
 
     healthBar = LoadTexture("ASSETS/2D/UI/HealthBar.png");
 
@@ -205,8 +212,14 @@ void Game::render()
     DrawGrid(20, 1.0f);
     EndMode3D();
 
-    DrawRectangleRec(player.getHealthBar(), GREEN);
+    DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
     DrawTexture(healthBar, 0, 1000, WHITE);
+
+    DrawTexture(fogVignette, 0, 0, fogOpacity);
+    //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
+    //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
+    DrawTexturePro(fogGradient, gradientSource, gradientDest, {(float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
+    DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
    
     DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
     DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
@@ -259,6 +272,8 @@ void Game::update()
 
     mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
+    
+
     for (Tile& item : m_terrainTileCollection)
     {
         item.update(player.getPosition());
@@ -270,7 +285,7 @@ void Game::update()
     player.update();
     cameraMove();
     UpdateCamera(&camera, CAMERA_PERSPECTIVE);
-
+    //fogVisibility();
 }
 
 void Game::inputControl()
@@ -301,12 +316,6 @@ void Game::inputControl()
         }
         player.updateHitBox(camDirection);
         camPos.z += camDirection;
-    }
-    
-    Command* command = Input::getInstance()->handleInput();
-    if (command)
-    {
-        command->execute(&player);
     }
 
     if (IsKeyDown(KEY_UP))
@@ -371,6 +380,20 @@ void Game::inputControl()
         float frameTime = GetFrameTime();
         m_reboundCounter -= frameTime;
         camPos -= M_REBOUND_DIRECTION * m_reboundForce * frameTime;
+    }
+
+    Command* command = nullptr;
+    if (leftStickX == 0 && rightStickX == 0 && leftStickY == 0 && rightStickY == 0)
+    {
+        command = new NoInputCommand;
+    }
+    else
+    {
+        command = Input::getInstance()->handleInput();
+    }
+    if (command)
+    {
+        command->execute(&player);
     }
 }
 
@@ -460,7 +483,7 @@ void Game::checkCollisions()
 {
     int collide = 0;
 
-    player.collision(false); // RS: At the start of the collision check, set collision to false.
+    player.enemyCollision(false); // RS: At the start of the collision check, set collision to false.
 
     BoundingBox one = player.getHitbox();
     BoundingBox one2 = player.getHitbox();
@@ -469,7 +492,16 @@ void Game::checkCollisions()
 
     if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 2.0f))
     {
-        player.collision(true);
+        if (swarmer[0].getPosition().x < player.getPosition().x)
+        {
+            player.handleInput(EVENT_HIT_L);
+        }
+        if (swarmer[0].getPosition().x > player.getPosition().x)
+        {
+            player.handleInput(EVENT_HIT_R);
+        }
+        player.hitSound(1);
+        player.enemyCollision(true);
         swarmer[0].collision(true);
     }
 
@@ -477,14 +509,15 @@ void Game::checkCollisions()
     {
         if (m_terrainTileCollection[m_tileCurrent].checkFeederBulletCollision(player.getBulletPositon(i), 1.0f))
         {// Feeder collision set to true in Furniture (follow if statement above)
-            collide = 1; // Not sure what the 'collide' var is for...!
             player.despawnBullet(i);
+            reduceFog();
             score += 10;
         }
 
         if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getBulletPositon(i), 1.0f))
         {
             swarmer[0].collision(true);
+            reduceFog();
             player.despawnBullet(i);
             score += 10;
         }
@@ -492,43 +525,49 @@ void Game::checkCollisions()
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
     {// Colliding with terrain on the right
-        player.collision(true);
+        player.worldCollision(true);
+        player.handleInput(EVENT_HIT_R);
+        player.hitSound(0);
         player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
     {// Colliding with terrain on the left
-        player.collision(true);
+        player.worldCollision(true);
+        player.handleInput(EVENT_HIT_L);
+        player.hitSound(0);
         player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
     {// Colliding with terrain in front
-        player.collision(true);
+        player.worldCollision(true);
+        player.hitSound(0);
         reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
-    } 
+    }
 
-    // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
-    //if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
-    //{
-    //    player.collision(true);
-    //}
+    // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
     if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
     {
-        player.collision(true);
+        player.hitSound(0);
+        player.enemyCollision(true);
+        //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
-    
-
-    // m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius());
-
-    /* RS: Not sure what this is for!
-    if (collide != 1)
+    if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
     {
-        mushroom[mushroomOnMap].setCollisions(false);
+        if (mudBombPosition < player.getPosition().x)
+        {
+            player.handleInput(EVENT_HIT_L);
+        }
+        if (mudBombPosition > player.getPosition().x)
+        {
+            player.handleInput(EVENT_HIT_R);
+        }
+        player.hitSound(1);
+        player.poisonPlayer(true);
     }
-    */
 }
 
 void Game::mapMove()
@@ -552,6 +591,8 @@ void Game::mapMove()
 
     m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
     m_terrainTileCollection[m_tileNext].makeFeederSeekPlayer(false, player);
+
+    swarmer->spawn({ -2.0f, 3.0f, -12.0f }, 5, 0);
 
     float mapLength = 64.0f;
     
@@ -591,5 +632,30 @@ void Game::cameraMove()
     camera.target.z = billPositionRotating.z - 15.0f;
 }
 
+void Game::fogVisibility()
+{
+    float heightPercent;
+    const float MAX_HEIGHT = 427.0f;
+    const int MAX_TICK = 700;
 
+    gradientDest.height = EaseLinearInOut(fogTick, heightVal, MAX_HEIGHT, MAX_TICK);
+    heightPercent = gradientDest.height / MAX_HEIGHT;
+
+    fogOpacity.a = 255.0f * heightPercent;
+
+    if (fogTick <= MAX_TICK)
+    {
+        fogTick++;
+    }
+    
+}
+
+void Game::reduceFog()
+{
+    fogTick -= 100;
+    if (fogTick < 0)
+    {
+        fogTick = 0;
+    }
+}
 

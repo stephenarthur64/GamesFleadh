@@ -22,6 +22,8 @@
     <ClInclude Include="include\Bullet.h" />
     <ClInclude Include="include\Command.h" />
     <ClInclude Include="include\ConcreteCommands.h" />
+    <ClInclude Include="include\DamageLState.h" />
+    <ClInclude Include="include\DamageRState.h" />
     <ClInclude Include="include\DamageState.h" />
     <ClInclude Include="include\DeathState.h" />
     <ClInclude Include="include\Feeder.h" />
@@ -36,6 +38,7 @@
     <ClInclude Include="include\MovingRightState.h" />
     <ClInclude Include="include\MovingUpState.h" />
     <ClInclude Include="include\Mushroom.h" />
+    <ClInclude Include="include\NoInputState.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\PlayerSpottedState.h" />
     <ClInclude Include="include\ShootState.h" />
@@ -49,6 +52,8 @@
   <ItemGroup>
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\Command.cpp" />
+    <ClCompile Include="src\DamageLState.cpp" />
+    <ClCompile Include="src\DamageRState.cpp" />
     <ClCompile Include="src\DamageState.cpp" />
     <ClCompile Include="src\DeathState.cpp" />
     <ClCompile Include="src\Feeder.cpp" />
@@ -62,6 +67,7 @@
     <ClCompile Include="src\MovingRightState.cpp" />
     <ClCompile Include="src\MovingUpState.cpp" />
     <ClCompile Include="src\Mushroom.cpp" />
+    <ClCompile Include="src\NoInputState.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\PlayerSpottedState.cpp" />
     <ClCompile Include="src\ShootState.cpp" />

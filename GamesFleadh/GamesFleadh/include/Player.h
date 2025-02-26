@@ -6,7 +6,7 @@
 #include "raymath.h"
 #include "gameobject.h"
 #include "State.h"
-#include "IdleState.h"
+#include "NoInputState.h"
 #include "Weapon.h"
 
 class Player : public GameObject
@@ -26,14 +26,17 @@ public:
 
 	Quaternion getCrosshairRotation() { return crosshairRotation; }
 	
-	void collision(bool collide);
 	void worldCollision(bool collide);
+	void enemyCollision(bool collide);
 
 	void updateZPos(float newXPos);
 	virtual void rotate(int t_direction) override;
 	virtual void init() override;
 	virtual void render() override;
+	void shootSound() override;
+	void hitSound(int t_type);
 	Rectangle getHealthBar() { return m_healthbar; }
+	Color getHealthBarColour() { return m_hpColour; }
 
 	void update();
 	void updateHealthbar();
@@ -47,6 +50,8 @@ public:
 
 	void rebound(Vector3 t_impactPoint);
 	
+	void poisonPlayer(bool t_poison);
+	bool isPoisoned() { return m_poisoned; }
 
 private:
 	//Weapon m_weapon;
@@ -60,8 +65,13 @@ private:
 	int bulletCount;
 	const int MAX_BULLETS = 10;
 
+	Sound shootingSFX;
+	Sound environmentHitSFX;
+	Sound enemyHitSFX;
+
 	Quaternion crosshairRotation;
 	Rectangle m_healthbar;
+	Color m_hpColour;
 
 	const float HEALTHBAR_MAX;
 
@@ -70,5 +80,8 @@ private:
 	const float m_reboundCountMax = 0.125f; // 33f;
 	const float m_reboundForce = 20.0f;
 
+	bool m_poisoned;
+	int m_poisonTick;
+	const int MAX_POISON_TICK;
 };
 

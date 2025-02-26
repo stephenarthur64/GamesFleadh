@@ -1,17 +1,30 @@
 #include "StreetFurniture.h"
 #include <iostream>
 
-StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos) : m_hasFeeder(t_hasFeeder)
+StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos, FurnitureType t_type) : m_hasFeeder(t_hasFeeder),
+																															m_colourDecrease(0),
+																															m_colourVal(255), eatTick(0), 
+																															MAX_EAT_TICK(60),
+																															m_type(t_type)
+																									
 {
 	m_placementOffset = t_startPos;
-
+	currentState = new IdleState;
 	m_body = LoadModel(t_furnitureType.c_str());
+	/*for (int i = 0; i < m_body.materialCount; i++)
+	{
+		m_body.materials[i].shader = LoadShader(TextFormat("ASSETS/shaders/glsl%i/discard_alpha.fs", GLSL_VERSION),
+			TextFormat("ASSETS/shaders/glsl%i/discard_alpha.fs", GLSL_VERSION));
+	}*/
 	// setHitBox();	
-
+	animsCount = 0;
+	animCurrentFrame = 0;
+	modelAnimations = LoadModelAnimations(t_furnitureType.c_str(), &animsCount);
 	if (t_hasFeeder)
 	{
 		m_feeder.init();
 	}
+	m_health = 255;
 }
 
 StreetFurniture::~StreetFurniture()
@@ -28,7 +41,7 @@ void StreetFurniture::render()
 {
 	if (!m_inPlay) return; // Not in gameplay: early out.
 
-	DrawModel(m_body, m_position, 1.0f, WHITE);
+	DrawModel(m_body, m_position, 1.0f, m_colour);
 	// DrawBoundingBox(m_hitbox, BLUE);
 	
 	// DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
@@ -65,6 +78,11 @@ void StreetFurniture::update(Vector3 t_target)
 {
 	if (!m_hasFeeder) return;
 	m_feeder.update(t_target);
+
+	if (m_type == MUSHROOM)
+	{
+		currentState->update(this);
+	}
 }
 
 void StreetFurniture::spawnFeeder()
@@ -195,6 +213,18 @@ bool StreetFurniture::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bu
 	return false;
 }
 
+bool StreetFurniture::checkMudbombPlayerCollision(BoundingBox t_player)
+{
+	if (m_hasFeeder)
+	{
+		if (m_feeder.checkBulletCollisions(t_player))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
 {
 	if (m_hasFeeder)
@@ -207,6 +237,14 @@ void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
 		{
 			m_feeder.disableShooting();
 		}
+	}
+}
+
+void StreetFurniture::makeFeederEat()
+{
+	if (m_hasFeeder)
+	{
+		handleInput(EVENT_DAMAGE);
 	}
 }
 

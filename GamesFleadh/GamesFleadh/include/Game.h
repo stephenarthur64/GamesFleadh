@@ -4,6 +4,8 @@
 #include "raymath.h"
 #include "rlgl.h" // RS: Added for skybox
 #include <vector>
+#include "reasings.h"
+
 
 // RS: Again, added for skybox - shader for skybox depends on platform.
 #if defined(PLATFORM_DESKTOP)
@@ -50,6 +52,9 @@ public:
 
 	void reboundZ(Vector3 t_impactPoint);
 
+	void fogVisibility();
+	void reduceFog();
+
 private:
 	Camera camera;
 	Camera camTopDown;
@@ -69,6 +74,15 @@ private:
 	Texture2D healthBar;
 	Texture2D fogBar;
 	Texture2D fogGradient;
+	Texture2D fogVignette;
+
+	Rectangle gradientSource;
+	Rectangle gradientDest;
+
+	Color fogOpacity;
+
+	int fogTick = 0;
+	float heightVal = 0;
 
 	float camSpeed = 0.2f;
 	float camDirection;

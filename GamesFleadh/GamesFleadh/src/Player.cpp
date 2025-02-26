@@ -1,9 +1,10 @@
 #include "Player.h"
 
 
-Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450)
+Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false), m_poisonTick(-1), MAX_POISON_TICK(30),
+					m_hpColour(GREEN)
 {
-	currentState = new IdleState;
+	currentState = new NoInputState;
 	m_health = 100;
 	animsCount = 0;
 	animCurrentFrame = 0;
@@ -34,7 +35,7 @@ void Player::updateHitBox(float t_z)
 	m_hitbox.max.z += t_z;
 }
 
-void Player::collision(bool collide)
+void Player::worldCollision(bool collide)
 {
 	if (collide)
 	{
@@ -43,11 +44,12 @@ void Player::collision(bool collide)
 	}
 }
 
-void Player::worldCollision(bool collide)
+void Player::enemyCollision(bool collide)
 {
 	if (collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
+		m_health -= 10;
 	}
 }
 
@@ -69,6 +71,15 @@ void Player::init()
 {
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
+
+	shootingSFX = LoadSound("ASSETS/Audio/SFX/buzzHasThatThangOnHim.mp3");
+	SetSoundVolume(shootingSFX, 0.3);
+
+	environmentHitSFX = LoadSound("ASSETS/Audio/SFX/buzzEnvironmentHitRedux.mp3");
+	SetSoundVolume(environmentHitSFX, 0.3);
+
+	enemyHitSFX = LoadSound("ASSETS/Audio/SFX/buzzGetHitRedux.mp3");
+	SetSoundVolume(enemyHitSFX, 0.3);
 
 	m_position.y += 2.0f;
 
@@ -94,11 +105,41 @@ void Player::render()
 	}
 }
 
+void Player::shootSound()
+{
+	PlaySound(shootingSFX);
+}
+
+void Player::hitSound(int t_type)
+{
+	if (t_type == 0)
+	{
+		PlaySound(environmentHitSFX);
+	}
+	else if (t_type == 1)
+	{
+		PlaySound(enemyHitSFX);
+	}
+}
+
 void Player::update()
 {
 	currentState->update(this);
 	updateHealthbar();
-	//m_weapon.update(m_position);
+	if (m_poisoned && m_health > 10 && m_poisonTick > MAX_POISON_TICK)
+	{
+		m_health -= 5;
+		m_poisonTick = 0;
+	}
+	else if (m_health <= 10)
+	{
+		m_poisoned = false;
+		m_hpColour = GREEN;
+	}
+	else
+	{
+		m_poisonTick++;
+	}
 
 	if (m_reboundCounter > 0)
 	{
@@ -146,13 +187,13 @@ void Player::shootBullet(Vector3 t_target)
 {
 	if (bulletCount < 10)
 	{
-		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
+		bullet[bulletCount].spawn(m_position, 0.8f, t_target);
 		bulletCount++;
 	}
 	else
 	{
 		bulletCount = 0;
-		bullet[bulletCount].spawn(m_position, 0.3f, t_target);
+		bullet[bulletCount].spawn(m_position, 0.8f, t_target);
 	}
 }
 
@@ -175,5 +216,12 @@ void Player::rebound(Vector3 t_impactPoint)
 	m_reboundCounter = m_reboundCountMax;
 	m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
 
+}
+
+void Player::poisonPlayer(bool t_poison)
+{
+	m_poisoned = t_poison;
+	m_poisonTick = 0;
+	m_hpColour = ORANGE;
 }
 

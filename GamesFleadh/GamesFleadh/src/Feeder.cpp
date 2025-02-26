@@ -1,6 +1,6 @@
 #include "Feeder.h"
 
-Feeder::Feeder() : MAX_DISTANCE(8.0f), m_spotted(false), m_active(false)
+Feeder::Feeder() : MAX_DISTANCE(8.0f), m_spotted(false), m_active(false), BULLET_TICK_MAX(120), DAMAGE_TICK_MAX(60)
 {
 	currentState = new IdleState;
 	m_health = 1;
@@ -47,6 +47,9 @@ void Feeder::spawn(Vector3 t_position)
 
 	m_hitbox.min.z = t_position.z + 0.5f;
 	m_hitbox.max.z = t_position.z - 0.5f;
+	despawnBullet(); 
+	disableShooting();
+	m_colour = WHITE;
 }
 
 void Feeder::collision(bool t_collision)
@@ -59,7 +62,7 @@ void Feeder::collision(bool t_collision)
 		m_health--;
 		handleInput(Event::EVENT_DAMAGE);
 
-		if (m_health <= 0)
+		if (m_health == 0)
 		{
 			kill();
 		}
@@ -77,7 +80,7 @@ void Feeder::init()
 	//m_body = LoadModel("ASSETS/RS/animTest.glb");
 	setHitBox();
 	m_mudBomb.init();
-	fxBoom = LoadSound("ASSETS/boom.wav");
+	fxBoom = LoadSound("ASSETS/Audio/SFX/buzzBlastImpactRedux.mp3");
 	SetSoundVolume(fxBoom, 0.3);
 	explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
@@ -101,6 +104,18 @@ void Feeder::renderBoom(Camera &t_camera)
 	}
 }
 
+bool Feeder::checkBulletCollisions(BoundingBox t_player)
+{
+	if (CheckCollisionBoxSphere(t_player, m_mudBomb.getPosition(), m_mudBomb.getRadius()))
+	{
+		mudBombPosition = m_mudBomb.getPosition().x; // DON'T LOOK AT ME
+		m_mudBomb.despawn();
+		return true;
+	}
+
+	return false;
+}
+
 void Feeder::shootBullet(Vector3 t_target)
 {
 	checkDistanceFromPlayer(t_target);
@@ -116,6 +131,7 @@ void Feeder::shootBullet(Vector3 t_target)
 void Feeder::despawnBullet()
 {
 	m_mudBomb.despawn();
+	m_active = false;
 }
 
 void Feeder::disableShooting()
@@ -160,6 +176,8 @@ void Feeder::kill()
 	position.x = m_position.x;
 	position.y = m_position.y;
 
+	m_health = -1;
+
 	PlaySound(fxBoom);
 
 	//m_position.x = 1000.0f;
@@ -176,13 +194,13 @@ void Feeder::update(Vector3 t_target)
 
 	boom();
 
-	if (bulletTick >= 180 && t_target.z > m_position.z)
+	if (bulletTick >= BULLET_TICK_MAX && t_target.z > m_position.z)
 	{
 		m_mudBomb.despawn();
 		disableShooting();
 	}
 
-	if (bulletTick >= 180)
+	if (bulletTick >= BULLET_TICK_MAX)
 	{
 		bulletTick = 0;
 		shootBullet(t_target);
@@ -192,11 +210,11 @@ void Feeder::update(Vector3 t_target)
 		bulletTick++;
 	}
 
-	if (damageTick >= 60)
+	if (damageTick >= DAMAGE_TICK_MAX)
 	{
 		if (m_health > 0)
 		{
-			handleInput(Event::EVENT_NONE);
+			handleInput(Event::EVENT_MOVE);
 		}
 		else
 		{

@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-Bullet::Bullet()
+Bullet::Bullet() : m_radius(0.5f)
 {
 }
 
@@ -63,7 +63,7 @@ void Bullet::init()
 
 void Bullet::render()
 {
-	DrawModel(m_body, m_position, 0.5f, BLUE);
+	DrawModel(m_body, m_position, m_radius, BLUE);
 	DrawBoundingBox(m_hitbox, RED);
 }
 

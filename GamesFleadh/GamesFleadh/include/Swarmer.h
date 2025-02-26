@@ -2,6 +2,7 @@
 #include "gameobject.h"
 #include "IdleState.h"
 #include "Globals.h"
+#include "reasings.h"
 #include <raymath.h>
 
 #define NUM_FRAMES_PER_LINE     5
@@ -17,6 +18,8 @@ public:
 	virtual void init();
 	virtual void render();
 	void renderBoom(Camera t_camera);
+
+	void spawn(Vector3 t_position, float limitMax, float limitMin);
 
 	void boom();
 
@@ -37,6 +40,7 @@ public:
 
 private:
 	int spottedTick = 0;
+	int hoverTick = 0;
 
 	float m_upperLimit;
 	float m_lowerLimit;
@@ -49,7 +53,7 @@ private:
 	Vector3 m_velocity;
 
 	const float MAX_DISTANCE;
-
+	//we bring the boom-jamie cullen
 	Sound fxBoom;
 
 	// Load explosion texture

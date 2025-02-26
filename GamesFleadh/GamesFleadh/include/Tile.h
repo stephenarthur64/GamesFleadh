@@ -31,6 +31,8 @@ public:
 
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
+	bool checkMudBombPlayerCollision(BoundingBox t_player);
+
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
 
 	// std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
@@ -65,6 +67,8 @@ private:
 
 	void processFurnitureMap(Image t_furnitureMap);
 
-	void assignFurniture(float t_u, float t_v, std::string t_furnitureType);
+	void assignFurniture(float t_u, float t_v, std::string t_furnitureType, FurnitureType t_type);
+
+
 };
 
