@@ -4,7 +4,7 @@
 
 enum Direction {NORTH, SOUTH, EAST, WEST};
 
-enum FurnitureType {NONE, MUSHROOM, NOT_MUSHROOM}; // temp values
+enum FurnitureType {NONE, MUSHROOM, CHUNKY_MUSHROOM, NOT_MUSHROOM}; // temp values
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;

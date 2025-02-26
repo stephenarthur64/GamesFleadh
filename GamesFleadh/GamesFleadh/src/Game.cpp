@@ -28,6 +28,8 @@ Game::~Game()
 
 void Game::run()
 {
+    srand(time(nullptr));
+
     init();
 
     while (!WindowShouldClose())

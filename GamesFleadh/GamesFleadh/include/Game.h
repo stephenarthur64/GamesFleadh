@@ -5,6 +5,8 @@
 #include "rlgl.h" // RS: Added for skybox
 #include <vector>
 #include "reasings.h"
+#include <random>
+#include <time.h>
 
 
 // RS: Again, added for skybox - shader for skybox depends on platform.
