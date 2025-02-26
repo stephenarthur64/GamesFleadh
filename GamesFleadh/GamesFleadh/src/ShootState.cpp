@@ -36,7 +36,7 @@ void ShootState::update(GameObject* obj)
 {
 	tick++;
 	//obj->holdAnimation(0, 3);
-	obj->animation(1);
+	obj->animation(SHOOT);
 }
 
 void ShootState::enter(GameObject* obj)

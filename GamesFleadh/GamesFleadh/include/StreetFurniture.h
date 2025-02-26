@@ -7,6 +7,8 @@
 #include "reasings.h"
 #include "State.h"
 #include "IdleState.h"
+#include <raymath.h>
+#include <random>
 #include <cmath> // For the pow() function
 // #include <memory>
 
@@ -15,6 +17,11 @@
 #else   // PLATFORM_ANDROID, PLATFORM_WEB
 #define GLSL_VERSION            100
 #endif
+
+typedef struct {
+	Model body;
+	Vector3 position;
+}Stone;
 
 class StreetFurniture :
     public GameObject
@@ -27,6 +34,8 @@ public:
 	void rotate(int t_direction) override;
 	void init() override;
 	void render() override;
+
+	void initStones();
 
 	void renderBoom(Camera& t_camera);
 
@@ -59,6 +68,11 @@ private:
 	//std::unique_ptr<Feeder> m_feeder;
 	bool m_hasFeeder;
 	Feeder m_feeder;
+
+	Stone m_stones[3];
+
+	Model m_grass;
+	Vector3 m_grassPos;
 
 	FurnitureType m_type;
 

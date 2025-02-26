@@ -18,7 +18,7 @@ State* DamageState::handleInput(Event t_event)
 
 void DamageState::update(GameObject* obj)
 {
-    obj->animation(1);
+    obj->animation(DAMAGE);
 }
 
 void DamageState::enter(GameObject* obj)

@@ -27,7 +27,7 @@ State* NoInputState::handleInput(Event t_event)
 
 void NoInputState::update(GameObject* obj)
 {
-    obj->animation(7);
+    obj->animation(IDLE_2);
 }
 
 void NoInputState::enter(GameObject* obj)
