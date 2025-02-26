@@ -152,7 +152,7 @@ void Game::setupSkybox()
 
     char skyboxFileName[256] = { 0 };
 
-    Image skyboxImage = LoadImage("ASSETS/3D/Skybox/skyBox.png");
+    Image skyboxImage = LoadImage("ASSETS/3D/Skybox/skybox_starry.png"); // <-------------------------------------------------------- HERE -----------------------------------------------------------
     skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = LoadTextureCubemap(skyboxImage, CUBEMAP_LAYOUT_AUTO_DETECT);    // CUBEMAP_LAYOUT_PANORAMA
     UnloadImage(skyboxImage);
 }
