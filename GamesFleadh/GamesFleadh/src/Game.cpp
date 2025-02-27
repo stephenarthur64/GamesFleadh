@@ -535,6 +535,7 @@ void Game::checkCollisions()
         player.hitSound(1);
         player.enemyCollision(true);
         swarmer[0].collision(true);
+        swarmer[0].handleInput(EVENT_ATTACK);
     }
 
     for (int i = 0; i < player.getBulletMax(); i++)

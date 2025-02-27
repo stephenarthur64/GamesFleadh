@@ -6,6 +6,7 @@
 #include "DamageState.h"
 #include "NoInputState.h"
 #include "EatenState.h"
+#include "AttackState.h"
 
 State* IdleState::handleInput(Event t_event)
 {
@@ -41,6 +42,11 @@ State* IdleState::handleInput(Event t_event)
 	if (t_event == Event::EVENT_SPOTTED)
 	{
 		return new PlayerSpottedState;
+	}
+
+	if (t_event == EVENT_ATTACK)
+	{
+		return new AttackState;
 	}
 
 	return nullptr;
