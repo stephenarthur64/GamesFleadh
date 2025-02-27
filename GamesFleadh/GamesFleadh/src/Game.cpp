@@ -208,8 +208,8 @@ void Game::render()
     //DrawSphereWires(Vector3{ 0.0f,2.0f, 0.0f  }, 0.25f, 6, 6, BLUE);
     //DrawSphereWires(Vector3{ 0.0f,2.0f, -64.0f}, 0.25f, 6, 6, BLUE);
     
-    //DrawSphereWires(heightMapBounds.min, 0.5f, 6, 6, GREEN);
-    //DrawSphereWires(heightMapBounds.max, 0.5f, 6, 6, PURPLE);
+    DrawSphereWires(heightMapBounds.min, 0.5f, 6, 6, GREEN);
+    DrawSphereWires(heightMapBounds.max, 0.5f, 6, 6, PURPLE);
 
     DrawSphere(objectPlacementTest, 2.0f, ORANGE);
 
@@ -564,7 +564,7 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.handleInput(EVENT_HIT_R);
         player.hitSound(0);
-        player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+        //player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
@@ -572,7 +572,7 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.handleInput(EVENT_HIT_L);
         player.hitSound(0);
-        player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+        //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
