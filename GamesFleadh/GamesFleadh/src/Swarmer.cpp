@@ -29,7 +29,7 @@ void Swarmer::init()
 
 void Swarmer::render()
 {
-	DrawModel(m_body, m_position, 1.0f, WHITE);
+	DrawModel(m_body, m_position, 5.0f, WHITE);
 	DrawBoundingBox(m_hitbox, BLUE);
 }
 
@@ -44,6 +44,7 @@ void Swarmer::renderBoom(Camera t_camera)
 void Swarmer::spawn(Vector3 t_position, float limitMax, float limitMin)
 {
 	m_position = t_position;
+	m_position.y = 10.0f;
 	setLimits(limitMax, limitMin);
 	setHitbox();
 	m_health = 1;
