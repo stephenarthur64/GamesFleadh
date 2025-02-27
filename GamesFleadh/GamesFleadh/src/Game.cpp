@@ -208,10 +208,10 @@ void Game::render()
     //DrawSphereWires(Vector3{ 0.0f,2.0f, 0.0f  }, 0.25f, 6, 6, BLUE);
     //DrawSphereWires(Vector3{ 0.0f,2.0f, -64.0f}, 0.25f, 6, 6, BLUE);
     
-    DrawSphereWires(heightMapBounds.min, 0.5f, 6, 6, GREEN);
-    DrawSphereWires(heightMapBounds.max, 0.5f, 6, 6, PURPLE);
+    DrawSphereWires(heightMapBounds.min, 2.5f, 6, 6, GREEN);
+    DrawSphereWires(heightMapBounds.max, 2.5f, 6, 6, PURPLE);
 
-    DrawSphere(objectPlacementTest, 2.0f, ORANGE);
+    //DrawSphere(objectPlacementTest, 2.0f, ORANGE);
 
     DrawGrid(20, 1.0f);
     EndMode3D();
@@ -278,30 +278,30 @@ void Game::update()
 
         mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
-        if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
-        {// Colliding with terrain on the right
-            player.worldCollision(true);
-            player.handleInput(EVENT_HIT_R);
-            player.hitSound(0);
-            player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL, camPos);
-        }
+        //if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
+        //{// Colliding with terrain on the right
+        //    player.worldCollision(true);
+        //    player.handleInput(EVENT_HIT_R);
+        //    player.hitSound(0);
+        //    player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL, camPos);
+        //}
 
-        if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
-        {// Colliding with terrain on the left
-            player.worldCollision(true);
-            player.handleInput(EVENT_HIT_L);
-            player.hitSound(0);
-            player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL, camPos);
-        }
+        //if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
+        //{// Colliding with terrain on the left
+        //    player.worldCollision(true);
+        //    player.handleInput(EVENT_HIT_L);
+        //    player.hitSound(0);
+        //    player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL, camPos);
+        //}
 
-        if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
-        {// Colliding with terrain in front
-            player.worldCollision(true);
-            player.hitSound(0);
-            reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
-        }
+        //if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
+        //{// Colliding with terrain in front
+        //    player.worldCollision(true);
+        //    player.hitSound(0);
+        //    reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+        //}
 
-        m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
+        // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
 
         for (Tile& item : m_terrainTileCollection)
         {
