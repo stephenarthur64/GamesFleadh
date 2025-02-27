@@ -136,6 +136,11 @@ void StreetFurniture::update(Vector3 t_target)
 
 	if (!m_hasFeeder) return;
 	m_feeder.update(t_target);
+
+	if (!m_feeder.isAlive())
+	{
+		handleInput(EVENT_MOVE);
+	}
 }
 
 void StreetFurniture::spawnFeeder()
@@ -303,7 +308,7 @@ void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
 
 void StreetFurniture::makeFeederEat()
 {
-	if (m_hasFeeder)
+	if (m_hasFeeder && m_feeder.isAlive())
 	{
 		handleInput(EVENT_EAT);
 	}

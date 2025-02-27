@@ -117,6 +117,9 @@
     <ClInclude Include="include\EatenState.h">
       <Filter>Header Files\FSM</Filter>
     </ClInclude>
+    <ClInclude Include="include\AttackState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -202,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="src\EatenState.cpp">
       <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AttackState.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -122,6 +122,7 @@ void Feeder::shootBullet(Vector3 t_target)
 
 	if (m_spotted)
 	{
+		handleInput(EVENT_ATTACK);
 		m_target = t_target;
 		bulletTick = 0;
 		m_mudBomb.spawn(m_position, 0.3f, m_target);
@@ -181,6 +182,16 @@ void Feeder::kill()
 	PlaySound(fxBoom);
 
 	//m_position.x = 1000.0f;
+}
+
+bool Feeder::isAlive()
+{
+	if (m_health <= 0 && !boomActive)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void Feeder::update(Vector3 t_target)

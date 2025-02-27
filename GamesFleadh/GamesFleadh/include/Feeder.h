@@ -40,6 +40,8 @@ public:
 
 	void kill();
 
+	bool isAlive();
+
 	void update(Vector3 t_target);
 
 	void checkDistanceFromPlayer(Vector3 t_playerPos);
