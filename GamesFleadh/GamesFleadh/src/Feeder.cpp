@@ -122,6 +122,7 @@ void Feeder::shootBullet(Vector3 t_target)
 
 	if (m_spotted)
 	{
+		handleInput(EVENT_ATTACK);
 		m_target = t_target;
 		bulletTick = 0;
 		m_mudBomb.spawn(m_position, 0.3f, m_target);
