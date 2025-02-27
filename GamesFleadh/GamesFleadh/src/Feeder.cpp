@@ -183,6 +183,16 @@ void Feeder::kill()
 	//m_position.x = 1000.0f;
 }
 
+bool Feeder::isAlive()
+{
+	if (m_health <= 0 && !boomActive)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void Feeder::update(Vector3 t_target)
 {
 	currentState->update(this);
