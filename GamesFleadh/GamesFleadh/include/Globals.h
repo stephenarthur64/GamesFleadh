@@ -44,17 +44,17 @@ const std::string ASSET_FURNITUREMAP_01 = "ASSETS/2D/Heightmaps/test1_EnemyPlace
 const std::string ASSET_TILE_MODEL_01 = "";
 
 const std::string ASSET_HEIGHTMAP_02 = "ASSETS/2D/Heightmaps/nadenTest1.png"; // nadenTest1rebalanced1.png";
-const std::string GULLY_DIFFUSE_02 = "ASSETS/2D/GullyTextures/dummyBlue.png";
+const std::string GULLY_DIFFUSE_02 = "ASSETS/2D/GullyTextures/heightmapTexture1.png";
 const std::string ASSET_FURNITUREMAP_02 = "ASSETS/2D/Heightmaps/furniturePlacement1.png";
 const std::string ASSET_TILE_MODEL_02 = "";
 
 const std::string ASSET_HEIGHTMAP_03 = "ASSETS/2D/Heightmaps/nadenTest2.png"; //nadenTest2rebalanced1.png";
-const std::string GULLY_DIFFUSE_03 = "ASSETS/2D/GullyTextures/dummyRed.png";
+const std::string GULLY_DIFFUSE_03 = "ASSETS/2D/GullyTextures/heightmapTexture2.png";
 const std::string ASSET_FURNITUREMAP_03 = "ASSETS/2D/Heightmaps/furniturePlacement2.png";
 const std::string ASSET_TILE_MODEL_03 = "";
 
 const std::string ASSET_HEIGHTMAP_04 = "ASSETS/2D/Heightmaps/nadenTest3.png"; // nadenTest3rebalanced1.png";
-const std::string GULLY_DIFFUSE_04 = "ASSETS/2D/GullyTextures/dummyYellow.png";
+const std::string GULLY_DIFFUSE_04 = "ASSETS/2D/GullyTextures/heightmapTexture3.png";
 const std::string ASSET_FURNITUREMAP_04 = "ASSETS/2D/Heightmaps/furniturePlacement3.png";
 const std::string ASSET_TILE_MODEL_04  = "";
 

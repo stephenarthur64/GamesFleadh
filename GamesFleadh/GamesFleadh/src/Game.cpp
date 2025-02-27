@@ -82,8 +82,8 @@ void Game::loadAssets()
 
     // There should be a line below for every tile in the game (currently has a duplicate tile)
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_02, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_02));
-    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_03, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_03));
-    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_04, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_04));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_03, ASSET_FURNITUREMAP_03, ASSET_TILE_MODEL_02, GULLY_DIFFUSE_03));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_04, ASSET_FURNITUREMAP_04, ASSET_TILE_MODEL_03, GULLY_DIFFUSE_04));
     // m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
 
     fogOpacity = WHITE;
