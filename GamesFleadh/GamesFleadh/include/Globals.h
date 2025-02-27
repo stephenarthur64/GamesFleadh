@@ -4,7 +4,7 @@
 
 enum Direction {NORTH, SOUTH, EAST, WEST};
 
-enum FurnitureType {NONE, MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
+enum FurnitureType {NONE, SWARMER, MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
@@ -62,3 +62,5 @@ static float mudBombPosition; // This is awful, I know, but there was no other w
 
 static Vector3 g_lastFurnitureCollision; // RS: Way to pass col point from StreetFurniture.cpp back to Game radialFurnitureCollision func. Mea culpa.
 static float g_lastFurnitureRadius; // RS: See above. =(
+
+const int MAX_SWARMERS = 5;

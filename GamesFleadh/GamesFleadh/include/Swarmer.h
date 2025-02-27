@@ -22,7 +22,7 @@ public:
 	void spawn(Vector3 t_position, float limitMax, float limitMin);
 
 	void boom();
-
+	void colour(Color ye) { m_colour = RED; }
 	void setLimits(float t_upperLimit, float t_lowerLimit);
 	void setHitbox();
 
