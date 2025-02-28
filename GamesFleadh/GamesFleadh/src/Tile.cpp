@@ -133,6 +133,7 @@ bool Tile::isColliding(Vector3 t_collider)
 
 bool Tile::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
 {
+
     for (StreetFurniture& item : m_furnitureVec)
     {
         if (item.checkRadialFurnitureItemsCollision(t_playerPos, t_playerRad))

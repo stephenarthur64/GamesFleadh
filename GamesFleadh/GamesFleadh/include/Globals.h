@@ -62,3 +62,6 @@ static float mudBombPosition; // This is awful, I know, but there was no other w
 
 static Vector3 g_lastFurnitureCollision; // RS: Way to pass col point from StreetFurniture.cpp back to Game radialFurnitureCollision func. Mea culpa.
 static float g_lastFurnitureRadius; // RS: See above. =(
+
+static Vector3 g_furnCollisionItem;
+static Vector3 g_furnCollisionPlyr;

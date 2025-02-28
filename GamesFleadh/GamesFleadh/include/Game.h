@@ -181,7 +181,7 @@ private:
 	const Vector3 M_REBOUND_DIRECTION = { 0.0f, 0.0f, -1.0f };
 	float m_reboundCounter = 0.0f;
 	const float m_reboundCountMax = 0.125f; // 33f;
-	const float m_reboundForce = 20.0f;
+	const float m_reboundForce = 5.0f;
 
 };
 

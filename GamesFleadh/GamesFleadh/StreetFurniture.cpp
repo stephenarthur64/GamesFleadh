@@ -227,6 +227,9 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 
 bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
 {
+	g_furnCollisionItem = m_position;	// Update debug values
+	g_furnCollisionPlyr = t_playerPos;	// Update debug values
+
 	m_posWithPlayerHeight = m_position;
 	m_posWithPlayerHeight.y = (t_playerPos.y) - m_position.y; // Player's current height minus lowest level of furniture
 	m_posWithPlayerHeight.y = Clamp(m_posWithPlayerHeight.y, m_position.y, m_overallHeightOnGround);

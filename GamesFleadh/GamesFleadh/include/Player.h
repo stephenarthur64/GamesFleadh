@@ -48,7 +48,7 @@ public:
 	void updateBullet();
 	void despawnBullet(int bulletNum);
 
-	void rebound(Vector3 t_impactPoint, Vector3& t_cam);
+	void rebound(Vector3 t_impactPoint);
 	// void rebound(Vector3 t_impactPoint);
 	void reboundFurniture(Vector3 t_impactPoint); // This possibly needs the t_cam var from above now
 	
@@ -81,7 +81,7 @@ private:
 	Vector3 m_reboundDirection = Vector3Zero();
 	float m_reboundCounter = 0.0f;
 	const float m_reboundCountMax = 0.125f; // 33f;
-	const float m_reboundForce = 20.0f;
+	const float m_reboundForce = 5.0f;
 
 	bool m_poisoned;
 	int m_poisonTick;

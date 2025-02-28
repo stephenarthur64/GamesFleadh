@@ -100,6 +100,7 @@ void Player::render()
 {
 	DrawModel(m_body, m_position, 2.0f, m_colour);
 	DrawBoundingBox(m_hitbox, RED);
+	DrawLine3D(g_furnCollisionItem, g_furnCollisionPlyr, PURPLE);
 
 	for (int i = 0; i < getBulletMax(); i++)
 	{
@@ -213,10 +214,11 @@ void Player::despawnBullet(int bulletNum)
 	bullet[bulletNum].despawn();
 }
 
-void Player::rebound(Vector3 t_impactPoint, Vector3& t_cam)
+void Player::rebound(Vector3 t_impactPoint)
 {
 	std::cout << "Rebound triggered.\n";
 	m_reboundCounter = m_reboundCountMax;
+
 	m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
 	if (m_position.y < 1.0f)
 	{
@@ -230,8 +232,12 @@ void Player::rebound(Vector3 t_impactPoint, Vector3& t_cam)
 
 void Player::reboundFurniture(Vector3 t_impactPoint)
 {
-	std::cout << "Rebound triggered.\n";
+	std::cout << "Rebound furniture.\n";
 	m_reboundCounter = m_reboundCountMax;
+
+	g_furnCollisionItem = t_impactPoint;
+	g_furnCollisionPlyr = m_position;
+
 	Vector3 normal = Vector3Normalize(t_impactPoint - m_position);
 	m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
 	//m_reboundDirection.y = 0.0f;
