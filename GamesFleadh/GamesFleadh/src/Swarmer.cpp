@@ -17,7 +17,7 @@ void Swarmer::rotate(int t_direction)
 void Swarmer::init()
 {
 	m_body = LoadModel("ASSETS/3D/Enemy/Swarmer/Swarmer.glb");
-	setLimits(3, 0);
+	//setLimits(3, 0);
 	setHitbox();
 	fxBoom = LoadSound("ASSETS/Audio/SFX/buzzBlastImpactRedux.mp3");
 	SetSoundVolume(fxBoom, 0.3);
@@ -156,6 +156,7 @@ void Swarmer::playerSpotted(bool t_spotted)
 
 void Swarmer::hover()
 {
+
 	Vector3 movement = { 0.0f, 0.0f, 0.0f };
 	Vector3 newPosition = { 0.0f, 0.0f, 0.0f };
 
