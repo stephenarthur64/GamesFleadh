@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AttackState.h" />
     <ClInclude Include="include\Bullet.h" />
     <ClInclude Include="include\Command.h" />
     <ClInclude Include="include\ConcreteCommands.h" />
@@ -51,6 +52,7 @@
     <ClInclude Include="include\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AttackState.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\DamageLState.cpp" />

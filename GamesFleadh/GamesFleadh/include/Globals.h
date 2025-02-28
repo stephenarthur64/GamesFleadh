@@ -4,7 +4,7 @@
 
 enum Direction {NORTH, SOUTH, EAST, WEST};
 
-enum FurnitureType {NONE, MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
+enum FurnitureType {NONE, SWARMER, MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
@@ -16,7 +16,7 @@ const Vector3 PLAYER_COLLISION_OFFSET_LATERAL = Vector3{ 2.0f,-0.25f,0.0f };
 const Color GREEN_HILL = { 147, 204, 147, 255 }; // Green tint for generated terrain
 
 // const std::string GULLY_DIFFUSE_01 = "ASSETS/2D/GullyTextures/HeightmapPaint.png";
-const std::string GULLY_DIFFUSE_01 = "ASSETS/2D/GullyTextures/river_test6.png";
+// const std::string GULLY_DIFFUSE_01 = "ASSETS/2D/GullyTextures/river_test6.png";
 const std::string GULLY_DIFFUSE_RIVERTEST01 = "ASSETS/2D/GullyTextures/river_test6.png";
 
 
@@ -38,20 +38,29 @@ const std::string FURNITURE_STONE_SMALL02 = "ASSETS/3D/StreetFurniture/Stones/st
 const std::string FURNITURE_GRASS = "ASSETS/3D/StreetFurniture/Grass/grassMushroom.glb";
 
 
-const std::string ASSET_HEIGHTMAP_01 = "ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3.png";
+const std::string ASSET_HEIGHTMAP_01 = "ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3_rebalanced01.png";
+const std::string GULLY_DIFFUSE_01 = "ASSETS/2D/GullyTextures/river_test6.png";
 const std::string ASSET_FURNITUREMAP_01 = "ASSETS/2D/Heightmaps/test1_EnemyPlacement02001RS.png";
 const std::string ASSET_TILE_MODEL_01 = "";
 
-const std::string ASSET_HEIGHTMAP_02 = "";
-const std::string ASSET_FURNITUREMAP_02 = "";
+const std::string ASSET_HEIGHTMAP_02 = "ASSETS/2D/Heightmaps/nadenTest1.png"; // nadenTest1rebalanced1.png";
+const std::string GULLY_DIFFUSE_02 = "ASSETS/2D/GullyTextures/heightmapTexture1.png";
+const std::string ASSET_FURNITUREMAP_02 = "ASSETS/2D/Heightmaps/furniturePlacement1.png";
 const std::string ASSET_TILE_MODEL_02 = "";
 
-const std::string ASSET_HEIGHTMAP_03 = "";
-const std::string ASSET_FURNITUREMAP_03 = "";
+const std::string ASSET_HEIGHTMAP_03 = "ASSETS/2D/Heightmaps/nadenTest2.png"; //nadenTest2rebalanced1.png";
+const std::string GULLY_DIFFUSE_03 = "ASSETS/2D/GullyTextures/heightmapTexture2.png";
+const std::string ASSET_FURNITUREMAP_03 = "ASSETS/2D/Heightmaps/furniturePlacement2.png";
 const std::string ASSET_TILE_MODEL_03 = "";
 
-const std::string ASSET_HEIGHTMAP_04 = "";
-const std::string ASSET_FURNITUREMAP_04 = "";
+const std::string ASSET_HEIGHTMAP_04 = "ASSETS/2D/Heightmaps/nadenTest3.png"; // nadenTest3rebalanced1.png";
+const std::string GULLY_DIFFUSE_04 = "ASSETS/2D/GullyTextures/heightmapTexture3.png";
+const std::string ASSET_FURNITUREMAP_04 = "ASSETS/2D/Heightmaps/furniturePlacement3.png";
 const std::string ASSET_TILE_MODEL_04  = "";
 
 static float mudBombPosition; // This is awful, I know, but there was no other way besides MAJOR refactoring
+
+static Vector3 g_lastFurnitureCollision; // RS: Way to pass col point from StreetFurniture.cpp back to Game radialFurnitureCollision func. Mea culpa.
+static float g_lastFurnitureRadius; // RS: See above. =(
+
+const int MAX_SWARMERS = 5;

@@ -119,11 +119,23 @@ bool Tile::isColliding(Vector3 t_collider)
 	return false;
 }
 
-bool Tile::checkFurnitureItemsCollision(BoundingBox t_player)
+//bool Tile::checkFurnitureItemsCollision(BoundingBox t_player)
+//{
+//    for (StreetFurniture& item : m_furnitureVec)
+//    {        
+//        if (item.checkPlayerFurnitureCollision(t_player))
+//        {
+//            return true;
+//        }
+//    }
+//    return false;
+//}
+
+bool Tile::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
 {
     for (StreetFurniture& item : m_furnitureVec)
-    {        
-        if (item.checkPlayerFurnitureCollision(t_player))
+    {
+        if (item.checkRadialFurnitureItemsCollision(t_playerPos, t_playerRad))
         {
             return true;
         }
@@ -161,6 +173,11 @@ void Tile::makeFeederSeekPlayer(bool t_seeking, Player player)
     {
         item.makeFeederSeekPlayer(t_seeking, player);
     }
+}
+
+Vector3 Tile::getSwarmerPos(int index)
+{
+    return m_swarmerPos[index]; 
 }
 
 void Tile::update(Vector3 t_target)
@@ -221,11 +238,11 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                     type = POINTY_MUSHROOM;
                 }
                 
-                /*if (col.r == 0 && col.b == 255 && col.g == 255) 
+                if (col.r == 0 && col.b == 255 && col.g == 255) 
                 {
-                    furnType = FURNITURE_GRASS;
-                    type = NOT_MUSHROOM;
-                }*/
+                    furnType = "";
+                    type = SWARMER;
+                }
                 
                 if (col.r == 5 && col.b == 0 && col.g == 0) 
                 {
@@ -313,9 +330,20 @@ void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType, Fu
 
     int randomChance = rand() % 3;
 
-    StreetFurniture article(randomChance != 0, t_furnitureType, furniturePos, t_type);
+    if (t_type == SWARMER)
+    {
+        if (m_swarmerPosCount < MAX_SWARMERS)
+        {
+            m_swarmerPos[m_swarmerPosCount] = furniturePos + MAP_POS_CURRENT;
+            m_swarmerPosCount++;
+        }
+    }
+    else
+    {
+        StreetFurniture article(randomChance != 0, t_furnitureType, furniturePos, t_type);
 
-    // StreetFurniture article(true, t_furnitureType, furniturePos); // SWITCH BACK TO TRUE FOR FIXING
+        // StreetFurniture article(true, t_furnitureType, furniturePos); // SWITCH BACK TO TRUE FOR FIXING
 
-    m_furnitureVec.push_back(article);
+        m_furnitureVec.push_back(article);
+    }
 }

@@ -26,12 +26,15 @@ public:
 
 	bool isColliding(Vector3 t_collider);
 	bool checkFurnitureItemsCollision(BoundingBox t_player);
-	
+	bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
+
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
 	bool checkMudBombPlayerCollision(BoundingBox t_player);
 
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
+
+	Vector3 getSwarmerPos(int index);
 
 	// std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
 
@@ -44,6 +47,9 @@ private:
 	Image m_furnitureMapImage;
 	Image m_diffuseMapImage;
 	// Model m_tileModel;
+
+	Vector3 m_swarmerPos[MAX_SWARMERS];
+	int m_swarmerPosCount = 0;
 	
 	std::vector<StreetFurniture> m_furnitureVec;
 

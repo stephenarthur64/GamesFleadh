@@ -52,7 +52,13 @@ void StreetFurniture::render()
 	if (!m_inPlay) return; // Not in gameplay: early out.
 
 	DrawModel(m_body, m_position, 1.0f, m_colour);
-	DrawBoundingBox(m_hitbox, BLUE);
+	// DrawBoundingBox(m_hitbox, BLUE);
+	
+	// DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
+
+	DrawCircle3D(m_posWithPlayerHeight, m_interpolatedColRadius, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, ORANGE);
+
+
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -130,6 +136,11 @@ void StreetFurniture::update(Vector3 t_target)
 
 	if (!m_hasFeeder) return;
 	m_feeder.update(t_target);
+
+	if (!m_feeder.isAlive())
+	{
+		handleInput(EVENT_MOVE);
+	}
 }
 
 void StreetFurniture::spawnFeeder()
@@ -160,7 +171,29 @@ void StreetFurniture::setHitBox()
 	m_hitbox.min.z = localSpaceBoundingBox.min.z + m_position.z;
 	m_hitbox.max.z = localSpaceBoundingBox.max.z + m_position.z;
 
+	m_overallHeight = m_hitbox.max.y - m_hitbox.min.y;
+	m_overallHeightOnGround = m_overallHeight + m_position.y;
+
+	Vector3 flatMinPos = localSpaceBoundingBox.min;
+	flatMinPos.y = 0.0f;
+
+	Vector3 flatMaxPos = localSpaceBoundingBox.max;
+	flatMaxPos.y = 0.0f;
+
+	Vector3 centrePoint = (flatMinPos + flatMaxPos) * 0.5f;
+
+	// m_collisionRadiusMax = Vector3Length(centrePoint - flatMinPos);
+
+	m_collisionRadiusMax = (std::max(Vector3Length(centrePoint - flatMinPos), Vector3Length(centrePoint - flatMaxPos))); // *0.5f;
+
 	
+
+	/*float xWidth = std::abs((localSpaceBoundingBox.min.x) - (localSpaceBoundingBox.max.x));
+	float zWidth = std::abs((localSpaceBoundingBox.min.z) - (localSpaceBoundingBox.max.z));
+	float widthAverage = (xWidth + zWidth) * 0.5f;
+	float radius = widthAverage * 0.5f;*/
+	
+	// m_collisionRadiusMax = m_hitbox.max.x
 }
 
 void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
@@ -183,9 +216,54 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 	}
 }
 
-bool StreetFurniture::checkPlayerFurnitureCollision(BoundingBox t_player)
+//bool StreetFurniture::checkPlayerFurnitureCollision(BoundingBox t_player)
+//{
+//	if (CheckCollisionBoxes(m_hitbox, t_player)){return true;}
+//}
+
+// Problems:
+// * Clamp doesn't seem to work - collision circle always higher than I want it to be. // Spherical collision?
+// * Still need to add exponential curve to collision shape 
+
+bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
 {
-	if (CheckCollisionBoxes(m_hitbox, t_player)){return true;}
+	m_posWithPlayerHeight = m_position;
+	m_posWithPlayerHeight.y = (t_playerPos.y) - m_position.y; // Player's current height minus lowest level of furniture
+	m_posWithPlayerHeight.y = Clamp(m_posWithPlayerHeight.y, m_position.y, m_overallHeightOnGround);
+
+	// m_posWithPlayerHeight.y -= 1.0f; // Stupid hack.
+
+	m_posWPlyrHeightNorm = m_posWithPlayerHeight;
+	m_posWPlyrHeightNorm.y = m_posWPlyrHeightNorm.y / m_overallHeightOnGround;
+
+	Vector3 playerTest = t_playerPos;
+	playerTest.y = 0.0f;
+
+	Vector3 mushTest = m_posWithPlayerHeight;
+	mushTest.y = 0.0f;
+
+	float distance = Vector3Distance(playerTest, mushTest);
+	// float distance = Vector3Distance(t_playerPos, m_posWithPlayerHeight);
+
+	// m_interpolatedColRadius = Lerp(m_collisionRadiusMin, m_collisionRadiusMax, m_posWPlyrHeightNorm.y);
+
+	m_interpolatedColRadius = exponentialScale(m_posWPlyrHeightNorm.y, m_collisionRadiusMin, m_collisionRadiusMax - 2.0f, 2.0f); // Note magic literal 2.0f =(
+
+	float combinedRad = t_playerRad + m_interpolatedColRadius;
+
+	// float yDelta = t_playerPos.y - m_overallHeightOnGround;
+
+	if (distance < combinedRad)	
+	{
+		if (t_playerPos.y < m_overallHeightOnGround)
+		{
+			g_lastFurnitureCollision = m_posWithPlayerHeight;
+			g_lastFurnitureRadius = m_interpolatedColRadius;
+			bool returnValue = true;
+			return returnValue;
+		}
+	}
+	return false;
 }
 
 bool StreetFurniture::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius)
@@ -230,8 +308,13 @@ void StreetFurniture::makeFeederSeekPlayer(bool t_seeking, Player player)
 
 void StreetFurniture::makeFeederEat()
 {
-	if (m_hasFeeder)
+	if (m_hasFeeder && m_feeder.isAlive())
 	{
 		handleInput(EVENT_EAT);
 	}
+}
+
+float StreetFurniture::exponentialScale(float scalar, float minimum, float maximum, float base)
+{
+	return minimum + (maximum - minimum) * (pow(base, scalar) - 1) / (base - 1);
 }

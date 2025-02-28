@@ -9,6 +9,7 @@
 #include "IdleState.h"
 #include <raymath.h>
 #include <random>
+#include <cmath> // For the pow() function
 // #include <memory>
 
 #if defined(PLATFORM_DESKTOP)
@@ -50,6 +51,8 @@ public:
 
 	bool checkPlayerFurnitureCollision(BoundingBox t_player);
 
+	bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
+
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
 	bool checkMudbombPlayerCollision(BoundingBox t_player);
@@ -57,6 +60,8 @@ public:
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
 
 	void makeFeederEat();
+
+	float exponentialScale(float scalar, float minimum, float maximum, float base);
 
 private:
 	//// Feeder* m_feeder{}; // Starts as null pointer
@@ -72,6 +77,16 @@ private:
 	FurnitureType m_type;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
+	float m_collisionRadiusMin = 1.5f;
+	float m_collisionRadiusMax = 0.0f;
+	float m_interpolatedColRadius = 0.0f;
+
+	float m_overallHeight = 0.0f;
+	float m_overallHeightOnGround = 0.0f;
+	Vector3 m_posWithPlayerHeight = Vector3Zero();
+	Vector3 m_posWPlyrHeightNorm = Vector3Zero();
+
+
 	int m_colourDecrease;
 	float m_colourVal;
 	int eatTick;

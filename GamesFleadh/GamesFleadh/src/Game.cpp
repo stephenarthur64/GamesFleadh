@@ -81,8 +81,16 @@ void Game::loadAssets()
     //heightmapTexture = LoadTextureFromImage(heightmapImage);        
 
     // There should be a line below for every tile in the game (currently has a duplicate tile)
-    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_RIVERTEST01));
-    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_02, ASSET_FURNITUREMAP_02, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_02));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_03, ASSET_FURNITUREMAP_03, ASSET_TILE_MODEL_02, GULLY_DIFFUSE_03));
+    m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_04, ASSET_FURNITUREMAP_04, ASSET_TILE_MODEL_03, GULLY_DIFFUSE_04));
+    // m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
+
+    for (int i = 0; i < MAX_SWARMERS; i++)
+    {
+        Vector3 pos = m_terrainTileCollection[m_tileCurrent].getSwarmerPos(i);
+        swarmer[i].spawn(pos, pos.x + 5.0f, pos.x - 5.0f);
+    }
 
     fogOpacity = WHITE;
     fogOpacity.a = 0;
@@ -104,7 +112,7 @@ void Game::loadAssets()
     player.init();
     billPositionStatic = { 2.0f,2.0f,3.0f };
 
-    for (int i = 0; i < maxSwarmer; i++)
+    for (int i = 0; i < MAX_SWARMERS; i++)
     {
         swarmer[i].init();
     }
@@ -186,7 +194,7 @@ void Game::render()
         tileToDraw.render();
     }
 
-    for (int i = 0; i < maxSwarmer; i++)
+    for (int i = 0; i < MAX_SWARMERS; i++)
     {
         swarmer[0].render();
         swarmer[0].renderBoom(camera);
@@ -206,10 +214,10 @@ void Game::render()
     //DrawSphereWires(Vector3{ 0.0f,2.0f, 0.0f  }, 0.25f, 6, 6, BLUE);
     //DrawSphereWires(Vector3{ 0.0f,2.0f, -64.0f}, 0.25f, 6, 6, BLUE);
     
-    //DrawSphereWires(heightMapBounds.min, 0.5f, 6, 6, GREEN);
-    //DrawSphereWires(heightMapBounds.max, 0.5f, 6, 6, PURPLE);
+    DrawSphereWires(heightMapBounds.min, 2.5f, 6, 6, GREEN);
+    DrawSphereWires(heightMapBounds.max, 2.5f, 6, 6, PURPLE);
 
-    DrawSphere(objectPlacementTest, 2.0f, ORANGE);
+    //DrawSphere(objectPlacementTest, 2.0f, ORANGE);
 
     DrawGrid(20, 1.0f);
     EndMode3D();
@@ -299,7 +307,7 @@ void Game::update()
         //    reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
         //}
 
-        m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
+        // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
 
         for (Tile& item : m_terrainTileCollection)
         {
@@ -370,6 +378,7 @@ void Game::inputControl()
     if (IsKeyReleased(KEY_SPACE) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
     {// RS: Toggle! Is nice, you like.
         autoScroll = !autoScroll;
+        std::cout << "Good god.";
     }
 
     /*if (IsKeyPressed(KEY_Z))
@@ -377,11 +386,11 @@ void Game::inputControl()
         player.collision(true);
     }*/
 
-    if (IsKeyReleased(KEY_X))
-    {
-        std::cout << "\nPlacing objects.\n";
-        // placeObjectsFromImage(imgPlacementTest);
-    }
+    //if (IsKeyReleased(KEY_X))
+    //{
+    //    std::cout << "\nPlacing objects.\n";
+    //    // placeObjectsFromImage(imgPlacementTest);
+    //}
     if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         player.shootBullet(billPositionRotating);
@@ -389,6 +398,7 @@ void Game::inputControl()
 
     if (IsKeyReleased(KEY_BACKSPACE))
     {
+        std::cout << "Is this even working?";
         player.addHealth(10);
     }
 
@@ -535,6 +545,7 @@ void Game::checkCollisions()
         player.hitSound(1);
         player.enemyCollision(true);
         swarmer[0].collision(true);
+        swarmer[0].handleInput(EVENT_ATTACK);
     }
 
     for (int i = 0; i < player.getBulletMax(); i++)
@@ -555,11 +566,40 @@ void Game::checkCollisions()
         }
     }
 
-    if (m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()))
-    {
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
+    {// Colliding with terrain on the right
+        player.worldCollision(true);
+        player.handleInput(EVENT_HIT_R);
+        player.hitSound(0);
+        //player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+    }
+
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
+    {// Colliding with terrain on the left
+        player.worldCollision(true);
+        player.handleInput(EVENT_HIT_L);
         player.hitSound(0);
         player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
+
+    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
+    {// Colliding with terrain in front
+        player.worldCollision(true);
+        player.hitSound(0);
+        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+    }
+
+    // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
+
+    if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
+    {
+        std::cout << "Is this calling?\n\n";
+        player.hitSound(0);
+        //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+        player.enemyCollision(true);
+        player.reboundFurniture(g_lastFurnitureCollision);
+    }
+
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
     {
         if (mudBombPosition < player.getPosition().x)
@@ -584,6 +624,7 @@ void Game::mapMove()
     while (m_tileNext == m_tileCurrent)
     {
         m_tileNext = rand() % m_terrainTileCollection.size();
+        std::cout << "m_tileNext is " << m_tileNext << ".\n";
     }
 
     for (Tile& item : m_terrainTileCollection)
@@ -597,7 +638,11 @@ void Game::mapMove()
     m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
     m_terrainTileCollection[m_tileNext].makeFeederSeekPlayer(false, player);
 
-    swarmer->spawn({ -2.0f, 3.0f, -12.0f }, 5, 0);
+    for (int i = 0; i < MAX_SWARMERS; i++)
+    {
+        Vector3 pos = m_terrainTileCollection[m_tileCurrent].getSwarmerPos(i);
+        swarmer[i].spawn(pos, 2, 0);
+    }
 
     float mapLength = 64.0f;
     
