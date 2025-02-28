@@ -48,7 +48,7 @@ public:
 	void updateBullet();
 	void despawnBullet(int bulletNum);
 
-	void rebound(Vector3 t_impactPoint, Vector3& t_cam);
+	void rebound(Vector3 t_impactPoint);
 	// void rebound(Vector3 t_impactPoint);
 	void reboundFurniture(Vector3 t_impactPoint); // This possibly needs the t_cam var from above now
 	
