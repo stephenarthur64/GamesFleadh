@@ -38,7 +38,7 @@ void Tile::render()
 {
 	if (!m_inPlay) return;
     // GREEN_HILL); // m_colour - object colour should be used here
-    DrawModel(m_body, m_position, 1.0f, WHITE);
+    //DrawModel(m_body, m_position, 1.0f, WHITE);
     // Render furniture?
 
     for (StreetFurniture item : m_furnitureVec)

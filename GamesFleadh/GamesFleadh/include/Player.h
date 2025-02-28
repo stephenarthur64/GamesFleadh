@@ -47,7 +47,7 @@ public:
 	void updateBullet();
 	void despawnBullet(int bulletNum);
 
-	void rebound(Vector3 t_impactPoint, Vector3& t_cam);
+	void rebound(Vector3 t_impactPoint);
 	
 	void poisonPlayer(bool t_poison);
 	bool isPoisoned() { return m_poisoned; }

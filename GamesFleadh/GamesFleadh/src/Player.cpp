@@ -146,7 +146,7 @@ void Player::update(Vector3&t_cam)
 		float frameTime = GetFrameTime();
 		m_reboundCounter -= frameTime;
 		m_position += m_reboundDirection * m_reboundForce * frameTime;
-		t_cam += m_reboundDirection * m_reboundForce * frameTime;;
+		t_cam += m_reboundDirection * (m_reboundForce / 2) * frameTime;;
 	}
 
 	m_position.y = Clamp(m_position.y, -0.2f, 13.0f);
@@ -211,7 +211,7 @@ void Player::despawnBullet(int bulletNum)
 	bullet[bulletNum].despawn();
 }
 
-void Player::rebound(Vector3 t_impactPoint, Vector3& t_cam)
+void Player::rebound(Vector3 t_impactPoint)
 {
 	std::cout << "Rebound triggered.\n";
 	m_reboundCounter = m_reboundCountMax;
