@@ -239,9 +239,9 @@ void Game::render()
         //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
         //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
 
-        //DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
-        //DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
-        //DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
+        DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
+        DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
+        DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
         //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
 
         /*for (int i = 0; i < MAX_MUSHROOMS; i++)

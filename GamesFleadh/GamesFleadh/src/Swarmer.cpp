@@ -48,7 +48,7 @@ void Swarmer::renderBoom(Camera t_camera)
 void Swarmer::spawn(Vector3 t_position, float limitMax, float limitMin)
 {
 	m_position = t_position;
-	m_position.y = 10.0f;
+	m_position.y = 6.0f;
 	setLimits(limitMax, limitMin);
 	setHitbox();
 	m_health = 1;
