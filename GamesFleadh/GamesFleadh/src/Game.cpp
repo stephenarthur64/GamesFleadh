@@ -2,7 +2,7 @@
 #include <cmath> // Used for abs()
 
 bool g_renderWireDebug = false;
-bool g_render2DDebug = true;
+bool g_render2DDebug = false;
 
 Game::Game() : score(0), activeMap(1), state(GameState::GAMEPLAY)
 {
@@ -232,14 +232,9 @@ void Game::render()
     EndMode3D();
 
     if (g_render2DDebug)
-    {
-        DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
-        DrawTexture(healthBar, 0, 1000, WHITE);
-        DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
-        DrawTexture(fogVignette, 0, 0, fogOpacity);
-        DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
-        DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
+    {      
         DrawFPS(10, 30);
+        DrawTexture(fogVignette, 0, 0, fogOpacity);
 
         //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
         //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
@@ -273,6 +268,16 @@ void Game::render()
         DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
         DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);*/
     }
+    else
+    {
+        DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
+        DrawTexture(healthBar, 0, 1000, WHITE);
+        DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
+        DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
+        DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
+    }
+
+
     EndDrawing();
 }
 
