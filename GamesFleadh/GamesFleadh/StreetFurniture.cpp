@@ -109,7 +109,7 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 	m_health = 255;
 
 	initStones();
-	m_grass = LoadModel(FURNITURE_GRASS.c_str());
+	m_grass.init();
 }
 
 StreetFurniture::~StreetFurniture()
@@ -130,11 +130,6 @@ void StreetFurniture::render()
 
 	DrawModel(m_body, m_position, 1.0f, m_colour);
 	
-	
-
-
-	
-	
 	// DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
 
 	//DrawCircle3D(m_posWithPlayerHeight, m_interpolatedColRadius, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, ORANGE);
@@ -147,7 +142,7 @@ void StreetFurniture::render()
 	}
 	if (m_typeEnum != CHUNKY_MUSHROOM)
 	{
-		DrawModel(m_grass, m_grassPos, 0.8f, WHITE);
+		m_grass.render();
 	}
 
 	if (m_hasCollider)
@@ -279,6 +274,11 @@ void StreetFurniture::update(Vector3 t_target)
 		currentState->update(this);
 	}
 
+	if (m_typeEnum != CHUNKY_MUSHROOM)
+	{
+		m_grass.update();
+	}
+
 	if (!m_hasFeeder) return;
 	m_feeder.update(t_target);
 
@@ -366,7 +366,7 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 	m_stones[1].position = m_position + Vector3{ 0.0f, 0.0f, 2.0f };
 	m_stones[2].position = m_position + Vector3{ -2.0f, 0.0f, 0.0f };
 	
-	m_grassPos = m_position;
+	m_grass.spawn(m_position);
 
 	if (m_hasFeeder)
 	{

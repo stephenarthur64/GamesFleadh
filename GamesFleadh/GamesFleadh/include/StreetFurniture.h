@@ -7,6 +7,7 @@
 #include "reasings.h"
 #include "State.h"
 #include "IdleState.h"
+#include "Grass.h"
 #include <raymath.h>
 #include <random>
 #include <cmath> // For the pow() function
@@ -74,7 +75,7 @@ private:
 
 	Stone m_stones[3];
 
-	Model m_grass;
+	Grass m_grass;
 	Model m_collider;
 	bool m_hasCollider;
 

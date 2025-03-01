@@ -236,7 +236,7 @@ void Game::render()
     DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
    
     //DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
-    //DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
+    DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
     //DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
     DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
@@ -253,7 +253,7 @@ void Game::render()
         DrawText(TextFormat("SWARMER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
     }
 
-    DrawFPS(10, 30);
+    
 
     /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
     DrawText((TextFormat("NormalX: %f, NormalZ: %f", worldNormalX, worldNormalZ)), 10, 45, 32, ORANGE);
@@ -266,6 +266,8 @@ void Game::render()
     
     DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
     DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);*/
+    
+    DrawFPS(10, 30);
 
     EndDrawing();
 }
@@ -393,7 +395,7 @@ void Game::inputControl()
 
     if (player.isAuto())
     {// RS: How are we not doing this stuff with GETFRAMETIME(), are we barbarians?
-        camPos.z += -0.1f;
+        camPos.z += -0.12f;
     }
 
     if (m_reboundCounter > 0)
@@ -583,7 +585,7 @@ void Game::checkCollisions()
     }
     else
     {
-        player.setAuto(true);
+        player.setAuto(autoScroll);
     }
 
     //if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))

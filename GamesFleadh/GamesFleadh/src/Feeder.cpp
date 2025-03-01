@@ -90,7 +90,7 @@ void Feeder::init()
 
 void Feeder::render()
 {
-	DrawModel(m_body, m_position, 0.8f, m_colour);
+	DrawModel(m_body, m_position, 1.8f, m_colour);
 	DrawBoundingBox(m_hitbox, GREEN);
 	m_mudBomb.render();
 }

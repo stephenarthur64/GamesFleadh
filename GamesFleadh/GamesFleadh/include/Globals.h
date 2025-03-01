@@ -42,7 +42,7 @@ const std::string FURNITURE_STONE_MED_POINTY = "ASSETS/3D/StreetFurniture/Stones
 const std::string FURNITURE_STONE_SMALL01 = "ASSETS/3D/StreetFurniture/Stones/stoneSmallV1.glb";
 const std::string FURNITURE_STONE_SMALL02 = "ASSETS/3D/StreetFurniture/Stones/stoneSmallV2.glb";
 
-const std::string FURNITURE_GRASS = "ASSETS/3D/StreetFurniture/Grass/grassMushroom.glb";
+const std::string FURNITURE_GRASS = "ASSETS/3D/StreetFurniture/Grass/grass.glb";
 
 const std::string FURNITURE_BATCH_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/BatchMushroomCollider.glb";
 const std::string FURNITURE_BUMPY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/BumpyMushroomCollider.glb";

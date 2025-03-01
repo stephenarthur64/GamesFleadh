@@ -118,7 +118,10 @@
       <Filter>Header Files\FSM</Filter>
     </ClInclude>
     <ClInclude Include="include\AttackState.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Grass.h">
+      <Filter>Header Files\GO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -207,6 +210,12 @@
       <Filter>Source Files\FSM</Filter>
     </ClCompile>
     <ClCompile Include="src\AttackState.cpp">
+      <Filter>Source Files\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Grass.cpp">
+      <Filter>Source Files\GO</Filter>
+    </ClCompile>
+    <ClCompile Include="testmodels.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

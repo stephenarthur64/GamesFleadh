@@ -158,8 +158,8 @@ void Player::update(Vector3&t_cam)
 		t_cam += m_reboundDirection * (m_reboundForce / 2) * frameTime;;
 	}
 
-	m_position.y = Clamp(m_position.y, -0.2f, 13.0f);
-
+	m_position.y = Clamp(m_position.y, 1.0f, 10.0f);
+	t_cam.y = Clamp(m_position.y, 1.0f, 10.0f);
 	//std::cout << "Y position is: " << m_position.y << "\n";
 
 }
