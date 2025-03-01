@@ -358,6 +358,7 @@ void Game::inputControl()
     if (IsKeyReleased(KEY_SPACE) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
     {// RS: Toggle! Is nice, you like.
         autoScroll = !autoScroll;
+        player.setAuto(autoScroll);
         std::cout << "Good god.";
     }
 
@@ -390,7 +391,7 @@ void Game::inputControl()
     crosshairMove();
     billPositionRotating.z = player.getPosition().z - 3.0f;
 
-    if (autoScroll)
+    if (player.isAuto())
     {// RS: How are we not doing this stuff with GETFRAMETIME(), are we barbarians?
         camPos.z += -0.1f;
     }
@@ -574,15 +575,16 @@ void Game::checkCollisions()
     m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
 
     if (m_collisionData.collision)
-
-
-    /*if (m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getBoundingBoxRadius(), player.getHitbox()))
     {
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
         player.enemyCollision(true);
         player.reboundFurniture(m_collisionData);
-    }*/
+    }
+    else
+    {
+        player.setAuto(true);
+    }
 
     //if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
     //{

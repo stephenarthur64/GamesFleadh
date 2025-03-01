@@ -431,6 +431,7 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 
 FurnitureCollisionData StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
 {
+	m_data = { 0, 0, false };
 	if (!m_hasCollider) return m_data = { 0,0,false }; // Early out - if we don't have colliders to test, what's the point?
 
 	float xDist = t_playerPos.x - m_position.x;
@@ -441,7 +442,8 @@ FurnitureCollisionData StreetFurniture::checkBoundsFurnitureItemsCollision(Vecto
 
 	if (combinedDist > combinedRadResult) {
 		//std::cout << "\nNo mushroom.\n";  
-		return m_data = { 0,0,false }; // RS: Early out - we're too far from the mushroom to bother checking anything else. Too mushroom! ...It's 6.47am.
+		m_data = { 0,0,false }; // RS: Early out - we're too far from the mushroom to bother checking anything else. Too mushroom! ...It's 6.47am.
+		return m_data;
 	}
 
 	//std::cout << "\nClose to a mushroom?\n";
@@ -477,11 +479,10 @@ FurnitureCollisionData StreetFurniture::checkBoundsFurnitureItemsCollision(Vecto
 			default:
 				break;
 			}
-
-			return m_data = { 0,0,true }; // Collision detected!
+			m_data.collision = true;
+			return m_data; // Collision detected!
 		}
 	}
-	m_data = { 0, 0, false };
 	return m_data;
 }
 

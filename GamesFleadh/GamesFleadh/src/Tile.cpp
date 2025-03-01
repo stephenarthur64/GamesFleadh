@@ -146,10 +146,11 @@ bool Tile::isColliding(Vector3 t_collider)
 
 FurnitureCollisionData Tile::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
 {
+    m_data.collision = false;
     for (StreetFurniture& item : m_furnitureVec)
     {
-
-        if (item.checkBoundsFurnitureItemsCollision(t_playerPos, t_playerRadius, t_playerBox).collision)
+        m_data = item.checkBoundsFurnitureItemsCollision(t_playerPos, t_playerRadius, t_playerBox);
+        if (m_data.collision)
         {
             return m_data;
         }

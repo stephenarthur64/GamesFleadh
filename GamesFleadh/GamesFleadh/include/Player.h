@@ -24,6 +24,8 @@ public:
 	int currentBullet() { return bulletCount; }
 	void setHitBox();
 	void updateHitBox(float t_x);
+	void setAuto(bool t_auto) { m_auto = t_auto; }
+	bool isAuto() { return m_auto; }
 
 	Quaternion getCrosshairRotation() { return crosshairRotation; }
 	
@@ -99,5 +101,7 @@ private:
 	const int MAX_POISON_TICK;
 
 	float m_boundingBoxRadius = 0.0f;
+
+	bool m_auto = false;
 };
 
