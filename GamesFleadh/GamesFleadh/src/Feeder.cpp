@@ -79,7 +79,7 @@ void Feeder::init()
 	m_yaw = 200.0f;
 	//m_body = LoadModel("ASSETS/RS/animTest.glb");
 	setHitBox();
-	m_mudBomb.init();
+	m_mudBomb.init(1);
 	fxBoom = LoadSound("ASSETS/Audio/SFX/buzzBlastImpactRedux.mp3");
 	SetSoundVolume(fxBoom, 0.3);
 	explosion = LoadTexture("ASSETS/explosion.png");

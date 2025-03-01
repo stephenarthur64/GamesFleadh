@@ -56,14 +56,21 @@ void Bullet::follow(Vector3 t_target)
 	}
 }
 
-void Bullet::init()
+void Bullet::init(int t_type)
 {
-	m_body = LoadModel("ASSETS/3D/Player/Bullet/Bullet.glb");
+	if (t_type == 0)
+	{
+		m_body = LoadModel("ASSETS/3D/Player/Bullet/Bullet.glb");
+	}
+	else
+	{
+		m_body = LoadModel("ASSETS/3D/Enemy/Feeder/enemyBullet.glb");
+	}
 }
 
 void Bullet::render()
 {
-	DrawModel(m_body, m_position, m_radius, BLUE);
+	DrawModel(m_body, m_position, m_radius, WHITE);
 	DrawBoundingBox(m_hitbox, RED);
 }
 

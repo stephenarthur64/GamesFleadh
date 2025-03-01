@@ -94,7 +94,7 @@ void Player::init()
 
 	for (int i = 0; i < getBulletMax(); i++)
 	{
-		bullet[i].init();
+		bullet[i].init(0);
 	}
 
 	m_boundingBoxRadius = boundingBoxRadius(getHitbox());

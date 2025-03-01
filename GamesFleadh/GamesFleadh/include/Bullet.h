@@ -15,7 +15,8 @@ public:
 	void despawn();
 	void move();
 	void follow(Vector3 t_target);
-	virtual void init() override;
+	void init(int t_type);
+	virtual void init() override {};
 	virtual void render() override;
 	virtual void rotate(int t_direction) override;
 
