@@ -231,6 +231,11 @@ void Player::rebound(Vector3 t_impactPoint)
 void Player::reboundFurniture(FurnitureCollisionData t_data)
 {
 	std::cout << "Rebound triggered.\n";
+	if (m_currentVelocity == Vector3{0.0f, 0.0f, 0.0f})
+	{
+		m_currentVelocity.z = 2.0f;
+	}
+
 	m_reboundCounter = m_reboundCountMax;
 	Vector3 normal = Vector3Normalize(t_data.lastFurnitureCollision - m_position);
 	m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
