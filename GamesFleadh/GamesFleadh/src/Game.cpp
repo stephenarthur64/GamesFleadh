@@ -92,6 +92,8 @@ void Game::loadAssets()
         swarmer[i].spawn(pos, pos.x + 5.0f, pos.x - 5.0f);
     }
 
+    gameFont = LoadFont("ASSETS/2D/Font/BuzzzFont.ttf");
+
     fogOpacity = WHITE;
     fogOpacity.a = 0;
     fogVignette = LoadTexture("ASSETS/2D/Fog/OrangeVignette.png");
@@ -217,6 +219,8 @@ void Game::render()
     DrawSphereWires(heightMapBounds.min, 2.5f, 6, 6, GREEN);
     DrawSphereWires(heightMapBounds.max, 2.5f, 6, 6, PURPLE);
 
+    DrawLine3D(g_furnCollisionItem, g_furnCollisionPlyr, PURPLE);
+
     //DrawSphere(objectPlacementTest, 2.0f, ORANGE);
 
     DrawGrid(20, 1.0f);
@@ -231,10 +235,11 @@ void Game::render()
     DrawTexturePro(fogGradient, gradientSource, gradientDest, {(float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
     DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
    
-    DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
-    DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
-    DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
-    DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
+    //DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
+    //DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
+    //DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
+    //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
+    DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
     
     /*for (int i = 0; i < MAX_MUSHROOMS; i++)
     {
@@ -283,31 +288,6 @@ void Game::update()
         distanceRotating = Vector3Distance(camera.position, billPositionRotating);
 
         mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
-
-        //if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
-        //{// Colliding with terrain on the right
-        //    player.worldCollision(true);
-        //    player.handleInput(EVENT_HIT_R);
-        //    player.hitSound(0);
-        //    player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL, camPos);
-        //}
-
-        //if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
-        //{// Colliding with terrain on the left
-        //    player.worldCollision(true);
-        //    player.handleInput(EVENT_HIT_L);
-        //    player.hitSound(0);
-        //    player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL, camPos);
-        //}
-
-        //if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
-        //{// Colliding with terrain in front
-        //    player.worldCollision(true);
-        //    player.hitSound(0);
-        //    reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
-        //}
-
-        // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox());
 
         for (Tile& item : m_terrainTileCollection)
         {
@@ -378,6 +358,7 @@ void Game::inputControl()
     if (IsKeyReleased(KEY_SPACE) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
     {// RS: Toggle! Is nice, you like.
         autoScroll = !autoScroll;
+        player.setAuto(autoScroll);
         std::cout << "Good god.";
     }
 
@@ -410,7 +391,7 @@ void Game::inputControl()
     crosshairMove();
     billPositionRotating.z = player.getPosition().z - 3.0f;
 
-    if (autoScroll)
+    if (player.isAuto())
     {// RS: How are we not doing this stuff with GETFRAMETIME(), are we barbarians?
         camPos.z += -0.1f;
     }
@@ -571,7 +552,7 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.handleInput(EVENT_HIT_R);
         player.hitSound(0);
-        //player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+        player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
@@ -579,26 +560,40 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.handleInput(EVENT_HIT_L);
         player.hitSound(0);
-        //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+        player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
     {// Colliding with terrain in front
         player.worldCollision(true);
         player.hitSound(0);
-        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+        //reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
     }
 
     // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
-    if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
+    m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
+
+    if (m_collisionData.collision)
     {
-        std::cout << "Is this calling?\n\n";
+        std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
-        //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
         player.enemyCollision(true);
-        player.reboundFurniture(g_lastFurnitureCollision);
+        player.reboundFurniture(m_collisionData);
     }
+    else
+    {
+        player.setAuto(true);
+    }
+
+    //if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
+    //{
+    //    //std::cout << "Is this calling?\n\n";
+    //    player.hitSound(0);
+    //    //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+    //    player.enemyCollision(true);
+    //    player.reboundFurniture(g_lastFurnitureCollision);
+    //}
 
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
     {

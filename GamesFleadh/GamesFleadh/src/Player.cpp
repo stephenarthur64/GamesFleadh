@@ -9,6 +9,8 @@ Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisone
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Player/Buzzz/Buzz.glb", &animsCount);
+
+
 }
 
 void Player::move(Vector3 t_velocity)
@@ -94,12 +96,15 @@ void Player::init()
 	{
 		bullet[i].init();
 	}
+
+	m_boundingBoxRadius = boundingBoxRadius(getHitbox());
 }
 
 void Player::render()
 {
 	DrawModel(m_body, m_position, 2.0f, m_colour);
 	DrawBoundingBox(m_hitbox, RED);
+	DrawLine3D(g_furnCollisionItem, g_furnCollisionPlyr, PURPLE);
 
 	for (int i = 0; i < getBulletMax(); i++)
 	{
@@ -116,10 +121,12 @@ void Player::hitSound(int t_type)
 {
 	if (t_type == 0)
 	{
+		if (IsSoundPlaying(environmentHitSFX)) return;
 		PlaySound(environmentHitSFX);
 	}
 	else if (t_type == 1)
 	{
+		if (IsSoundPlaying(enemyHitSFX)) return;
 		PlaySound(enemyHitSFX);
 	}
 }
@@ -148,7 +155,7 @@ void Player::update(Vector3&t_cam)
 		float frameTime = GetFrameTime();
 		m_reboundCounter -= frameTime;
 		m_position += m_reboundDirection * m_reboundForce * frameTime;
-		t_cam += m_reboundDirection * m_reboundForce * frameTime;;
+		t_cam += m_reboundDirection * (m_reboundForce / 2) * frameTime;;
 	}
 
 	m_position.y = Clamp(m_position.y, -0.2f, 13.0f);
@@ -213,10 +220,11 @@ void Player::despawnBullet(int bulletNum)
 	bullet[bulletNum].despawn();
 }
 
-void Player::rebound(Vector3 t_impactPoint, Vector3& t_cam)
+void Player::rebound(Vector3 t_impactPoint)
 {
 	std::cout << "Rebound triggered.\n";
 	m_reboundCounter = m_reboundCountMax;
+
 	m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
 	if (m_position.y < 1.0f)
 	{
@@ -228,15 +236,22 @@ void Player::rebound(Vector3 t_impactPoint, Vector3& t_cam)
 	}	
 }
 
-void Player::reboundFurniture(Vector3 t_impactPoint)
+void Player::reboundFurniture(FurnitureCollisionData t_data)
 {
+	m_auto = false;
 	std::cout << "Rebound triggered.\n";
+	if (m_currentVelocity == Vector3{0.0f, 0.0f, 0.0f})
+	{
+		m_currentVelocity.z = 2.0f;
+	}
+
 	m_reboundCounter = m_reboundCountMax;
-	Vector3 normal = Vector3Normalize(t_impactPoint - m_position);
+
+	Vector3 normal = Vector3Normalize(t_data.lastFurnitureCollision - m_position);
 	m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
 	//m_reboundDirection.y = 0.0f;
-	m_position.x = t_impactPoint.x + normal.x * (g_lastFurnitureRadius + 0.1f);
-	m_position.z = t_impactPoint.z + normal.z * (g_lastFurnitureRadius + 0.1f);
+	//m_position.x = t_data.lastFurnitureCollision.x + normal.x * (t_data.lastFurnitureRadius + 0.1f);
+	//m_position.z = t_data.lastFurnitureCollision.z + normal.z * (t_data.lastFurnitureRadius + 0.1f);
 }
 
 void Player::poisonPlayer(bool t_poison)

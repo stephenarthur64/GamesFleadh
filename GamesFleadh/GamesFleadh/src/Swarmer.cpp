@@ -29,7 +29,7 @@ void Swarmer::init()
 
 void Swarmer::render()
 {
-	DrawModel(m_body, m_position, 5.0f, WHITE);
+	DrawModel(m_body, m_position, 1.0f, WHITE);
 	DrawBoundingBox(m_hitbox, BLUE);
 }
 

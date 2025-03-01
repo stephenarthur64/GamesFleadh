@@ -9,6 +9,22 @@ GameObject::GameObject() : m_position({ 0.0f, 3.0f, 0.0f }), m_colour(WHITE), m_
 {
 }
 
+BoundingBox GameObject::getCurrentBounds()
+{
+	BoundingBox box;
+
+	box.min.x = getHitbox().min.x + m_position.x;
+	box.max.x = getHitbox().min.x + m_position.x;
+
+	box.min.y = getHitbox().min.y + m_position.y;
+	box.max.y = getHitbox().min.y + m_position.y;
+
+	box.min.z = getHitbox().min.z + m_position.z;
+	box.max.z = getHitbox().min.z + m_position.z;
+
+	return BoundingBox();
+}
+
 void GameObject::handleInput(Event t_event)
 {
 	State* tempState = nullptr;

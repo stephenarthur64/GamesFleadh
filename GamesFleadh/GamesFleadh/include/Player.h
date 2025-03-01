@@ -19,10 +19,13 @@ public:
 	BoundingBox getBulletHitBox(int count) { return bullet[count].getHitbox(); }
 	const int getBulletMax() { return MAX_BULLETS; }
 	const float getCollisionRadius() { return m_collisionRadius; }
+	const float getBoundingBoxRadius() { return m_boundingBoxRadius; }
 	void addHealth(int t_amt) { m_health += t_amt; }
 	int currentBullet() { return bulletCount; }
 	void setHitBox();
 	void updateHitBox(float t_x);
+	void setAuto(bool t_auto) { m_auto = t_auto; }
+	bool isAuto() { return m_auto; }
 
 	Quaternion getCrosshairRotation() { return crosshairRotation; }
 	
@@ -48,12 +51,22 @@ public:
 	void updateBullet();
 	void despawnBullet(int bulletNum);
 
-	void rebound(Vector3 t_impactPoint, Vector3& t_cam);
+	void rebound(Vector3 t_impactPoint);
 	// void rebound(Vector3 t_impactPoint);
-	void reboundFurniture(Vector3 t_impactPoint); // This possibly needs the t_cam var from above now
+	void reboundFurniture(FurnitureCollisionData t_data); // This possibly needs the t_cam var from above now
 	
 	void poisonPlayer(bool t_poison);
 	bool isPoisoned() { return m_poisoned; }
+
+	float boundingBoxRadius(BoundingBox box)
+	{
+		float dx = box.max.x - box.min.x;
+		float dy = box.max.y - box.min.y;
+		float dz = box.max.z - box.min.z;
+
+		// Compute the diagonal length and divide by 2 to get the radius
+		return 0.5f * sqrt(dx * dx + dy * dy + dz * dz);
+	}
 
 private:
 	//Weapon m_weapon;
@@ -81,10 +94,14 @@ private:
 	Vector3 m_reboundDirection = Vector3Zero();
 	float m_reboundCounter = 0.0f;
 	const float m_reboundCountMax = 0.125f; // 33f;
-	const float m_reboundForce = 20.0f;
+	const float m_reboundForce = 5.0f;
 
 	bool m_poisoned;
 	int m_poisonTick;
 	const int MAX_POISON_TICK;
+
+	float m_boundingBoxRadius = 0.0f;
+
+	bool m_auto = false;
 };
 

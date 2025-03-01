@@ -15,6 +15,7 @@ public:
     Model* getModel() { return &m_body; }
     Vector3 getPosition() { return m_position; }
     BoundingBox getHitbox() { return m_hitbox; }
+	BoundingBox getCurrentBounds();
     Color getColour() { return m_colour; }
 	virtual void handleInput(Event t_event);
 	virtual void rotate(int t_direction) = 0;

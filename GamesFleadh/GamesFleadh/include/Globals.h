@@ -4,7 +4,14 @@
 
 enum Direction {NORTH, SOUTH, EAST, WEST};
 
-enum FurnitureType {NONE, SWARMER, MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
+enum FurnitureType {NONE, SWARMER, MUSHROOM, DEFAULT_MUSHROOM, BATCH_MUSHROOM, BUMPY_MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
+
+// RS: Way to pass col point from StreetFurniture.cpp back to Game radialFurnitureCollision func. Mea culpa.
+typedef struct {
+	Vector3 lastFurnitureCollision; 
+	float lastFurnitureRadius;
+	bool collision;
+}FurnitureCollisionData;
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
@@ -37,6 +44,12 @@ const std::string FURNITURE_STONE_SMALL02 = "ASSETS/3D/StreetFurniture/Stones/st
 
 const std::string FURNITURE_GRASS = "ASSETS/3D/StreetFurniture/Grass/grassMushroom.glb";
 
+const std::string FURNITURE_BATCH_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/BatchMushroomCollider.glb";
+const std::string FURNITURE_BUMPY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/BumpyMushroomCollider.glb";
+const std::string FURNITURE_CHUNKY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/ThickMushroomCollider.glb";
+const std::string FURNITURE_DEFAULT_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/DefaultMushroomCollider.glb";
+const std::string FURNITURE_POINTY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/PointyMushroomCollider.glb";
+
 
 const std::string ASSET_HEIGHTMAP_01 = "ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3_rebalanced01.png";
 const std::string GULLY_DIFFUSE_01 = "ASSETS/2D/GullyTextures/river_test6.png";
@@ -62,5 +75,11 @@ static float mudBombPosition; // This is awful, I know, but there was no other w
 
 static Vector3 g_lastFurnitureCollision; // RS: Way to pass col point from StreetFurniture.cpp back to Game radialFurnitureCollision func. Mea culpa.
 static float g_lastFurnitureRadius; // RS: See above. =(
+
+static Vector3 g_furnCollisionItem;
+static Vector3 g_furnCollisionPlyr;
+
+const float FURNITURE_TEST_OUTER_RADIUS = 8.0f;
+
 
 const int MAX_SWARMERS = 5;

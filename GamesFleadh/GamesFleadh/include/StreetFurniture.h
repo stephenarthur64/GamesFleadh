@@ -10,6 +10,7 @@
 #include <raymath.h>
 #include <random>
 #include <cmath> // For the pow() function
+#include <vector>
 // #include <memory>
 
 #if defined(PLATFORM_DESKTOP)
@@ -27,7 +28,7 @@ class StreetFurniture :
     public GameObject
 {
 public:
-	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f }, FurnitureType t_type = NONE);
+	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f }, FurnitureType t_type = NONE, bool t_hasCollider = false);
 	// StreetFurniture(StreetFurniture&&) = default;
 	~StreetFurniture();
 
@@ -51,7 +52,9 @@ public:
 
 	bool checkPlayerFurnitureCollision(BoundingBox t_player);
 
-	bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
+	FurnitureCollisionData checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
+
+	FurnitureCollisionData checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox);
 
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
@@ -72,9 +75,16 @@ private:
 	Stone m_stones[3];
 
 	Model m_grass;
+	Model m_collider;
+	bool m_hasCollider;
+
+	std::vector<BoundingBox> m_modelBoundingBoxes;
+
 	Vector3 m_grassPos;
 
 	FurnitureType m_type;
+	FurnitureCollisionData m_data;
+	FurnitureType m_typeEnum;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
 	float m_collisionRadiusMin = 1.5f;
@@ -83,8 +93,12 @@ private:
 
 	float m_overallHeight = 0.0f;
 	float m_overallHeightOnGround = 0.0f;
+
+	float m_highestPoint = 0.0f;
+
 	Vector3 m_posWithPlayerHeight = Vector3Zero();
 	Vector3 m_posWPlyrHeightNorm = Vector3Zero();
+
 
 
 	int m_colourDecrease;
