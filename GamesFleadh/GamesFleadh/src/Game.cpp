@@ -299,7 +299,7 @@ void Game::update()
         player.updateBullet();
         camera.position = camPos;
         checkCollisions();
-        player.update(camPos);
+        player.update(billPositionRotating);
     }
     else if (state == GameState::TITLE)
     {
