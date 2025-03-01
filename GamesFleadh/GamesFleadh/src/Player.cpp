@@ -238,7 +238,12 @@ void Player::rebound(Vector3 t_impactPoint)
 
 void Player::reboundFurniture(FurnitureCollisionData t_data)
 {
-	std::cout << "Rebound furniture.\n";
+	std::cout << "Rebound triggered.\n";
+	if (m_currentVelocity == Vector3{0.0f, 0.0f, 0.0f})
+	{
+		m_currentVelocity.z = 2.0f;
+	}
+
 	m_reboundCounter = m_reboundCountMax;
 
 	g_furnCollisionItem = t_impactPoint;

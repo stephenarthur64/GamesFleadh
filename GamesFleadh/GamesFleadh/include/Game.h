@@ -65,6 +65,8 @@ private:
 	Camera camera;
 	Camera camTopDown;
 
+	Font gameFont;
+
 	Image heightmapImage;
 	Texture2D heightmapTexture;
 	Mesh heightmapMesh;
