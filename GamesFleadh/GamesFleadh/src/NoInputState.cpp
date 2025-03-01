@@ -6,13 +6,16 @@
 
 State* NoInputState::handleInput(Event t_event)
 {
-    if (t_event == EVENT_MOVE)
+    if (tick > 180)
     {
-        return new IdleState;
-    }
-    if (t_event == EVENT_SHOOT)
-    {
-        return new ShootState;
+        if (t_event == EVENT_MOVE)
+        {
+            return new IdleState;
+        }
+        if (t_event == EVENT_SHOOT)
+        {
+            return new ShootState;
+        }
     }
     if (t_event == EVENT_HIT_L)
     {
@@ -27,11 +30,27 @@ State* NoInputState::handleInput(Event t_event)
 
 void NoInputState::update(GameObject* obj)
 {
-    obj->animation(IDLE_2);
+    if (tick < 180)
+    {
+        obj->animation(randNum);
+    }
+    else
+    {
+        obj->animation(DEFAULT);
+    }
+    tick++;
+
+    if (tick > 240)
+    {
+        obj->resetAnimation();
+        tick = 0;
+        randNum = (rand() % (IDLE_3 - IDLE_1 + 1)) + IDLE_1;
+    }
 }
 
 void NoInputState::enter(GameObject* obj)
 {
+    tick = 0;
     obj->resetAnimation();
 }
 

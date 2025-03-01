@@ -8,5 +8,9 @@ public:
 	void update(GameObject* obj) override;
 	void enter(GameObject* obj) override;
 	void exit(GameObject* obj) override;
+
+private:
+	int tick = 0;
+	int randNum = IDLE_1;
 };
 
