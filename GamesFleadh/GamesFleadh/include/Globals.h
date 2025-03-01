@@ -81,5 +81,10 @@ static Vector3 g_furnCollisionPlyr;
 
 const float FURNITURE_TEST_OUTER_RADIUS = 8.0f;
 
+extern bool g_renderWireDebug;
+
+extern bool g_render2DDebug;
+
+
 
 const int MAX_SWARMERS = 5;

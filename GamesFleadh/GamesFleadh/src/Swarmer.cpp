@@ -29,8 +29,12 @@ void Swarmer::init()
 
 void Swarmer::render()
 {
+	if (g_renderWireDebug)
+	{
+		DrawBoundingBox(m_hitbox, BLUE);
+	}
+
 	DrawModel(m_body, m_position, 1.0f, WHITE);
-	DrawBoundingBox(m_hitbox, BLUE);
 }
 
 void Swarmer::renderBoom(Camera t_camera)

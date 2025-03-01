@@ -129,12 +129,6 @@ void StreetFurniture::render()
 	if (!m_inPlay) return; // Not in gameplay: early out.
 
 	DrawModel(m_body, m_position, 1.0f, m_colour);
-	
-	// DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
-
-	//DrawCircle3D(m_posWithPlayerHeight, m_interpolatedColRadius, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, ORANGE);
-
-	DrawCircle3D(m_position + Vector3{ 0.0f, 2.0f, 0.0f }, FURNITURE_TEST_OUTER_RADIUS, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, RED);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -145,66 +139,75 @@ void StreetFurniture::render()
 		m_grass.render();
 	}
 
-	if (m_hasCollider)
+	if (g_renderWireDebug)
 	{
-		Color boxCol;
-		for (int i = 0; i < m_collider.meshCount; i++) // Goes through the collider MODEL, sets a specific colour
-		{
-			switch (i + 2)
-			{
-			case 0:
-				boxCol = MAROON;
-				break;
-			case 1:
-				boxCol = ORANGE;
-				break;
-			case 2:
-				boxCol = DARKGREEN;
-				break;
-			case 3:
-				boxCol = DARKBLUE;
-				break;
-			case 4:
-				boxCol = DARKPURPLE;
-				break;
-			case 5:
-				boxCol = DARKBROWN;
-				break;
-			case 6:
-				boxCol = RED;
-				break;
-			case 7:
-				boxCol = MAGENTA;
-				break;
-			case 8:
-				boxCol = LIME;
-				break;
-			case 9:
-				boxCol = BLUE;
-				break;
-			case 10:
-				boxCol = VIOLET;
-				break;
-			case 11:
-				boxCol = BROWN;
-				break;
-			case 12:
-				boxCol = PINK;
-				break;
-			case 13:
-				boxCol = YELLOW;
-				break;
-			case 14:
-				boxCol = GREEN;
-				break;
-			case 15:
-				boxCol = SKYBLUE;
-				break;
-			default:
-				break;
-			}
+		// DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
 
-			DrawBoundingBox(m_modelBoundingBoxes[i], boxCol);
+	//DrawCircle3D(m_posWithPlayerHeight, m_interpolatedColRadius, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, ORANGE);
+
+		DrawCircle3D(m_position + Vector3{ 0.0f, 2.0f, 0.0f }, FURNITURE_TEST_OUTER_RADIUS, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, RED);
+
+		if (m_hasCollider)
+		{
+			Color boxCol;
+			for (int i = 0; i < m_collider.meshCount; i++) // Goes through the collider MODEL, sets a specific colour
+			{
+				switch (i + 2)
+				{
+				case 0:
+					boxCol = MAROON;
+					break;
+				case 1:
+					boxCol = ORANGE;
+					break;
+				case 2:
+					boxCol = DARKGREEN;
+					break;
+				case 3:
+					boxCol = DARKBLUE;
+					break;
+				case 4:
+					boxCol = DARKPURPLE;
+					break;
+				case 5:
+					boxCol = DARKBROWN;
+					break;
+				case 6:
+					boxCol = RED;
+					break;
+				case 7:
+					boxCol = MAGENTA;
+					break;
+				case 8:
+					boxCol = LIME;
+					break;
+				case 9:
+					boxCol = BLUE;
+					break;
+				case 10:
+					boxCol = VIOLET;
+					break;
+				case 11:
+					boxCol = BROWN;
+					break;
+				case 12:
+					boxCol = PINK;
+					break;
+				case 13:
+					boxCol = YELLOW;
+					break;
+				case 14:
+					boxCol = GREEN;
+					break;
+				case 15:
+					boxCol = SKYBLUE;
+					break;
+				default:
+					break;
+				}
+
+				DrawBoundingBox(m_modelBoundingBoxes[i], boxCol);
+			}
 		}
 	}
 

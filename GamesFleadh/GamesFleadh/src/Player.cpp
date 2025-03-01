@@ -103,12 +103,16 @@ void Player::init()
 void Player::render()
 {
 	DrawModel(m_body, m_position, 2.0f, m_colour);
-	DrawBoundingBox(m_hitbox, RED);
-	DrawLine3D(g_furnCollisionItem, g_furnCollisionPlyr, PURPLE);
 
 	for (int i = 0; i < getBulletMax(); i++)
 	{
 		bullet[i].render();
+	}
+
+	if (g_renderWireDebug)
+	{
+		DrawBoundingBox(m_hitbox, RED);
+		DrawLine3D(g_furnCollisionItem, g_furnCollisionPlyr, PURPLE);
 	}
 }
 
