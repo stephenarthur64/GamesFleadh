@@ -187,5 +187,11 @@ private:
 	const float m_reboundCountMax = 0.125f; // 33f;
 	const float m_reboundForce = 5.0f;
 
+	const float oobCounterMax = 1.5f;
+	float oobCounterCur = 0.0f;
+
+	const float oobResetCounterMax = 0.33f;
+	float oobResetCounterCur = 0.0f;
+
 };
 
