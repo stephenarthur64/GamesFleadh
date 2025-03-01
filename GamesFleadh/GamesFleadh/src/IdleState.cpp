@@ -7,6 +7,8 @@
 #include "NoInputState.h"
 #include "EatenState.h"
 #include "AttackState.h"
+#include "CollisionLState.h"
+#include "CollisionRState.h"
 
 State* IdleState::handleInput(Event t_event)
 {
@@ -47,6 +49,15 @@ State* IdleState::handleInput(Event t_event)
 	if (t_event == EVENT_ATTACK)
 	{
 		return new AttackState;
+	}
+
+	if (t_event == EVENT_COLLIDE_L)
+	{
+		return new CollisionLState;
+	}
+	if (t_event == EVENT_COLLIDE_R)
+	{
+		return new CollisionRState;
 	}
 
 	return nullptr;

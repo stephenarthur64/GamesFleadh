@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClInclude Include="include\AttackState.h" />
     <ClInclude Include="include\Bullet.h" />
+    <ClInclude Include="include\CollisionLState.h" />
+    <ClInclude Include="include\CollisionRState.h" />
     <ClInclude Include="include\Command.h" />
     <ClInclude Include="include\ConcreteCommands.h" />
     <ClInclude Include="include\DamageLState.h" />
@@ -55,6 +57,8 @@
   <ItemGroup>
     <ClCompile Include="src\AttackState.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\CollisionLState.cpp" />
+    <ClCompile Include="src\CollisionRState.cpp" />
     <ClCompile Include="src\Command.cpp" />
     <ClCompile Include="src\DamageLState.cpp" />
     <ClCompile Include="src\DamageRState.cpp" />

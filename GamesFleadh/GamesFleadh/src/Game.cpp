@@ -552,7 +552,7 @@ void Game::checkCollisions()
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
     {// Colliding with terrain on the right
         player.worldCollision(true);
-        player.handleInput(EVENT_HIT_R);
+        player.handleInput(EVENT_COLLIDE_R);
         player.hitSound(0);
         player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
     }
@@ -560,7 +560,7 @@ void Game::checkCollisions()
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
     {// Colliding with terrain on the left
         player.worldCollision(true);
-        player.handleInput(EVENT_HIT_L);
+        player.handleInput(EVENT_COLLIDE_L);
         player.hitSound(0);
         player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
     }

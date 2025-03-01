@@ -28,7 +28,7 @@
 //------------------------------------------------------------------------------------
 int maintest(void)
 {
-    std::string assetName = "ASSETS/3D/StreetFurniture/Grass/grass.glb";
+    std::string assetName = "ASSETS/3D/Player/Buzzz/Buzz.glb";
 
     // Initialization
     //--------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ int maintest(void)
         UpdateCamera(&camera, CAMERA_ORBITAL);
 
         // Update model animation
-        ModelAnimation anim = modelAnimations[animIndex];
+        ModelAnimation anim = modelAnimations[10];
         animCurrentFrame = (animCurrentFrame + 1)%anim.frameCount;
         UpdateModelAnimation(model, anim, animCurrentFrame);
         //----------------------------------------------------------------------------------

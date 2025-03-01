@@ -12,6 +12,8 @@ typedef enum
     EVENT_INPUT,
     EVENT_HIT_L,
     EVENT_HIT_R,
+    EVENT_COLLIDE_L,
+    EVENT_COLLIDE_R,
     EVENT_EAT,
     EVENT_ATTACK,
     EVENT_DIE,    // Represents a die event

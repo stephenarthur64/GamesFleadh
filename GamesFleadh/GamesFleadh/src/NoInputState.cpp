@@ -3,6 +3,8 @@
 #include "ShootState.h"
 #include "DamageLState.h"
 #include "DamageRState.h"
+#include "CollisionLState.h"
+#include "CollisionRState.h"
 
 State* NoInputState::handleInput(Event t_event)
 {
@@ -24,6 +26,15 @@ State* NoInputState::handleInput(Event t_event)
     if (t_event == EVENT_HIT_R)
     {
         return new DamageRState;
+    }
+
+    if (t_event == EVENT_COLLIDE_L)
+    {
+        return new CollisionLState;
+    }
+    if (t_event == EVENT_COLLIDE_R)
+    {
+        return new CollisionRState;
     }
     return nullptr;
 }
