@@ -20,6 +20,12 @@ public:
 	const int getBulletMax() { return MAX_BULLETS; }
 	const float getCollisionRadius() { return m_collisionRadius; }
 	const float getBoundingBoxRadius() { return m_boundingBoxRadius; }
+	Vector2 getLowerLimit() { return lowerLimit; }
+	Vector2 getUpperLimit() { return upperLimit; }
+	void updateLimits(Vector2 t_low, Vector2 t_high);
+	
+	void reboundLimits(Vector3& t_cam);
+
 	void addHealth(int t_amt) { m_health += t_amt; }
 	int currentBullet() { return bulletCount; }
 	void setHitBox();
@@ -41,7 +47,7 @@ public:
 	Rectangle getHealthBar() { return m_healthbar; }
 	Color getHealthBarColour() { return m_hpColour; }
 
-	void update(Vector3& t_cam);
+	void update(Vector3& t_cam, Vector3 &t_crosshair);
 	void updateHealthbar();
 
 	void resetToOrigin();
@@ -93,6 +99,7 @@ private:
 
 	Vector3 m_reboundDirection = Vector3Zero();
 	float m_reboundCounter = 0.0f;
+	Vector3 m_reboundCrosshair = Vector3Zero();
 	const float m_reboundCountMax = 0.125f; // 33f;
 	const float m_reboundForce = 5.0f;
 
@@ -103,5 +110,8 @@ private:
 	float m_boundingBoxRadius = 0.0f;
 
 	bool m_auto = false;
+
+	Vector2 lowerLimit = { -1.0f, 2.0f };
+	Vector2 upperLimit = { 1.0f, 2.5f };
 };
 

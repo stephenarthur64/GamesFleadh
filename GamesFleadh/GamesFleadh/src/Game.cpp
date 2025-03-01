@@ -255,6 +255,19 @@ void Game::render()
         {
             DrawText(TextFormat("SWARMER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
         }
+    DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
+    DrawTexture(healthBar, 0, 1000, WHITE);
+
+    DrawTexture(fogVignette, 0, 0, fogOpacity);
+    //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
+    //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
+    DrawTexturePro(fogGradient, gradientSource, gradientDest, {(float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
+    DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
+  
+    DrawText(TextFormat("DIFF IN LIMITS: %f", diffBetweenLimits), 10, 440, 10, RED);
+    //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
+    DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
+    
 
         /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
         DrawText((TextFormat("NormalX: %f, NormalZ: %f", worldNormalX, worldNormalZ)), 10, 45, 32, ORANGE);
@@ -297,9 +310,6 @@ void Game::update()
             swarmer[i].update();
         }
 
-        distanceStatic = Vector3Distance(camera.position, billPositionStatic);
-        distanceStatic += 2.0f;
-        distanceRotating = Vector3Distance(camera.position, billPositionRotating);
 
         mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
@@ -311,7 +321,7 @@ void Game::update()
         player.updateBullet();
         camera.position = camPos;
         checkCollisions();
-        player.update(billPositionRotating);
+        player.update(camera.position, billPositionRotating);
     }
     else if (state == GameState::TITLE)
     {
@@ -601,7 +611,7 @@ void Game::checkCollisions()
 
     // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
-    m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
+   /* m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
 
     if (m_collisionData.collision)
     {
@@ -613,7 +623,7 @@ void Game::checkCollisions()
     else
     {
         player.setAuto(autoScroll);
-    }
+    }*/
 
     //if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
     //{
@@ -677,6 +687,9 @@ void Game::cameraMove()
 {
     float speed = 0.2f;
 
+    Vector2 lowerLimit = player.getLowerLimit();
+    Vector2 upperLimit = player.getUpperLimit();
+
     if (player.getPosition().x < lowerLimit.x && camPos.x > player.getPosition().x)
     {
         camPos.x -= speed;
@@ -704,6 +717,9 @@ void Game::cameraMove()
     }
     camera.target = billPositionRotating;
     camera.target.z = billPositionRotating.z - 15.0f;
+
+    player.updateLimits(lowerLimit, upperLimit);
+    diffBetweenLimits = upperLimit.x - lowerLimit.x;
 }
 
 void Game::fogVisibility()
