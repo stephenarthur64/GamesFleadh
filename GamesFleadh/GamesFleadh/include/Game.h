@@ -127,9 +127,6 @@ private:
 	// StreetFurniture streetF[5];
 	Swarmer swarmer[MAX_SWARMERS];
 
-	Vector2 lowerLimit = { -1.0f, -1.0f };
-	Vector2 upperLimit = { 1.0f, 0.0f };
-
 	int maxStreetFurniture = 5; // Changed from const as this will be set by terrain;
 
 	int maxSwarmer = 5;
@@ -187,5 +184,7 @@ private:
 	const float m_reboundCountMax = 0.125f; // 33f;
 	const float m_reboundForce = 5.0f;
 
+
+	float diffBetweenLimits = 0.0f;
 };
 

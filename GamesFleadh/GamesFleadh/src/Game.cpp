@@ -236,8 +236,10 @@ void Game::render()
     DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
    
     //DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
-    DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
+    /*DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);*/
     //DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
+    // 
+    DrawText(TextFormat("DIFF IN LIMITS: %f", diffBetweenLimits), 10, 440, 10, RED);
     //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
     DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
     
@@ -651,6 +653,9 @@ void Game::cameraMove()
 {
     float speed = 0.2f;
 
+    Vector2 lowerLimit = player.getLowerLimit();
+    Vector2 upperLimit = player.getUpperLimit();
+
     if (player.getPosition().x < lowerLimit.x && camPos.x > player.getPosition().x)
     {
         camPos.x -= speed;
@@ -678,6 +683,9 @@ void Game::cameraMove()
     }
     camera.target = billPositionRotating;
     camera.target.z = billPositionRotating.z - 15.0f;
+
+    player.updateLimits(lowerLimit, upperLimit);
+    diffBetweenLimits = upperLimit.x - lowerLimit.x;
 }
 
 void Game::fogVisibility()

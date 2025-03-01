@@ -20,6 +20,12 @@ public:
 	const int getBulletMax() { return MAX_BULLETS; }
 	const float getCollisionRadius() { return m_collisionRadius; }
 	const float getBoundingBoxRadius() { return m_boundingBoxRadius; }
+	Vector2 getLowerLimit() { return lowerLimit; }
+	Vector2 getUpperLimit() { return upperLimit; }
+	void updateLimits(Vector2 t_low, Vector2 t_high);
+	
+	void reboundLimits(Vector3& t_cam);
+
 	void addHealth(int t_amt) { m_health += t_amt; }
 	int currentBullet() { return bulletCount; }
 	void setHitBox();
@@ -104,5 +110,8 @@ private:
 	float m_boundingBoxRadius = 0.0f;
 
 	bool m_auto = false;
+
+	Vector2 lowerLimit = { -1.0f, 2.0f };
+	Vector2 upperLimit = { 1.0f, 2.5f };
 };
 

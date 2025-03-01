@@ -24,6 +24,18 @@ void Player::move(Vector3 t_velocity)
 	m_currentVelocity = t_velocity;
 }
 
+void Player::updateLimits(Vector2 t_low, Vector2 t_high)
+{
+	upperLimit = t_high;
+	lowerLimit = t_low;
+}
+
+void Player::reboundLimits(Vector3 &t_cam)
+{
+	lowerLimit = { t_cam.x - 1.0f, t_cam.y - 2.0f };
+	upperLimit = { t_cam.x + 1.0f, t_cam.y - 2.0f };
+}
+
 void Player::setHitBox()
 {
 	Vector3 minOffset = { -hitboxOffsetMin, -0.1f, -1.0f };
@@ -154,13 +166,29 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 	{
 		float frameTime = GetFrameTime();
 		m_reboundCounter -= frameTime;
-		//m_position += m_reboundDirection * m_reboundForce * frameTime;
-		//t_crosshair += m_reboundCrosshair * (m_reboundForce) * frameTime;
-		//t_cam += m_reboundCrosshair * (m_reboundForce)*frameTime;
+		Vector3 rebound = m_reboundDirection * m_reboundForce * frameTime;
+		m_position += rebound;
+		t_crosshair += rebound;
+		t_cam += rebound;
+		upperLimit.x += rebound.x;
+		upperLimit.y += rebound.y;
+
+		lowerLimit.x += rebound.x;
+		lowerLimit.y += rebound.y;
 	}
+	/*else if (m_reboundCounter < 0 && m_reboundCounter != -100)
+	{
+		reboundLimits(t_cam);
+		m_reboundCounter = -100;
+	}*/
+
 
 	m_position.y = Clamp(m_position.y, 1.0f, 10.0f);
-	t_cam.y = Clamp(m_position.y, 1.0f, 10.0f);
+	//t_cam.y = Clamp(m_position.y, -10.0f, 15.0f);
+	if (t_cam.y > 10.0f)
+	{
+		t_cam.y = 10.0f;
+	}
 	//std::cout << "Y position is: " << m_position.y << "\n";
 
 }
@@ -223,7 +251,7 @@ void Player::despawnBullet(int bulletNum)
 
 void Player::rebound(Vector3 t_impactPoint)
 {
-	/*std::cout << "Rebound triggered.\n";
+	std::cout << "Rebound triggered.\n";
 	m_reboundCounter = m_reboundCountMax;
 
 	m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
@@ -236,7 +264,7 @@ void Player::rebound(Vector3 t_impactPoint)
 	{
 		m_reboundDirection.y = 0.0f;
 	}	
-	m_reboundCrosshair = m_reboundDirection;*/
+	m_reboundCrosshair = m_reboundDirection;
 }
 
 void Player::reboundFurniture(FurnitureCollisionData t_data)
