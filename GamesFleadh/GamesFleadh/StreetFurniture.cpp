@@ -1,16 +1,19 @@
 #include "StreetFurniture.h"
 #include <iostream>
 
-StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos, FurnTypeEnum t_typeEnum) : m_hasFeeder(t_hasFeeder),
+StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos, FurnTypeEnum t_typeEnum, bool t_hasCollider) : 
+																															m_hasFeeder(t_hasFeeder),
 																															m_colourDecrease(0),
 																															m_colourVal(255), eatTick(0), 
 																															MAX_EAT_TICK(60),
-																															m_typeEnum(t_typeEnum)
+																															m_typeEnum(t_typeEnum),
+																															m_hasCollider(t_hasCollider)
 																									
 {
 	m_placementOffset = t_startPos;
 	currentState = new IdleState;
 	m_body = LoadModel(t_furnitureType.c_str());
+	
 	
 	for (int i = 0; i < m_body.meshCount; i++)
 	{
@@ -20,9 +23,9 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 		{
 			m_highestPoint = bokz.max.y;
 		}
-
-		m_modelBoundingBoxes.push_back(bokz);
 	}
+
+
 
 	/*for (int i = 0; i < m_body.materialCount; i++)
 	{
@@ -42,24 +45,44 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 		break;
 	case DEFAULT_MUSHROOM:
 		furnType = "DEFAULT_MUSHROOM";
+		m_collider = LoadModel(FURNITURE_DEFAULT_MUSH_COL.c_str());
+		m_hasCollider = true;
 		break;
 	case BATCH_MUSHROOM:
-		furnType = "CHUNKY_MUSHROOM";
+		furnType = "BATCH_MUSHROOM";
+		m_collider = LoadModel(FURNITURE_BATCH_MUSH_COL.c_str());
+		m_hasCollider = true;
 		break;
 	case BUMPY_MUSHROOM:
-		furnType = "CHUNKY_MUSHROOM";
+		furnType = "BUMPY_MUSHROOM";
+		m_collider = LoadModel(FURNITURE_BUMPY_MUSH_COL.c_str());
+		m_hasCollider = true;
 		break;
 	case CHUNKY_MUSHROOM:
 		furnType = "CHUNKY_MUSHROOM";
+		m_collider = LoadModel(FURNITURE_CHUNKY_MUSH_COL.c_str());
+		m_hasCollider = true;
 		break;
 	case POINTY_MUSHROOM:
 		furnType = "POINTY_MUSHROOM";
+		m_collider = LoadModel(FURNITURE_POINTY_MUSH_COL.c_str());
+		m_hasCollider = true;
 		break;
 	case NOT_MUSHROOM:
 		furnType = "NOT_MUSHROOM";
 		break;
 	default:
 		break;
+	}
+
+	if (m_hasCollider)
+	{
+		for (int i = 0; i < m_collider.meshCount; i++)
+		{
+			BoundingBox collider = GetMeshBoundingBox(m_collider.meshes[i]);
+
+			m_modelBoundingBoxes.push_back(collider);
+		}
 	}
 
 	std::cout << "\n=================================================================\n";
@@ -114,7 +137,7 @@ void StreetFurniture::render()
 	
 	// DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
 
-	DrawCircle3D(m_posWithPlayerHeight, m_interpolatedColRadius, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, ORANGE);
+	//DrawCircle3D(m_posWithPlayerHeight, m_interpolatedColRadius, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, ORANGE);
 
 	DrawCircle3D(m_position + Vector3{ 0.0f, 2.0f, 0.0f }, FURNITURE_TEST_OUTER_RADIUS, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, RED);
 
@@ -127,67 +150,67 @@ void StreetFurniture::render()
 		DrawModel(m_grass, m_grassPos, 0.8f, WHITE);
 	}
 
-	Color boxCol;
-
-
-
-	for (int i = 0; i < m_body.meshCount; i++)
+	if (m_hasCollider)
 	{
-		switch (i+2)
+		Color boxCol;
+		for (int i = 0; i < m_collider.meshCount; i++) // Goes through the collider MODEL, sets a specific colour
 		{
-		case 0:
-			boxCol = MAROON;
-			break;
-		case 1:
-			boxCol = ORANGE;
-			break;
-		case 2:
-			boxCol = DARKGREEN;
-			break;
-		case 3:
-			boxCol = DARKBLUE;
-			break;
-		case 4:
-			boxCol = DARKPURPLE;
-			break;
-		case 5:
-			boxCol = DARKBROWN;
-			break;
-		case 6:
-			boxCol = RED;
-			break;
-		case 7:
-			boxCol = GOLD;
-			break;
-		case 8:
-			boxCol = LIME;
-			break;
-		case 9:
-			boxCol = BLUE;
-			break;
-		case 10:
-			boxCol = VIOLET;
-			break;
-		case 11:
-			boxCol = BROWN;
-			break;
-		case 12:
-			boxCol = PINK;
-			break;
-		case 13:
-			boxCol = YELLOW;
-			break;
-		case 14:
-			boxCol = GREEN;
-			break;
-		case 15:
-			boxCol = SKYBLUE;
-			break;
-		default:
-			break;
-		}
+			switch (i + 2)
+			{
+			case 0:
+				boxCol = MAROON;
+				break;
+			case 1:
+				boxCol = ORANGE;
+				break;
+			case 2:
+				boxCol = DARKGREEN;
+				break;
+			case 3:
+				boxCol = DARKBLUE;
+				break;
+			case 4:
+				boxCol = DARKPURPLE;
+				break;
+			case 5:
+				boxCol = DARKBROWN;
+				break;
+			case 6:
+				boxCol = RED;
+				break;
+			case 7:
+				boxCol = MAGENTA;
+				break;
+			case 8:
+				boxCol = LIME;
+				break;
+			case 9:
+				boxCol = BLUE;
+				break;
+			case 10:
+				boxCol = VIOLET;
+				break;
+			case 11:
+				boxCol = BROWN;
+				break;
+			case 12:
+				boxCol = PINK;
+				break;
+			case 13:
+				boxCol = YELLOW;
+				break;
+			case 14:
+				boxCol = GREEN;
+				break;
+			case 15:
+				boxCol = SKYBLUE;
+				break;
+			default:
+				break;
+			}
 
-		DrawBoundingBox(m_modelBoundingBoxes[i], boxCol);
+			DrawBoundingBox(m_modelBoundingBoxes[i], boxCol);
+		}
 	}
 
 	if (!m_hasFeeder) return;
@@ -282,18 +305,19 @@ void StreetFurniture::setHitBox()
 	m_hitbox.min.z = m_position.z - 3.0f;
 	m_hitbox.max.z = m_position.z - 1.0f;*/
 
-	for (int i = 0; i < m_body.meshCount; i++)
-	{		
-		m_modelBoundingBoxes[i].min.x = GetMeshBoundingBox(m_body.meshes[i]).min.x + m_position.x;
-		m_modelBoundingBoxes[i].max.x = GetMeshBoundingBox(m_body.meshes[i]).max.x + m_position.x;
+	if (m_hasCollider)
+	{
+		for (int i = 0; i < m_collider.meshCount; i++)
+		{
+			m_modelBoundingBoxes[i].min.x = GetMeshBoundingBox(m_collider.meshes[i]).min.x + m_position.x;
+			m_modelBoundingBoxes[i].max.x = GetMeshBoundingBox(m_collider.meshes[i]).max.x + m_position.x;
 
-		m_modelBoundingBoxes[i].min.y = GetMeshBoundingBox(m_body.meshes[i]).min.y + m_position.y;
-		m_modelBoundingBoxes[i].max.y = GetMeshBoundingBox(m_body.meshes[i]).max.y + m_position.y;
+			m_modelBoundingBoxes[i].min.y = GetMeshBoundingBox(m_collider.meshes[i]).min.y + m_position.y;
+			m_modelBoundingBoxes[i].max.y = GetMeshBoundingBox(m_collider.meshes[i]).max.y + m_position.y;
 
-		m_modelBoundingBoxes[i].min.z = GetMeshBoundingBox(m_body.meshes[i]).min.z + m_position.z;
-		m_modelBoundingBoxes[i].max.z = GetMeshBoundingBox(m_body.meshes[i]).max.z + m_position.z;
-
-		//DrawBoundingBox(GetMeshBoundingBox(m_body.meshes[i]), RAYWHITE);
+			m_modelBoundingBoxes[i].min.z = GetMeshBoundingBox(m_collider.meshes[i]).min.z + m_position.z;
+			m_modelBoundingBoxes[i].max.z = GetMeshBoundingBox(m_collider.meshes[i]).max.z + m_position.z;
+		}
 	}
 
 	BoundingBox localSpaceBoundingBox = GetMeshBoundingBox(m_body.meshes[0]);
@@ -361,52 +385,54 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 // * Clamp doesn't seem to work - collision circle always higher than I want it to be. // Spherical collision?
 // * Still need to add exponential curve to collision shape 
 
-bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
-{
-	g_furnCollisionItem = m_position;	// Update debug values
-	g_furnCollisionPlyr = t_playerPos;	// Update debug values
-
-	m_posWithPlayerHeight = m_position;
-	m_posWithPlayerHeight.y = (t_playerPos.y) - m_position.y; // Player's current height minus lowest level of furniture
-	m_posWithPlayerHeight.y = Clamp(m_posWithPlayerHeight.y, m_position.y, m_overallHeightOnGround);
-
-	// m_posWithPlayerHeight.y -= 1.0f; // Stupid hack.
-
-	m_posWPlyrHeightNorm = m_posWithPlayerHeight;
-	m_posWPlyrHeightNorm.y = m_posWPlyrHeightNorm.y / m_overallHeightOnGround;
-
-	Vector3 playerTest = t_playerPos;
-	playerTest.y = 0.0f;
-
-	Vector3 mushTest = m_posWithPlayerHeight;
-	mushTest.y = 0.0f;
-
-	float distance = Vector3Distance(playerTest, mushTest);
-	// float distance = Vector3Distance(t_playerPos, m_posWithPlayerHeight);
-
-	// m_interpolatedColRadius = Lerp(m_collisionRadiusMin, m_collisionRadiusMax, m_posWPlyrHeightNorm.y);
-
-	m_interpolatedColRadius = exponentialScale(m_posWPlyrHeightNorm.y, m_collisionRadiusMin, m_collisionRadiusMax - 2.0f, 2.0f); // Note magic literal 2.0f =(
-
-	float combinedRad = t_playerRad + m_interpolatedColRadius;
-
-	// float yDelta = t_playerPos.y - m_overallHeightOnGround;
-
-	if (distance < combinedRad)	
-	{
-		if (t_playerPos.y < m_overallHeightOnGround)
-		{
-			g_lastFurnitureCollision = m_posWithPlayerHeight;
-			g_lastFurnitureRadius = m_interpolatedColRadius;
-			bool returnValue = true;
-			return returnValue;
-		}
-	}
-	return false;
-}
+//bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
+//{
+//	g_furnCollisionItem = m_position;	// Update debug values
+//	g_furnCollisionPlyr = t_playerPos;	// Update debug values
+//
+//	m_posWithPlayerHeight = m_position;
+//	m_posWithPlayerHeight.y = (t_playerPos.y) - m_position.y; // Player's current height minus lowest level of furniture
+//	m_posWithPlayerHeight.y = Clamp(m_posWithPlayerHeight.y, m_position.y, m_overallHeightOnGround);
+//
+//	// m_posWithPlayerHeight.y -= 1.0f; // Stupid hack.
+//
+//	m_posWPlyrHeightNorm = m_posWithPlayerHeight;
+//	m_posWPlyrHeightNorm.y = m_posWPlyrHeightNorm.y / m_overallHeightOnGround;
+//
+//	Vector3 playerTest = t_playerPos;
+//	playerTest.y = 0.0f;
+//
+//	Vector3 mushTest = m_posWithPlayerHeight;
+//	mushTest.y = 0.0f;
+//
+//	float distance = Vector3Distance(playerTest, mushTest);
+//	// float distance = Vector3Distance(t_playerPos, m_posWithPlayerHeight);
+//
+//	// m_interpolatedColRadius = Lerp(m_collisionRadiusMin, m_collisionRadiusMax, m_posWPlyrHeightNorm.y);
+//
+//	m_interpolatedColRadius = exponentialScale(m_posWPlyrHeightNorm.y, m_collisionRadiusMin, m_collisionRadiusMax - 2.0f, 2.0f); // Note magic literal 2.0f =(
+//
+//	float combinedRad = t_playerRad + m_interpolatedColRadius;
+//
+//	// float yDelta = t_playerPos.y - m_overallHeightOnGround;
+//
+//	if (distance < combinedRad)	
+//	{
+//		if (t_playerPos.y < m_overallHeightOnGround)
+//		{
+//			g_lastFurnitureCollision = m_posWithPlayerHeight;
+//			g_lastFurnitureRadius = m_interpolatedColRadius;
+//			bool returnValue = true;
+//			return returnValue;
+//		}
+//	}
+//	return false;
+//}
 
 bool StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
 {
+	if (!m_hasCollider) return false; // Early out - if we don't have colliders to test, what's the point?
+
 	float xDist = t_playerPos.x - m_position.x;
 	float zDist = t_playerPos.z - m_position.z;
 	float combinedDist = xDist * xDist + zDist * zDist;
@@ -420,9 +446,10 @@ bool StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, fl
 
 	//std::cout << "\nClose to a mushroom?\n";
 
-	for (BoundingBox box : m_modelBoundingBoxes)
+	for (int i = 0; i < m_modelBoundingBoxes.size(); i++)
+	//for (BoundingBox box : m_modelBoundingBoxes)
 	{
-		if (CheckCollisionBoxes(t_playerBox, box)) {
+		if (CheckCollisionBoxes(t_playerBox, m_modelBoundingBoxes[i])) { // box)) {
 
 			switch (m_typeEnum)
 			{
@@ -451,7 +478,7 @@ bool StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, fl
 				break;
 			}
 
-			return true;
+			return true; // Collision detected!
 		}
 	}
 	return false;

@@ -37,6 +37,12 @@ const std::string FURNITURE_STONE_SMALL02 = "ASSETS/3D/StreetFurniture/Stones/st
 
 const std::string FURNITURE_GRASS = "ASSETS/3D/StreetFurniture/Grass/grassMushroom.glb";
 
+const std::string FURNITURE_BATCH_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/BatchMushroomCollider.glb";
+const std::string FURNITURE_BUMPY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/BumpyMushroomCollider.glb";
+const std::string FURNITURE_CHUNKY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/ThickMushroomCollider.glb";
+const std::string FURNITURE_DEFAULT_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/DefaultMushroomCollider.glb";
+const std::string FURNITURE_POINTY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/PointyMushroomCollider.glb";
+
 
 const std::string ASSET_HEIGHTMAP_01 = "ASSETS/2D/Heightmaps/test1_3xWider_halfDark4_Rot_halfDark3_rebalanced01.png";
 const std::string GULLY_DIFFUSE_01 = "ASSETS/2D/GullyTextures/river_test6.png";

@@ -131,18 +131,18 @@ bool Tile::isColliding(Vector3 t_collider)
 //    return false;
 //}
 
-bool Tile::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
-{
-
-    for (StreetFurniture& item : m_furnitureVec)
-    {
-        if (item.checkRadialFurnitureItemsCollision(t_playerPos, t_playerRad))
-        {
-            return true;
-        }
-    }
-    return false;
-}
+//bool Tile::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
+//{
+//
+//    for (StreetFurniture& item : m_furnitureVec)
+//    {
+//        if (item.checkRadialFurnitureItemsCollision(t_playerPos, t_playerRad))
+//        {
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
 bool Tile::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
 {

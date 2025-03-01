@@ -28,7 +28,7 @@ class StreetFurniture :
     public GameObject
 {
 public:
-	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f }, FurnTypeEnum t_type = NONE);
+	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f }, FurnTypeEnum t_type = NONE, bool t_hasCollider = false);
 	// StreetFurniture(StreetFurniture&&) = default;
 	~StreetFurniture();
 
@@ -52,7 +52,7 @@ public:
 
 	bool checkPlayerFurnitureCollision(BoundingBox t_player);
 
-	bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
+	// bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
 
 	bool checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox);
 
@@ -75,6 +75,8 @@ private:
 	Stone m_stones[3];
 
 	Model m_grass;
+	Model m_collider;
+	bool m_hasCollider;
 
 	std::vector<BoundingBox> m_modelBoundingBoxes;
 
