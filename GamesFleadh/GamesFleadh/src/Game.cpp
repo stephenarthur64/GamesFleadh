@@ -198,8 +198,8 @@ void Game::render()
 
     for (int i = 0; i < MAX_SWARMERS; i++)
     {
-        swarmer[0].render();
-        swarmer[0].renderBoom(camera);
+        swarmer[i].render();
+        swarmer[i].renderBoom(camera);
     }
 
     /*for (int i = 0; i < maxStreetFurniture; i++)
@@ -282,8 +282,11 @@ void Game::update()
         player.updateZPos(camPos.z - playerZOffsetFromCamera);
         player.faceCrosshair(billPositionRotating);
 
-        swarmer->checkDistanceFromPlayer(player.getPosition());
-        swarmer->update();
+        for (int i = 0; i < MAX_SWARMERS; i++)
+        {
+            swarmer[i].checkDistanceFromPlayer(player.getPosition());
+            swarmer[i].update();
+        }
 
         distanceStatic = Vector3Distance(camera.position, billPositionStatic);
         distanceStatic += 2.0f;
@@ -510,25 +513,23 @@ void Game::checkCollisions()
 
     player.enemyCollision(false); // RS: At the start of the collision check, set collision to false.
 
-    BoundingBox one = player.getHitbox();
-    BoundingBox one2 = player.getHitbox();
-    BoundingBox two = swarmer[0].getHitbox();
-    BoundingBox two2 = swarmer[0].getHitbox();
-
-    if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getPosition(), 2.0f))
+    for (int i = 0; i < MAX_SWARMERS; i++)
     {
-        if (swarmer[0].getPosition().x < player.getPosition().x)
+        if (CheckCollisionBoxSphere(swarmer[i].getHitbox(), player.getPosition(), 2.0f))
         {
-            player.handleInput(EVENT_HIT_L);
+            if (swarmer[i].getPosition().x < player.getPosition().x)
+            {
+                player.handleInput(EVENT_HIT_L);
+            }
+            if (swarmer[i].getPosition().x > player.getPosition().x)
+            {
+                player.handleInput(EVENT_HIT_R);
+            }
+            player.hitSound(1);
+            player.enemyCollision(true);
+            swarmer[i].collision(true);
+            swarmer[i].handleInput(EVENT_ATTACK);
         }
-        if (swarmer[0].getPosition().x > player.getPosition().x)
-        {
-            player.handleInput(EVENT_HIT_R);
-        }
-        player.hitSound(1);
-        player.enemyCollision(true);
-        swarmer[0].collision(true);
-        swarmer[0].handleInput(EVENT_ATTACK);
     }
 
     for (int i = 0; i < player.getBulletMax(); i++)
@@ -540,12 +541,15 @@ void Game::checkCollisions()
             score += 10;
         }
 
-        if (CheckCollisionBoxSphere(swarmer[0].getHitbox(), player.getBulletPositon(i), 1.0f))
+        for (int j = 0; j < MAX_SWARMERS; j++)
         {
-            swarmer[0].collision(true);
-            reduceFog();
-            player.despawnBullet(i);
-            score += 10;
+            if (CheckCollisionBoxSphere(swarmer[j].getHitbox(), player.getBulletPositon(i), 1.0f))
+            {
+                swarmer[j].collision(true);
+                reduceFog();
+                player.despawnBullet(i);
+                score += 10;
+            }
         }
     }
 
