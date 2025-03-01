@@ -4,7 +4,14 @@
 
 enum Direction {NORTH, SOUTH, EAST, WEST};
 
-enum FurnTypeEnum {NONE, DEFAULT_MUSHROOM, BATCH_MUSHROOM, BUMPY_MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
+enum FurnitureType {NONE, SWARMER, MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
+
+// RS: Way to pass col point from StreetFurniture.cpp back to Game radialFurnitureCollision func. Mea culpa.
+typedef struct {
+	Vector3 lastFurnitureCollision; 
+	float lastFurnitureRadius;
+	bool collision;
+}FurnitureCollisionData;
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
@@ -73,3 +80,6 @@ static Vector3 g_furnCollisionItem;
 static Vector3 g_furnCollisionPlyr;
 
 const float FURNITURE_TEST_OUTER_RADIUS = 8.0f;
+
+
+const int MAX_SWARMERS = 5;

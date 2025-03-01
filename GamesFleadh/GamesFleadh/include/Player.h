@@ -51,7 +51,7 @@ public:
 
 	void rebound(Vector3 t_impactPoint);
 	// void rebound(Vector3 t_impactPoint);
-	void reboundFurniture(Vector3 t_impactPoint); // This possibly needs the t_cam var from above now
+	void reboundFurniture(FurnitureCollisionData t_data); // This possibly needs the t_cam var from above now
 	
 	void poisonPlayer(bool t_poison);
 	bool isPoisoned() { return m_poisoned; }

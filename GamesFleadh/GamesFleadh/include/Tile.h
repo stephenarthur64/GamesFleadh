@@ -35,6 +35,8 @@ public:
 
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
 
+	Vector3 getSwarmerPos(int index);
+
 	// std::vector<StreetFurniture> getFurniture() { return m_furnitureVec; } // For debugging
 
 	void update(Vector3 t_target);
@@ -46,7 +48,12 @@ private:
 	Image m_furnitureMapImage;
 	Image m_diffuseMapImage;
 	// Model m_tileModel;
+
+	Vector3 m_swarmerPos[MAX_SWARMERS];
+	int m_swarmerPosCount = 0;
 	
+	FurnitureCollisionData m_data;
+
 	std::vector<StreetFurniture> m_furnitureVec;
 
 	float m_worldNormalX;

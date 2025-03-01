@@ -52,7 +52,7 @@ public:
 
 	bool checkPlayerFurnitureCollision(BoundingBox t_player);
 
-	// bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
+	FurnitureCollisionData checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
 
 	bool checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox);
 
@@ -82,6 +82,8 @@ private:
 
 	Vector3 m_grassPos;
 
+	FurnitureType m_type;
+	FurnitureCollisionData m_data;
 	FurnTypeEnum m_typeEnum;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };

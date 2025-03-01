@@ -481,7 +481,8 @@ bool StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, fl
 			return true; // Collision detected!
 		}
 	}
-	return false;
+	m_data = { 0, 0, false };
+	return m_data;
 }
 
 

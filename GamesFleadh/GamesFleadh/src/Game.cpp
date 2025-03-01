@@ -86,6 +86,12 @@ void Game::loadAssets()
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_04, ASSET_FURNITUREMAP_04, ASSET_TILE_MODEL_03, GULLY_DIFFUSE_04));
     // m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
 
+    for (int i = 0; i < MAX_SWARMERS; i++)
+    {
+        Vector3 pos = m_terrainTileCollection[m_tileCurrent].getSwarmerPos(i);
+        swarmer[i].spawn(pos, pos.x + 5.0f, pos.x - 5.0f);
+    }
+
     fogOpacity = WHITE;
     fogOpacity.a = 0;
     fogVignette = LoadTexture("ASSETS/2D/Fog/OrangeVignette.png");
@@ -106,7 +112,7 @@ void Game::loadAssets()
     player.init();
     billPositionStatic = { 2.0f,2.0f,3.0f };
 
-    for (int i = 0; i < maxSwarmer; i++)
+    for (int i = 0; i < MAX_SWARMERS; i++)
     {
         swarmer[i].init();
     }
@@ -188,7 +194,7 @@ void Game::render()
         tileToDraw.render();
     }
 
-    for (int i = 0; i < maxSwarmer; i++)
+    for (int i = 0; i < MAX_SWARMERS; i++)
     {
         swarmer[0].render();
         swarmer[0].renderBoom(camera);
@@ -562,6 +568,9 @@ void Game::checkCollisions()
 
     // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
+    m_collisionData = m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius());
+
+    if (m_collisionData.collision)
 
 
     if (m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getBoundingBoxRadius(), player.getHitbox()))
@@ -569,6 +578,7 @@ void Game::checkCollisions()
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
         player.enemyCollision(true);
+        player.reboundFurniture(m_collisionData);
     }
 
     //if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
@@ -618,7 +628,11 @@ void Game::mapMove()
     m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
     m_terrainTileCollection[m_tileNext].makeFeederSeekPlayer(false, player);
 
-    swarmer->spawn({ -2.0f, 3.0f, -12.0f }, 5, 0);
+    for (int i = 0; i < MAX_SWARMERS; i++)
+    {
+        Vector3 pos = m_terrainTileCollection[m_tileCurrent].getSwarmerPos(i);
+        swarmer[i].spawn(pos, 2, 0);
+    }
 
     float mapLength = 64.0f;
     

@@ -87,6 +87,8 @@ private:
 
 	Color fogOpacity;
 
+	FurnitureCollisionData m_collisionData;
+
 	int fogTick = 0;
 	float heightVal = 0;
 
@@ -121,7 +123,7 @@ private:
 	Player player;
 	// Mushroom mushroom[2];
 	// StreetFurniture streetF[5];
-	Swarmer swarmer[5];
+	Swarmer swarmer[MAX_SWARMERS];
 
 	Vector2 lowerLimit = { -1.0f, 2.0f };
 	Vector2 upperLimit = { 1.0f, 2.5f };
