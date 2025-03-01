@@ -131,7 +131,7 @@ void Player::hitSound(int t_type)
 	}
 }
 
-void Player::update(Vector3&t_cam)
+void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 {
 	currentState->update(this);
 	updateHealthbar();
@@ -154,8 +154,9 @@ void Player::update(Vector3&t_cam)
 	{
 		float frameTime = GetFrameTime();
 		m_reboundCounter -= frameTime;
-		m_position += m_reboundDirection * m_reboundForce * frameTime;
-		t_cam += m_reboundDirection * (m_reboundForce) * frameTime;;
+		//m_position += m_reboundDirection * m_reboundForce * frameTime;
+		//t_crosshair += m_reboundCrosshair * (m_reboundForce) * frameTime;
+		//t_cam += m_reboundCrosshair * (m_reboundForce)*frameTime;
 	}
 
 	m_position.y = Clamp(m_position.y, 1.0f, 10.0f);
@@ -222,7 +223,7 @@ void Player::despawnBullet(int bulletNum)
 
 void Player::rebound(Vector3 t_impactPoint)
 {
-	std::cout << "Rebound triggered.\n";
+	/*std::cout << "Rebound triggered.\n";
 	m_reboundCounter = m_reboundCountMax;
 
 	m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
@@ -235,6 +236,7 @@ void Player::rebound(Vector3 t_impactPoint)
 	{
 		m_reboundDirection.y = 0.0f;
 	}	
+	m_reboundCrosshair = m_reboundDirection;*/
 }
 
 void Player::reboundFurniture(FurnitureCollisionData t_data)

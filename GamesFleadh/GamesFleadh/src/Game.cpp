@@ -288,9 +288,6 @@ void Game::update()
             swarmer[i].update();
         }
 
-        distanceStatic = Vector3Distance(camera.position, billPositionStatic);
-        distanceStatic += 2.0f;
-        distanceRotating = Vector3Distance(camera.position, billPositionRotating);
 
         mapMove(); // Repositions terrain meshes based on camera X (distance/z) pos
 
@@ -302,7 +299,7 @@ void Game::update()
         player.updateBullet();
         camera.position = camPos;
         checkCollisions();
-        player.update(billPositionRotating);
+        player.update(camera.position, billPositionRotating);
     }
     else if (state == GameState::TITLE)
     {
@@ -578,7 +575,7 @@ void Game::checkCollisions()
 
     // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
-    m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
+   /* m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
 
     if (m_collisionData.collision)
     {
@@ -590,7 +587,7 @@ void Game::checkCollisions()
     else
     {
         player.setAuto(autoScroll);
-    }
+    }*/
 
     //if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
     //{

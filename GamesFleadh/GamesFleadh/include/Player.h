@@ -41,7 +41,7 @@ public:
 	Rectangle getHealthBar() { return m_healthbar; }
 	Color getHealthBarColour() { return m_hpColour; }
 
-	void update(Vector3& t_cam);
+	void update(Vector3& t_cam, Vector3 &t_crosshair);
 	void updateHealthbar();
 
 	void resetToOrigin();
@@ -93,6 +93,7 @@ private:
 
 	Vector3 m_reboundDirection = Vector3Zero();
 	float m_reboundCounter = 0.0f;
+	Vector3 m_reboundCrosshair = Vector3Zero();
 	const float m_reboundCountMax = 0.125f; // 33f;
 	const float m_reboundForce = 5.0f;
 

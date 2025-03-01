@@ -43,7 +43,7 @@ void Tile::render()
 
     for (StreetFurniture item : m_furnitureVec)
     {
-        item.render();
+       item.render();
     }
 }
 
