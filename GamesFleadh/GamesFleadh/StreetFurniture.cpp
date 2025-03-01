@@ -225,7 +225,7 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 // * Clamp doesn't seem to work - collision circle always higher than I want it to be. // Spherical collision?
 // * Still need to add exponential curve to collision shape 
 
-bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
+FurnitureCollisionData StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad)
 {
 	m_posWithPlayerHeight = m_position;
 	m_posWithPlayerHeight.y = (t_playerPos.y) - m_position.y; // Player's current height minus lowest level of furniture
@@ -257,13 +257,14 @@ bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, fl
 	{
 		if (t_playerPos.y < m_overallHeightOnGround)
 		{
-			g_lastFurnitureCollision = m_posWithPlayerHeight;
-			g_lastFurnitureRadius = m_interpolatedColRadius;
-			bool returnValue = true;
-			return returnValue;
+			m_data.lastFurnitureCollision = m_posWithPlayerHeight;
+			m_data.lastFurnitureRadius = m_interpolatedColRadius;
+			m_data.collision = true;
+			return m_data;
 		}
 	}
-	return false;
+	m_data = { 0, 0, false };
+	return m_data;
 }
 
 bool StreetFurniture::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius)

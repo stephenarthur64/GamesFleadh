@@ -591,13 +591,15 @@ void Game::checkCollisions()
 
     // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
-    if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
+    m_collisionData = m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius());
+
+    if (m_collisionData.collision)
     {
         std::cout << "Is this calling?\n\n";
         player.hitSound(0);
         //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
         player.enemyCollision(true);
-        player.reboundFurniture(g_lastFurnitureCollision);
+        player.reboundFurniture(m_collisionData);
     }
 
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))

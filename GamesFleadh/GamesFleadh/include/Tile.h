@@ -26,7 +26,7 @@ public:
 
 	bool isColliding(Vector3 t_collider);
 	bool checkFurnitureItemsCollision(BoundingBox t_player);
-	bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
+	FurnitureCollisionData checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
 
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
@@ -51,6 +51,8 @@ private:
 	Vector3 m_swarmerPos[MAX_SWARMERS];
 	int m_swarmerPosCount = 0;
 	
+	FurnitureCollisionData m_data;
+
 	std::vector<StreetFurniture> m_furnitureVec;
 
 	float m_worldNormalX;

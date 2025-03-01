@@ -87,6 +87,8 @@ private:
 
 	Color fogOpacity;
 
+	FurnitureCollisionData m_collisionData;
+
 	int fogTick = 0;
 	float heightVal = 0;
 
