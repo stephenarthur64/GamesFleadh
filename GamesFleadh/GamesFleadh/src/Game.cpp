@@ -571,18 +571,18 @@ void Game::checkCollisions()
 
     // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
-    m_collisionData = m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius());
+    m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
 
     if (m_collisionData.collision)
 
 
-    if (m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getBoundingBoxRadius(), player.getHitbox()))
+    /*if (m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getBoundingBoxRadius(), player.getHitbox()))
     {
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
         player.enemyCollision(true);
         player.reboundFurniture(m_collisionData);
-    }
+    }*/
 
     //if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
     //{

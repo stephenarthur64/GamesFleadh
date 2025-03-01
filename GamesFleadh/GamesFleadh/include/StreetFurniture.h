@@ -28,7 +28,7 @@ class StreetFurniture :
     public GameObject
 {
 public:
-	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f }, FurnTypeEnum t_type = NONE, bool t_hasCollider = false);
+	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f }, FurnitureType t_type = NONE, bool t_hasCollider = false);
 	// StreetFurniture(StreetFurniture&&) = default;
 	~StreetFurniture();
 
@@ -54,7 +54,7 @@ public:
 
 	FurnitureCollisionData checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
 
-	bool checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox);
+	FurnitureCollisionData checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox);
 
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
@@ -84,7 +84,7 @@ private:
 
 	FurnitureType m_type;
 	FurnitureCollisionData m_data;
-	FurnTypeEnum m_typeEnum;
+	FurnitureType m_typeEnum;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
 	float m_collisionRadiusMin = 1.5f;

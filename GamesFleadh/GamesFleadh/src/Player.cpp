@@ -246,10 +246,7 @@ void Player::reboundFurniture(FurnitureCollisionData t_data)
 
 	m_reboundCounter = m_reboundCountMax;
 
-	g_furnCollisionItem = t_impactPoint;
-	g_furnCollisionPlyr = m_position;
-
-	Vector3 normal = Vector3Normalize(t_impactPoint - m_position);
+	Vector3 normal = Vector3Normalize(t_data.lastFurnitureCollision - m_position);
 	m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
 	//m_reboundDirection.y = 0.0f;
 	m_position.x = t_data.lastFurnitureCollision.x + normal.x * (t_data.lastFurnitureRadius + 0.1f);

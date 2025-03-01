@@ -1,7 +1,7 @@
 #include "StreetFurniture.h"
 #include <iostream>
 
-StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos, FurnTypeEnum t_typeEnum, bool t_hasCollider) : 
+StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos, FurnitureType t_typeEnum, bool t_hasCollider) : 
 																															m_hasFeeder(t_hasFeeder),
 																															m_colourDecrease(0),
 																															m_colourVal(255), eatTick(0), 
@@ -429,9 +429,9 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 //	return false;
 //}
 
-bool StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
+FurnitureCollisionData StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
 {
-	if (!m_hasCollider) return false; // Early out - if we don't have colliders to test, what's the point?
+	if (!m_hasCollider) return m_data = { 0,0,false }; // Early out - if we don't have colliders to test, what's the point?
 
 	float xDist = t_playerPos.x - m_position.x;
 	float zDist = t_playerPos.z - m_position.z;
@@ -441,7 +441,7 @@ bool StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, fl
 
 	if (combinedDist > combinedRadResult) {
 		//std::cout << "\nNo mushroom.\n";  
-		return false; // RS: Early out - we're too far from the mushroom to bother checking anything else. Too mushroom! ...It's 6.47am.
+		return m_data = { 0,0,false }; // RS: Early out - we're too far from the mushroom to bother checking anything else. Too mushroom! ...It's 6.47am.
 	}
 
 	//std::cout << "\nClose to a mushroom?\n";
@@ -478,7 +478,7 @@ bool StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, fl
 				break;
 			}
 
-			return true; // Collision detected!
+			return m_data = { 0,0,true }; // Collision detected!
 		}
 	}
 	m_data = { 0, 0, false };

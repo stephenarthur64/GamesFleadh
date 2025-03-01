@@ -4,7 +4,7 @@
 
 enum Direction {NORTH, SOUTH, EAST, WEST};
 
-enum FurnitureType {NONE, SWARMER, MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
+enum FurnitureType {NONE, SWARMER, MUSHROOM, DEFAULT_MUSHROOM, BATCH_MUSHROOM, BUMPY_MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
 
 // RS: Way to pass col point from StreetFurniture.cpp back to Game radialFurnitureCollision func. Mea culpa.
 typedef struct {

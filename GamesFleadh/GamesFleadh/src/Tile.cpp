@@ -144,11 +144,12 @@ bool Tile::isColliding(Vector3 t_collider)
 //    return false;
 //}
 
-bool Tile::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
+FurnitureCollisionData Tile::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
 {
     for (StreetFurniture& item : m_furnitureVec)
     {
-        if (item.checkBoundsFurnitureItemsCollision(t_playerPos, t_playerRadius, t_playerBox))
+
+        if (item.checkBoundsFurnitureItemsCollision(t_playerPos, t_playerRadius, t_playerBox).collision)
         {
             return m_data;
         }
@@ -210,7 +211,7 @@ void Tile::update(Vector3 t_target)
 // std::vector<StreetFurniture> Tile::processFurnitureMap(Image t_furnitureMap)
 void Tile::processFurnitureMap(Image t_furnitureMap)
 {
-    FurnTypeEnum typeEnum = NONE;
+    FurnitureType typeEnum = NONE;
 
     for (int u = 0; u < t_furnitureMap.width; u++)
     {
@@ -254,7 +255,7 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                 if (col.r == 0 && col.b == 255 && col.g == 255) 
                 {
                     furnType = "";
-                    type = SWARMER;
+                    typeEnum = SWARMER;
                 }
                 
                 if (col.r == 5 && col.b == 0 && col.g == 0) 
@@ -323,7 +324,7 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
     }
 }
 
-void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType, FurnTypeEnum t_typeEnum)
+void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType, FurnitureType t_typeEnum)
 {
     Color heightFromCol = GetImageColor(m_heightMapImage, t_u, t_v);
 
@@ -343,7 +344,7 @@ void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType, Fu
 
     int randomChance = rand() % 3;
 
-    if (t_type == SWARMER)
+    if (t_typeEnum == SWARMER)
     {
         if (m_swarmerPosCount < MAX_SWARMERS)
         {
@@ -353,7 +354,7 @@ void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType, Fu
     }
     else
     {
-        StreetFurniture article(randomChance != 0, t_furnitureType, furniturePos, t_type);
+        StreetFurniture article(randomChance != 0, t_furnitureType, furniturePos, t_typeEnum);
 
         // StreetFurniture article(true, t_furnitureType, furniturePos); // SWITCH BACK TO TRUE FOR FIXING
 

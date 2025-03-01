@@ -27,7 +27,7 @@ public:
 	bool isColliding(Vector3 t_collider);
 	bool checkFurnitureItemsCollision(BoundingBox t_player);
 	// bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
-	bool checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox);
+	FurnitureCollisionData checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox);
 
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
@@ -74,7 +74,7 @@ private:
 
 	void processFurnitureMap(Image t_furnitureMap);
 
-	void assignFurniture(float t_u, float t_v, std::string t_furnitureType, FurnTypeEnum t_type);
+	void assignFurniture(float t_u, float t_v, std::string t_furnitureType, FurnitureType t_type);
 
 
 };
