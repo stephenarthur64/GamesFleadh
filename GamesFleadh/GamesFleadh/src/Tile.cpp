@@ -144,6 +144,18 @@ bool Tile::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playe
     return false;
 }
 
+bool Tile::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
+{
+    for (StreetFurniture& item : m_furnitureVec)
+    {
+        if (item.checkBoundsFurnitureItemsCollision(t_playerPos, t_playerRadius, t_playerBox))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool Tile::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius)
 {
     for (StreetFurniture& item : m_furnitureVec)
@@ -193,7 +205,7 @@ void Tile::update(Vector3 t_target)
 // std::vector<StreetFurniture> Tile::processFurnitureMap(Image t_furnitureMap)
 void Tile::processFurnitureMap(Image t_furnitureMap)
 {
-    FurnitureType type = NONE;
+    FurnTypeEnum typeEnum = NONE;
 
     for (int u = 0; u < t_furnitureMap.width; u++)
     {
@@ -210,28 +222,28 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                 if (col.r == 255 && col.b == 0 && col.g == 0)
                 {
                     furnType = FURNITURE_DEFAULT_MUSH;
-                    type = MUSHROOM;
+                    typeEnum = DEFAULT_MUSHROOM;
                 }
                     
                 if (col.r == 0 && col.b == 255 && col.g == 0) 
                 {
                     furnType = FURNITURE_BATCH_MUSH;
-                    type = MUSHROOM;
+                    typeEnum = BATCH_MUSHROOM;
                 }
                 if (col.r == 0 && col.b == 0 && col.g == 255) 
                 {
                     furnType = FURNITURE_BUMPY_MUSH;
-                    type = MUSHROOM;
+                    typeEnum = BUMPY_MUSHROOM;
                 }
                 if (col.r == 255 && col.b == 255 && col.g == 0) 
                 {
                     furnType = FURNITURE_CHUNKY_MUSH;
-                    type = CHUNKY_MUSHROOM;
+                    typeEnum = CHUNKY_MUSHROOM;
                 }
                 if (col.r == 255 && col.b == 0 && col.g == 255) 
                 {
                     furnType = FURNITURE_POINTY_MUSH;
-                    type = POINTY_MUSHROOM;
+                    typeEnum = POINTY_MUSHROOM;
                 }
                 
                 /*if (col.r == 0 && col.b == 255 && col.g == 255) 
@@ -243,40 +255,40 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                 if (col.r == 5 && col.b == 0 && col.g == 0) 
                 {
                     furnType = FURNITURE_STONE_SMALL01;
-                    type = NOT_MUSHROOM;
+                    typeEnum = NOT_MUSHROOM;
                 }
                 if (col.r == 10 && col.b == 0 && col.g == 0) 
                 {
                     furnType = FURNITURE_STONE_SMALL01;
-                    type = NOT_MUSHROOM;
+                    typeEnum = NOT_MUSHROOM;
                 }
                 if (col.r == 100 && col.b == 0 && col.g == 0) 
                 {
                     furnType = FURNITURE_STONE_MED_FLAT01;
-                    type = NOT_MUSHROOM;
+                    typeEnum = NOT_MUSHROOM;
                 }
                 if (col.r == 100 && col.b == 0 && col.g == 0)
                 {
                     std::cout << "!!!!!!!!!!!!Found r15!!!!!!!!!!!!\n!!!!!!!!!!!!Found r15!!!!!!!!!!!!\n!!!!!!!!!!!!Found r15!!!!!!!!!!!!\n";
-                    type = NONE;
+                    typeEnum = NONE;
                 }
                 if (col.r == 20 && col.b == 0 && col.g == 0) 
                 {
                     furnType = FURNITURE_STONE_MED_FLAT02;
-                    type = NOT_MUSHROOM;
+                    typeEnum = NOT_MUSHROOM;
                 }
                 if (col.r == 25 && col.b == 0 && col.g == 0) 
                 {
                     furnType = FURNITURE_STONE_MED_POINTY;
-                    type = NOT_MUSHROOM;
+                    typeEnum = NOT_MUSHROOM;
                 }
                 if (col.r == 30 && col.b == 0 && col.g == 0) 
                 {
                     furnType = FURNITURE_STONE_LARGE;
-                    type = NOT_MUSHROOM;
+                    typeEnum = NOT_MUSHROOM;
                 }
 
-                if(furnType != FURNITURE_DUMMY_ZERO) assignFurniture(u, v, furnType, type);
+                if(furnType != FURNITURE_DUMMY_ZERO) assignFurniture(u, v, furnType, typeEnum);
 
                 //if (furnitureCount < max_furniture)
                 //{
@@ -306,7 +318,7 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
     }
 }
 
-void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType, FurnitureType t_type)
+void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType, FurnTypeEnum t_typeEnum)
 {
     Color heightFromCol = GetImageColor(m_heightMapImage, t_u, t_v);
 
@@ -326,7 +338,7 @@ void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType, Fu
 
     int randomChance = rand() % 3;
 
-    StreetFurniture article(randomChance != 0, t_furnitureType, furniturePos, t_type);
+    StreetFurniture article(randomChance != 0, t_furnitureType, furniturePos, t_typeEnum);
 
     // StreetFurniture article(true, t_furnitureType, furniturePos); // SWITCH BACK TO TRUE FOR FIXING
 

@@ -10,6 +10,7 @@
 #include <raymath.h>
 #include <random>
 #include <cmath> // For the pow() function
+#include <vector>
 // #include <memory>
 
 #if defined(PLATFORM_DESKTOP)
@@ -27,7 +28,7 @@ class StreetFurniture :
     public GameObject
 {
 public:
-	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f }, FurnitureType t_type = NONE);
+	StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos = { 0.0f,0.0f,0.0f }, FurnTypeEnum t_type = NONE);
 	// StreetFurniture(StreetFurniture&&) = default;
 	~StreetFurniture();
 
@@ -53,6 +54,8 @@ public:
 
 	bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
 
+	bool checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox);
+
 	bool checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius);
 
 	bool checkMudbombPlayerCollision(BoundingBox t_player);
@@ -72,9 +75,12 @@ private:
 	Stone m_stones[3];
 
 	Model m_grass;
+
+	std::vector<BoundingBox> m_modelBoundingBoxes;
+
 	Vector3 m_grassPos;
 
-	FurnitureType m_type;
+	FurnTypeEnum m_typeEnum;
 
 	Vector3 m_placementOffset = { 0.0f, 0.0f, 0.0f };
 	float m_collisionRadiusMin = 1.5f;
@@ -83,8 +89,12 @@ private:
 
 	float m_overallHeight = 0.0f;
 	float m_overallHeightOnGround = 0.0f;
+
+	float m_highestPoint = 0.0f;
+
 	Vector3 m_posWithPlayerHeight = Vector3Zero();
 	Vector3 m_posWPlyrHeightNorm = Vector3Zero();
+
 
 
 	int m_colourDecrease;

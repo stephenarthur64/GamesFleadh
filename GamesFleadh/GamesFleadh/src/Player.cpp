@@ -9,6 +9,8 @@ Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisone
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Player/Buzzz/Buzz.glb", &animsCount);
+
+
 }
 
 void Player::move(Vector3 t_velocity)
@@ -94,6 +96,8 @@ void Player::init()
 	{
 		bullet[i].init();
 	}
+
+	m_boundingBoxRadius = boundingBoxRadius(getHitbox());
 }
 
 void Player::render()
@@ -117,10 +121,12 @@ void Player::hitSound(int t_type)
 {
 	if (t_type == 0)
 	{
+		if (IsSoundPlaying(environmentHitSFX)) return;
 		PlaySound(environmentHitSFX);
 	}
 	else if (t_type == 1)
 	{
+		if (IsSoundPlaying(enemyHitSFX)) return;
 		PlaySound(enemyHitSFX);
 	}
 }

@@ -1,26 +1,80 @@
 #include "StreetFurniture.h"
 #include <iostream>
 
-StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos, FurnitureType t_type) : m_hasFeeder(t_hasFeeder),
+StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, Vector3 t_startPos, FurnTypeEnum t_typeEnum) : m_hasFeeder(t_hasFeeder),
 																															m_colourDecrease(0),
 																															m_colourVal(255), eatTick(0), 
 																															MAX_EAT_TICK(60),
-																															m_type(t_type)
+																															m_typeEnum(t_typeEnum)
 																									
 {
 	m_placementOffset = t_startPos;
 	currentState = new IdleState;
 	m_body = LoadModel(t_furnitureType.c_str());
+	
+	for (int i = 0; i < m_body.meshCount; i++)
+	{
+		BoundingBox bokz = GetMeshBoundingBox(m_body.meshes[i]);
+
+		if (bokz.max.y > m_highestPoint)
+		{
+			m_highestPoint = bokz.max.y;
+		}
+
+		m_modelBoundingBoxes.push_back(bokz);
+	}
+
 	/*for (int i = 0; i < m_body.materialCount; i++)
 	{
 		m_body.materials[i].shader = LoadShader(TextFormat("ASSETS/shaders/glsl%i/discard_alpha.fs", GLSL_VERSION),
 			TextFormat("ASSETS/shaders/glsl%i/discard_alpha.fs", GLSL_VERSION));
 	}*/
 	// setHitBox();	
+
+	// enum FurnitureType { NONE, MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM }; // temp values
+
+	std::string furnType = "";
+
+	switch (m_typeEnum)
+	{
+	case NONE:
+		furnType = "NONE";
+		break;
+	case DEFAULT_MUSHROOM:
+		furnType = "DEFAULT_MUSHROOM";
+		break;
+	case BATCH_MUSHROOM:
+		furnType = "CHUNKY_MUSHROOM";
+		break;
+	case BUMPY_MUSHROOM:
+		furnType = "CHUNKY_MUSHROOM";
+		break;
+	case CHUNKY_MUSHROOM:
+		furnType = "CHUNKY_MUSHROOM";
+		break;
+	case POINTY_MUSHROOM:
+		furnType = "POINTY_MUSHROOM";
+		break;
+	case NOT_MUSHROOM:
+		furnType = "NOT_MUSHROOM";
+		break;
+	default:
+		break;
+	}
+
+	std::cout << "\n=================================================================\n";
+	std::cout << "Collision Detection, list meshes in Furniture Type " << furnType << ":\n";
+
+	for (int i = 0; i < m_body.materialCount; i++)
+	{
+		std::cout << "Mesh #" << i << "\n";
+	}
+	std::cout << "\n=================================================================\n";
+
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations(t_furnitureType.c_str(), &animsCount);
-	if (m_type == POINTY_MUSHROOM)
+	if (m_typeEnum == POINTY_MUSHROOM)
 	{
 		m_hasFeeder = false;
 	}
@@ -41,7 +95,7 @@ StreetFurniture::~StreetFurniture()
 	delete m_feeder;*/
 }
 
-void StreetFurniture::rotate(int t_direction){}
+void StreetFurniture::rotate(int t_direction){} // RS: Okay, so let's not rotate, maybe, and we'll get some nice collisions instead.
 
 void StreetFurniture::init()
 {
@@ -52,29 +106,97 @@ void StreetFurniture::render()
 	if (!m_inPlay) return; // Not in gameplay: early out.
 
 	DrawModel(m_body, m_position, 1.0f, m_colour);
-	// DrawBoundingBox(m_hitbox, BLUE);
+	
+	
+
+
+	
 	
 	// DrawCylinderWires(m_position, m_collisionRadiusMin, m_collisionRadiusMin, 100.0f, 6, GREEN);
 
 	DrawCircle3D(m_posWithPlayerHeight, m_interpolatedColRadius, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, ORANGE);
 
-
+	DrawCircle3D(m_position + Vector3{ 0.0f, 2.0f, 0.0f }, FURNITURE_TEST_OUTER_RADIUS, Vector3{ 1.0f, 0.0f, 0.0f }, 90.0f, RED);
 
 	for (int i = 0; i < 3; i++)
 	{
 		DrawModel(m_stones[i].body, m_stones[i].position, 0.5f, WHITE);
 	}
-	if (m_type != CHUNKY_MUSHROOM)
+	if (m_typeEnum != CHUNKY_MUSHROOM)
 	{
 		DrawModel(m_grass, m_grassPos, 0.8f, WHITE);
 	}
+
+	Color boxCol;
+
+
+
+	for (int i = 0; i < m_body.meshCount; i++)
+	{
+		switch (i+2)
+		{
+		case 0:
+			boxCol = MAROON;
+			break;
+		case 1:
+			boxCol = ORANGE;
+			break;
+		case 2:
+			boxCol = DARKGREEN;
+			break;
+		case 3:
+			boxCol = DARKBLUE;
+			break;
+		case 4:
+			boxCol = DARKPURPLE;
+			break;
+		case 5:
+			boxCol = DARKBROWN;
+			break;
+		case 6:
+			boxCol = RED;
+			break;
+		case 7:
+			boxCol = GOLD;
+			break;
+		case 8:
+			boxCol = LIME;
+			break;
+		case 9:
+			boxCol = BLUE;
+			break;
+		case 10:
+			boxCol = VIOLET;
+			break;
+		case 11:
+			boxCol = BROWN;
+			break;
+		case 12:
+			boxCol = PINK;
+			break;
+		case 13:
+			boxCol = YELLOW;
+			break;
+		case 14:
+			boxCol = GREEN;
+			break;
+		case 15:
+			boxCol = SKYBLUE;
+			break;
+		default:
+			break;
+		}
+
+		DrawBoundingBox(m_modelBoundingBoxes[i], boxCol);
+	}
+
 	if (!m_hasFeeder) return;
 	m_feeder.render();
 }
 
 void StreetFurniture::initStones()
 {
-	if (m_type == CHUNKY_MUSHROOM) // Big mushroom needs large stones
+	if (m_typeEnum == CHUNKY_MUSHROOM) // Big mushroom needs large stones
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -129,7 +251,7 @@ void StreetFurniture::playerDetected(bool t_spotted, Vector3 t_target)
 
 void StreetFurniture::update(Vector3 t_target)
 {
-	if (m_type == MUSHROOM || m_type == CHUNKY_MUSHROOM)
+	if (m_typeEnum == DEFAULT_MUSHROOM ||m_typeEnum == BATCH_MUSHROOM||m_typeEnum == BUMPY_MUSHROOM|| m_typeEnum == CHUNKY_MUSHROOM)
 	{
 		currentState->update(this);
 	}
@@ -159,6 +281,20 @@ void StreetFurniture::setHitBox()
 
 	m_hitbox.min.z = m_position.z - 3.0f;
 	m_hitbox.max.z = m_position.z - 1.0f;*/
+
+	for (int i = 0; i < m_body.meshCount; i++)
+	{		
+		m_modelBoundingBoxes[i].min.x = GetMeshBoundingBox(m_body.meshes[i]).min.x + m_position.x;
+		m_modelBoundingBoxes[i].max.x = GetMeshBoundingBox(m_body.meshes[i]).max.x + m_position.x;
+
+		m_modelBoundingBoxes[i].min.y = GetMeshBoundingBox(m_body.meshes[i]).min.y + m_position.y;
+		m_modelBoundingBoxes[i].max.y = GetMeshBoundingBox(m_body.meshes[i]).max.y + m_position.y;
+
+		m_modelBoundingBoxes[i].min.z = GetMeshBoundingBox(m_body.meshes[i]).min.z + m_position.z;
+		m_modelBoundingBoxes[i].max.z = GetMeshBoundingBox(m_body.meshes[i]).max.z + m_position.z;
+
+		//DrawBoundingBox(GetMeshBoundingBox(m_body.meshes[i]), RAYWHITE);
+	}
 
 	BoundingBox localSpaceBoundingBox = GetMeshBoundingBox(m_body.meshes[0]);
 
@@ -211,7 +347,7 @@ void StreetFurniture::setRelativePosition(Vector3 t_mapPos)
 	if (m_hasFeeder)
 	{
 		Vector3 feedingPos = m_position;
-		feedingPos.y = m_hitbox.max.y;
+		feedingPos.y = m_highestPoint; // m_hitbox.max.y;
 		m_feeder.spawn(feedingPos);
 	}
 }
@@ -268,6 +404,60 @@ bool StreetFurniture::checkRadialFurnitureItemsCollision(Vector3 t_playerPos, fl
 	}
 	return false;
 }
+
+bool StreetFurniture::checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox)
+{
+	float xDist = t_playerPos.x - m_position.x;
+	float zDist = t_playerPos.z - m_position.z;
+	float combinedDist = xDist * xDist + zDist * zDist;
+	float combinedRadius = t_playerRadius + FURNITURE_TEST_OUTER_RADIUS;
+	float combinedRadResult = combinedRadius * combinedRadius;
+
+	if (combinedDist > combinedRadResult) {
+		//std::cout << "\nNo mushroom.\n";  
+		return false; // RS: Early out - we're too far from the mushroom to bother checking anything else. Too mushroom! ...It's 6.47am.
+	}
+
+	//std::cout << "\nClose to a mushroom?\n";
+
+	for (BoundingBox box : m_modelBoundingBoxes)
+	{
+		if (CheckCollisionBoxes(t_playerBox, box)) {
+
+			switch (m_typeEnum)
+			{
+			case NONE:
+				std::cout << "\nColliding with mushroom type: " << "NONE\n";
+				break;
+			case DEFAULT_MUSHROOM:
+				std::cout << "\nColliding with mushroom type: " << "DEFAULT_MUSHROOM\n"; "";
+				break;
+			case BATCH_MUSHROOM:
+				std::cout << "\nColliding with mushroom type: " << "BATCH_MUSHROOM\n"; "";
+				break;
+			case BUMPY_MUSHROOM:
+				std::cout << "\nColliding with mushroom type: " << "BUMPY_MUSHROOM\n"; "";
+				break;
+			case CHUNKY_MUSHROOM:
+				std::cout << "\nColliding with mushroom type: " << "CHUNKY_MUSHROOM\n"; "";
+				break;
+			case POINTY_MUSHROOM:
+				std::cout << "\nColliding with mushroom type: " << "POINTY_MUSHROOM\n"; "";
+				break;
+			case NOT_MUSHROOM:
+				std::cout << "\nColliding with mushroom type: " << "NOT_MUSHROOM\n";
+				break;
+			default:
+				break;
+			}
+
+			return true;
+		}
+	}
+	return false;
+}
+
+
 
 bool StreetFurniture::checkFeederBulletCollision(Vector3 t_bulletPos, float t_bulletRadius)
 {

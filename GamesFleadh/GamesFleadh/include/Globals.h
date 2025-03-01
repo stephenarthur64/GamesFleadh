@@ -4,7 +4,7 @@
 
 enum Direction {NORTH, SOUTH, EAST, WEST};
 
-enum FurnitureType {NONE, MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
+enum FurnTypeEnum {NONE, DEFAULT_MUSHROOM, BATCH_MUSHROOM, BUMPY_MUSHROOM, CHUNKY_MUSHROOM, POINTY_MUSHROOM, NOT_MUSHROOM}; // temp values
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
@@ -65,3 +65,5 @@ static float g_lastFurnitureRadius; // RS: See above. =(
 
 static Vector3 g_furnCollisionItem;
 static Vector3 g_furnCollisionPlyr;
+
+const float FURNITURE_TEST_OUTER_RADIUS = 8.0f;

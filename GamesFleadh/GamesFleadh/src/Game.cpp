@@ -537,39 +537,48 @@ void Game::checkCollisions()
         }
     }
 
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
-    {// Colliding with terrain on the right
-        player.worldCollision(true);
-        player.handleInput(EVENT_HIT_R);
-        player.hitSound(0);
-        player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
-    }
+    //if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL))
+    //{// Colliding with terrain on the right
+    //    player.worldCollision(true);
+    //    player.handleInput(EVENT_HIT_R);
+    //    player.hitSound(0);
+    //    player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+    //}
 
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
-    {// Colliding with terrain on the left
-        player.worldCollision(true);
-        player.handleInput(EVENT_HIT_L);
-        player.hitSound(0);
-        player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
-    }
+    //if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
+    //{// Colliding with terrain on the left
+    //    player.worldCollision(true);
+    //    player.handleInput(EVENT_HIT_L);
+    //    player.hitSound(0);
+    //    player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+    //}
 
-    if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
-    {// Colliding with terrain in front
-        player.worldCollision(true);
-        player.hitSound(0);
-        //reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
-    }
+    //if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
+    //{// Colliding with terrain in front
+    //    player.worldCollision(true);
+    //    player.hitSound(0);
+    //    //reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+    //}
 
     // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
-    if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
+
+
+    if (m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getBoundingBoxRadius(), player.getHitbox()))
     {
-        std::cout << "Is this calling?\n\n";
+        std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
-        //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
         player.enemyCollision(true);
-        player.reboundFurniture(g_lastFurnitureCollision);
     }
+
+    //if (m_terrainTileCollection[m_tileCurrent].checkRadialFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius()))
+    //{
+    //    //std::cout << "Is this calling?\n\n";
+    //    player.hitSound(0);
+    //    //player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+    //    player.enemyCollision(true);
+    //    player.reboundFurniture(g_lastFurnitureCollision);
+    //}
 
     if (m_terrainTileCollection[m_tileCurrent].checkMudBombPlayerCollision(player.getHitbox()))
     {
