@@ -81,6 +81,11 @@ public:
 		return 0.5f * sqrt(dx * dx + dy * dy + dz * dz);
 	}
 
+
+
+	void FORCEKILLDEBUG() { m_health = 0; }
+
+
 private:
 	//Weapon m_weapon;
 
