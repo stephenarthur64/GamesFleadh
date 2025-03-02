@@ -58,6 +58,7 @@ public:
 
 	void fogVisibility();
 	void reduceFog();
+	void healthBarUpdate();
 
 private:
 	GameState state;
@@ -97,6 +98,9 @@ private:
 
 	int fogTick = 0;
 	float heightVal = 0;
+
+	int healthTick = 0;
+	float heightHealth = 0;
 
 	float camSpeed = 0.2f;
 	float camDirection;

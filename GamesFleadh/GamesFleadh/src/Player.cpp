@@ -2,7 +2,7 @@
 
 
 Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false), m_poisonTick(-1), MAX_POISON_TICK(30),
-					m_hpColour(GREEN)
+					m_hpColour(WHITE)
 {
 	currentState = new NoInputState;
 	m_health = 100;
@@ -173,7 +173,7 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 		else if (m_health <= 10)
 		{
 			m_poisoned = false;
-			m_hpColour = GREEN;
+			m_hpColour = WHITE;
 		}
 		else
 		{

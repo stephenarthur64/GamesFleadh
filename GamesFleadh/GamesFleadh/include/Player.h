@@ -20,6 +20,7 @@ public:
 	const int getBulletMax() { return MAX_BULLETS; }
 	const float getCollisionRadius() { return m_collisionRadius; }
 	const float getBoundingBoxRadius() { return m_boundingBoxRadius; }
+	int getHealth() { return m_health; }
 	Vector2 getLowerLimit() { return lowerLimit; }
 	Vector2 getUpperLimit() { return upperLimit; }
 	void updateLimits(Vector2 t_low, Vector2 t_high);
@@ -46,7 +47,7 @@ public:
 	virtual void render() override;
 	void shootSound() override;
 	void hitSound(int t_type);
-	Rectangle getHealthBar() { return m_healthbar; }
+	float getHealthBarHeight() { return m_healthbar.height; }
 	Color getHealthBarColour() { return m_hpColour; }
 
 	void update(Vector3& t_cam, Vector3 &t_crosshair);

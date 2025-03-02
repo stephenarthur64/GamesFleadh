@@ -300,7 +300,7 @@ void Game::render()
         DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
         DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
         DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
-        DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, WHITE);
+        DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
         DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
         DrawTexture(healthBar, 0, 710.0f, WHITE);
     }
@@ -327,7 +327,7 @@ void Game::update()
 
         player.updateZPos(camPos.z - playerZOffsetFromCamera);
         player.faceCrosshair(billPositionRotating);
-
+        healthBarUpdate();
         for (int i = 0; i < MAX_SWARMERS; i++)
         {
             swarmer[i].checkDistanceFromPlayer(player.getPosition());
@@ -762,6 +762,20 @@ void Game::reduceFog()
     {
         fogTick = 0;
     }
+}
+
+void Game::healthBarUpdate()
+{
+    float heightPercent;
+    const float MAX_HEIGHT = 427.0f;
+    const int MAX_TICK = 700;
+
+    //healthDest.height = EaseLinearInOut(healthTick, heightHealth, MAX_HEIGHT, MAX_TICK);
+    heightPercent = healthDest.height / MAX_HEIGHT;
+
+    heightPercent = 3.14;
+
+    healthDest.height = player.getHealth() * heightPercent;
 }
 
 
