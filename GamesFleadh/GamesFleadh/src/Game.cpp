@@ -230,6 +230,13 @@ void Game::render()
     }
     
     EndMode3D();
+
+    if (gameOverTick > 0)
+    {
+        countdownRespawn = ((180 - gameOverTick) / 60.0f) + 1;
+        DrawText(TextFormat("BUZZZ HAS FAILED!\n\nRESPAWNING....\n   %d", countdownRespawn), (SCREEN_WIDTH / 2.0f) - 150.0f, SCREEN_HEIGHT / 2.0f, 30, RED);
+    }
+
     
     if (g_render2DDebug)
     {      

@@ -119,6 +119,7 @@ private:
 	int score;
 	int activeMap;
 	int gameOverTick;
+	int countdownRespawn;
 
 	bool autoScroll{ false };
 
