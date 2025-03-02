@@ -1,7 +1,7 @@
 #include "Swarmer.h"
 
 // Swarmer::Swarmer(Player* t_playerRef) : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(5.0f), m_playerReference(t_playerRef)
-Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(5.0f)
+Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(10.0f)
 {
 	currentState = new IdleState;
 	m_health = 1;
