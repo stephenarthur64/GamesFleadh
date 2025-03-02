@@ -234,8 +234,9 @@ void Game::render()
         DrawGrid(20, 1.0f);
     }
 
-    DrawBillboardPro(camera, bill, source, billPositionRotating + Vector3{0.0f, 0.0f, -5.0f}, billUp, size, origin, rotation, WHITE);
-    DrawBillboardPro(camera, bill, source, Vector3Lerp(player.getPosition(), billPositionRotating, 0.5f), billUp, size, origin, rotation, RED);
+    DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
+    //DrawBillboardPro(camera, bill, source, billPositionRotating + Vector3{0.0f, 0.0f, -5.0f}, billUp, size, origin, rotation, WHITE);
+    //DrawBillboardPro(camera, bill, source, Vector3Lerp(player.getPosition(), billPositionRotating, 0.5f), billUp, size, origin, rotation, RED);
     
     EndMode3D();
 
