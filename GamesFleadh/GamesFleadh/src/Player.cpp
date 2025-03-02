@@ -13,6 +13,8 @@ Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisone
 
 }
 
+
+
 void Player::move(Vector3 t_velocity)
 {
 	t_velocity *= {m_speed, -m_speed, m_speed};
@@ -218,6 +220,15 @@ void Player::reboundLimits(Vector3& t_cam)
 
 	lowerLimit = { t_cam.x - 1.0f, t_cam.y - 2.0f };
 	upperLimit = { t_cam.x + 1.0f, t_cam.y + 2.0f };
+}
+
+void Player::respawn()
+{
+	m_position = { 0.0f, 3.0f, 0.0f };
+	m_health = 100;
+	currentState = new IdleState;
+	init();
+	m_alive = true;
 }
 
 void Player::updateHealthbar()

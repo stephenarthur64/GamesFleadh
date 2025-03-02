@@ -118,6 +118,7 @@ private:
 
 	int score;
 	int activeMap;
+	int gameOverTick;
 
 	bool autoScroll{ false };
 

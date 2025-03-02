@@ -26,6 +26,8 @@ public:
 	
 	void reboundLimits(Vector3& t_cam);
 
+	virtual void respawn() override;
+
 	void addHealth(int t_amt) { m_health += t_amt; }
 	int currentBullet() { return bulletCount; }
 	void setHitBox();

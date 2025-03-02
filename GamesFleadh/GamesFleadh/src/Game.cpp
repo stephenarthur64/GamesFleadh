@@ -301,6 +301,16 @@ void Game::update()
     inputControl();
     if (state == GameState::GAMEPLAY)
     {
+        if (!(player.isAlive()))
+        {
+            gameOverTick++;
+
+            if (gameOverTick > 180)
+            {
+                gameBegins();
+            }
+        }
+
         player.updateZPos(camPos.z - playerZOffsetFromCamera);
         player.faceCrosshair(billPositionRotating);
 
@@ -517,7 +527,12 @@ void Game::gamepadInit()
 
 void Game::gameBegins()
 {
-    
+    gameOverTick = 0;
+    score = 0;
+    camPos = { 0.0f, 5.0f, -2.0f };
+    mapMove();
+    billPositionRotating = { 0.0f, 6.0f, 5.0f };
+    player.respawn();
 }
 
 void Game::gamepadUpdate()
