@@ -58,9 +58,9 @@ void Feeder::collision(bool t_collision)
 {
 	if (t_collision)
 	{
+		PlaySound(sfxHit);
 		damageTick = 0;
 
-		m_colour = RED;
 		m_health--;
 		handleInput(Event::EVENT_DAMAGE);
 
@@ -84,10 +84,13 @@ void Feeder::init()
 	m_mudBomb.init(1);
 	sfxDeath = LoadSound("ASSETS/Audio/SFX/Feeder/feederDeath.mp3");
 	sfxHit = LoadSound("ASSETS/Audio/SFX/Feeder/feederHit.mp3");
-	sfxFeeding = LoadSound("ASSETS/Audio/SFX/Feeder/feederFeeding.mp3");
 	sfxMissileLaunch = LoadSound("ASSETS/Audio/SFX/Feeder/feederMissileLaunchRedux.mp3");
+	// ------------------------------------------------- Not Implemented Yet
+	sfxFeeding = LoadSound("ASSETS/Audio/SFX/Feeder/feederFeeding.mp3");
 	sfxMissileHit = LoadSound("ASSETS/Audio/SFX/Feeder/feederMissileHitRedux.mp3");
 	SetSoundVolume(sfxDeath, 0.3);
+	SetSoundVolume(sfxHit, 0.3);
+	SetSoundVolume(sfxMissileLaunch, 0.05);
 	explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
 	frameHeight = (float)(explosion.height / NUM_LINES);           // Sprite one frame rectangle height
@@ -132,6 +135,7 @@ void Feeder::shootBullet(Vector3 t_target)
 
 	if (m_spotted)
 	{
+		PlaySound(sfxMissileLaunch);
 		handleInput(EVENT_ATTACK);
 		m_target = t_target;
 		bulletTick = 0;

@@ -52,7 +52,6 @@ void Player::worldCollision(bool collide)
 	if (collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
-		if(m_health > 0) m_health -= 10;
 
 		if (!m_alive && animCurrentFrame < 150)
 		{
@@ -89,19 +88,22 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
-	shootingSFX = LoadSound("ASSETS/Audio/SFX/buzzHasThatThangOnHim.mp3");
+	shootingSFX = LoadSound("ASSETS/Audio/SFX/Buzz/buzzHasThatThangOnHim.mp3");
 	SetSoundVolume(shootingSFX, 0.3);
 
-	environmentHitSFX = LoadSound("ASSETS/Audio/SFX/buzzEnvironmentHitRedux.mp3");
+	environmentHitSFX = LoadSound("ASSETS/Audio/SFX/Buzz/buzzEnvironmentHitRedux.mp3");
 	SetSoundVolume(environmentHitSFX, 0.3);
 
-	enemyHitSFX = LoadSound("ASSETS/Audio/SFX/buzzGetHitRedux.mp3");
+	enemyHitSFX = LoadSound("ASSETS/Audio/SFX/Buzz/buzzGetHitRedux.mp3");
 	SetSoundVolume(enemyHitSFX, 0.3);
+
+	buzzingSFX = LoadSound("ASSETS/Audio/SFX/Buzz/buzzBuzz.mp3");
+	SetSoundVolume(buzzingSFX, 0.9);
 
 	m_position.y += 2.0f;
 
 	m_healthbar.x = 40;
-	m_healthbar.y = 1015;
+	m_healthbar.y = 35;
 	m_healthbar.width = HEALTHBAR_MAX;
 	m_healthbar.height = 40;
 
@@ -157,6 +159,7 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 
 	if (m_alive)
 	{
+	//	PlaySound(buzzingSFX);
 		updateHealthbar();
 		if (m_health <= 0)
 		{
@@ -182,9 +185,9 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 			float frameTime = GetFrameTime();
 			m_reboundCounter -= frameTime;
 			Vector3 rebound = m_reboundDirection * m_reboundForce * frameTime;
-			/*m_position += rebound;
+			m_position += rebound;
 			t_crosshair += rebound;
-			cameraMove(t_cam);*/
+			cameraMove(t_cam);
 			/*t_cam += rebound;
 			upperLimit.x += rebound.x;
 			upperLimit.y += rebound.y;
@@ -339,7 +342,7 @@ void Player::reboundFurniture(FurnitureCollisionData t_data)
 {
 	m_auto = false;
 	std::cout << "Rebound triggered.\n";
-	if (m_currentVelocity == Vector3{0.0f, 0.0f, 0.0f})
+	/*if (m_currentVelocity == Vector3{0.0f, 0.0f, 0.0f})
 	{
 		m_currentVelocity.z = 2.0f;
 	}
@@ -348,7 +351,7 @@ void Player::reboundFurniture(FurnitureCollisionData t_data)
 
 	Vector3 normal = Vector3Normalize(t_data.lastFurnitureCollision - m_position);
 
-	m_position.z += normal.z * 2.0f;
+	m_position.z += normal.z * 2.0f;*/
 
 	//m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
 	////m_reboundDirection.y = 0.0f;

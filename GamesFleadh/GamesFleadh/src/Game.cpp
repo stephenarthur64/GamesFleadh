@@ -103,10 +103,14 @@ void Game::loadAssets()
     fogBar = LoadTexture("ASSETS/2D/UI/FogBar.png");
     fogGradient = LoadTexture("ASSETS/2D/UI/FogGradient.png");
 
+    healthBar = LoadTexture("ASSETS/2D/UI/HealthBarVertical.png");
+    healthGradient = LoadTexture("ASSETS/2D/UI/HealthBarVerticalFill.png");
+
+    healthSource = { 0, 0, (float)healthGradient.width, (float)healthGradient.height };
+    healthDest = { 28, 210, (float)healthGradient.width + 10, (float)healthGradient.height };
+
     gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
     gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
-
-    healthBar = LoadTexture("ASSETS/2D/UI/HealthBar.png");
 
     bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
@@ -291,11 +295,11 @@ void Game::render()
     }
     else
     {
-        DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
-        DrawTexture(healthBar, 0, 1000, WHITE);
         DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
         DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
+        DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, WHITE);
         DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
+        DrawTexture(healthBar, 0, 20.0f, WHITE);
     }
     
     EndDrawing();
@@ -633,7 +637,12 @@ void Game::checkCollisions()
     {// Colliding with terrain in front
         player.worldCollision(true);
         player.hitSound(0);
-        //reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+        player.setAuto(false);
+    }
+    else
+    {
+        player.setAuto(autoScroll);
     }
 
     // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
@@ -644,8 +653,7 @@ void Game::checkCollisions()
     {
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
-        player.enemyCollision(true);
-        //player.reboundFurniture(m_collisionData);
+        player.reboundFurniture(m_collisionData);
     }
     else
     {

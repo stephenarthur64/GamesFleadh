@@ -80,12 +80,15 @@ private:
 	Vector3 camTopDownPos;
 	
 	Texture2D healthBar;
+	Texture2D healthGradient;
 	Texture2D fogBar;
 	Texture2D fogGradient;
 	Texture2D fogVignette;
 
 	Rectangle gradientSource;
 	Rectangle gradientDest;
+	Rectangle healthSource;
+	Rectangle healthDest;
 
 	Color fogOpacity;
 
