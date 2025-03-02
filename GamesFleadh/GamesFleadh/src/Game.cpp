@@ -121,7 +121,7 @@ void Game::loadAssets()
     gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
     gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
 
-    bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
+    bill = LoadTexture("ASSETS/2D/Crosshair/ArrowCrosshair.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
     billUp = { 0.0f, 1.0f, 0.0f };
     size = { source.width / source.height, 1.0f };
@@ -384,7 +384,7 @@ void Game::inputControl()
         return;
     }
 
-    if (IsKeyDown(KEY_W) || leftStickY < 0)
+    if (IsKeyDown(KEY_I) || leftStickY < 0)
     {
         camDirection = 0.0f;
         if (leftStickY < 0)
