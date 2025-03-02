@@ -51,6 +51,11 @@ void Player::worldCollision(bool collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
 		if(m_health > 0) m_health -= 10;
+
+		if (!m_alive && animCurrentFrame < 150)
+		{
+			animCurrentFrame = 150;
+		}
 	}
 }
 
@@ -104,6 +109,7 @@ void Player::init()
 	}
 
 	m_boundingBoxRadius = boundingBoxRadius(getHitbox());
+	m_alive = true;
 }
 
 void Player::render()
@@ -146,52 +152,63 @@ void Player::hitSound(int t_type)
 void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 {
 	currentState->update(this);
-	updateHealthbar();
-	if (m_poisoned && m_health > 10 && m_poisonTick > MAX_POISON_TICK)
+
+	if (m_alive)
 	{
-		m_health -= 5;
-		m_poisonTick = 0;
-	}
-	else if (m_health <= 10)
-	{
-		m_poisoned = false;
-		m_hpColour = GREEN;
+		updateHealthbar();
+		if (m_health <= 0)
+		{
+			handleInput(EVENT_DIE);
+		}
+		if (m_poisoned && m_health > 10 && m_poisonTick > MAX_POISON_TICK)
+		{
+			m_health -= 5;
+			m_poisonTick = 0;
+		}
+		else if (m_health <= 10)
+		{
+			m_poisoned = false;
+			m_hpColour = GREEN;
+		}
+		else
+		{
+			m_poisonTick++;
+		}
+
+		if (m_reboundCounter > 0)
+		{
+			float frameTime = GetFrameTime();
+			m_reboundCounter -= frameTime;
+			Vector3 rebound = m_reboundDirection * m_reboundForce * frameTime;
+			/*m_position += rebound;
+			t_crosshair += rebound;
+			cameraMove(t_cam);*/
+			/*t_cam += rebound;
+			upperLimit.x += rebound.x;
+			upperLimit.y += rebound.y;
+
+			lowerLimit.x += rebound.x;
+			lowerLimit.y += rebound.y;*/
+		}
+		else if (m_reboundCounter < 0 && m_reboundCounter != -100)
+		{
+			//reboundLimits(t_cam);
+			m_reboundCounter = -100;
+		}
+
+
+		m_position.y = Clamp(m_position.y, 1.0f, 10.0f);
+		//t_cam.y = Clamp(m_position.y, -10.0f, 15.0f);
+		if (t_cam.y > 10.0f)
+		{
+			t_cam.y = 10.0f;
+		}
+		//std::cout << "Y position is: " << m_position.y << "\n";
 	}
 	else
 	{
-		m_poisonTick++;
+		death(t_cam, t_crosshair);
 	}
-
-	if (m_reboundCounter > 0)
-	{
-		float frameTime = GetFrameTime();
-		m_reboundCounter -= frameTime;
-		Vector3 rebound = m_reboundDirection * m_reboundForce * frameTime;
-		/*m_position += rebound;
-		t_crosshair += rebound;
-		cameraMove(t_cam);*/
-		/*t_cam += rebound;
-		upperLimit.x += rebound.x;
-		upperLimit.y += rebound.y;
-
-		lowerLimit.x += rebound.x;
-		lowerLimit.y += rebound.y;*/
-	}
-	else if (m_reboundCounter < 0 && m_reboundCounter != -100)
-	{
-		//reboundLimits(t_cam);
-		m_reboundCounter = -100;
-	}
-
-
-	m_position.y = Clamp(m_position.y, 1.0f, 10.0f);
-	//t_cam.y = Clamp(m_position.y, -10.0f, 15.0f);
-	if (t_cam.y > 10.0f)
-	{
-		t_cam.y = 10.0f;
-	}
-	//std::cout << "Y position is: " << m_position.y << "\n";
-
 }
 
 void Player::reboundLimits(Vector3& t_cam)
@@ -326,6 +343,19 @@ void Player::reboundFurniture(FurnitureCollisionData t_data)
 	////m_reboundDirection.y = 0.0f;
 	//m_position.x = t_data.lastFurnitureCollision.x + normal.x * (t_data.lastFurnitureRadius + 0.1f);
 	//m_position.z = t_data.lastFurnitureCollision.z + normal.z * (t_data.lastFurnitureRadius + 0.1f);
+}
+
+void Player::death(Vector3 &t_cam, Vector3 &t_target)
+{
+	if (m_position.y > 0.5f)
+	{
+		m_position.y -= 0.1f;
+		t_target.y -= 0.1f;
+	}
+	if (t_cam.y > 1.5f)
+	{
+		t_cam.y -= 0.1f;
+	}
 }
 
 void Player::poisonPlayer(bool t_poison)

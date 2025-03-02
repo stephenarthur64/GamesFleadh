@@ -5,6 +5,7 @@
 #include "DamageRState.h"
 #include "CollisionLState.h"
 #include "CollisionRState.h"
+#include "DeathState.h"
 
 State* NoInputState::handleInput(Event t_event)
 {
@@ -36,6 +37,12 @@ State* NoInputState::handleInput(Event t_event)
     {
         return new CollisionRState;
     }
+
+    if (t_event == EVENT_DIE)
+    {
+        return new DeathState;
+    }
+
     return nullptr;
 }
 

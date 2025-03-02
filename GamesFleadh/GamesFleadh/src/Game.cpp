@@ -334,6 +334,11 @@ void Game::update()
 
 void Game::inputControl()
 {
+    if (!(player.isAlive()))
+    {
+        return;
+    }
+
     if (IsKeyDown(KEY_W) || leftStickY < 0)
     {
         camDirection = 0.0f;
