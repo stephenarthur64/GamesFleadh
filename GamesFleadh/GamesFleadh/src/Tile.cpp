@@ -355,10 +355,20 @@ void Tile::assignFurniture(float t_u, float t_v, std::string t_furnitureType, Fu
     }
     else
     {
-        StreetFurniture article(randomChance != 0, t_furnitureType, furniturePos, t_typeEnum);
+        if (t_typeEnum == CHUNKY_MUSHROOM)
+        {
+            StreetFurniture article(false, t_furnitureType, furniturePos, t_typeEnum);
 
-        // StreetFurniture article(true, t_furnitureType, furniturePos); // SWITCH BACK TO TRUE FOR FIXING
+            m_furnitureVec.push_back(article);
+        }
+        else
+        {
+            StreetFurniture article(randomChance != 0, t_furnitureType, furniturePos, t_typeEnum);
 
-        m_furnitureVec.push_back(article);
+            // StreetFurniture article(true, t_furnitureType, furniturePos); // SWITCH BACK TO TRUE FOR FIXING
+
+            m_furnitureVec.push_back(article);
+        }
+        
     }
 }

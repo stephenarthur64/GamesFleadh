@@ -46,7 +46,7 @@ const std::string FURNITURE_GRASS = "ASSETS/3D/StreetFurniture/Grass/grass.glb";
 
 const std::string FURNITURE_BATCH_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/BatchMushroomCollider.glb";
 const std::string FURNITURE_BUMPY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/BumpyMushroomCollider.glb";
-const std::string FURNITURE_CHUNKY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/ThickMushroomCollider.glb";
+const std::string FURNITURE_CHUNKY_MUSH_COL = "This is deliberately wrong so the collision doesn't load for the ChunkyMush"; // "ASSETS/3D/StreetFurniture/CollisionModels/ChunkyThickMushroomCollider.glb";
 const std::string FURNITURE_DEFAULT_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/DefaultMushroomCollider.glb";
 const std::string FURNITURE_POINTY_MUSH_COL = "ASSETS/3D/StreetFurniture/CollisionModels/PointyMushroomCollider.glb";
 

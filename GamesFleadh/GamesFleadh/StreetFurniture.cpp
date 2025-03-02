@@ -60,6 +60,7 @@ StreetFurniture::StreetFurniture(bool t_hasFeeder, std::string t_furnitureType, 
 		break;
 	case CHUNKY_MUSHROOM:
 		furnType = "CHUNKY_MUSHROOM";
+		std::cout << "\n\n\n!!!! CHUNKY MUSHROOM FOUND !!!!\n\n\n";
 		m_collider = LoadModel(FURNITURE_CHUNKY_MUSH_COL.c_str());
 		m_hasCollider = true;
 		break;
