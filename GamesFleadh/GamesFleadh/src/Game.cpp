@@ -190,7 +190,7 @@ void Game::render()
 
     player.render();
 
-    DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
+    
 
     for (Tile& tileToDraw : m_terrainTileCollection)
     {
@@ -228,6 +228,9 @@ void Game::render()
 
         DrawGrid(20, 1.0f);
     }
+
+    DrawBillboardPro(camera, bill, source, billPositionRotating + Vector3{0.0f, 0.0f, -5.0f}, billUp, size, origin, rotation, WHITE);
+    DrawBillboardPro(camera, bill, source, Vector3Lerp(player.getPosition(), billPositionRotating, 0.5f), billUp, size, origin, rotation, RED);
     
     EndMode3D();
 
@@ -290,6 +293,8 @@ void Game::render()
         DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
     }
 
+    
+    // DrawRectangleLines(SCREEN_WIDTH * 0.5 - m_upperLimit.x, SCREEN_HEIGHT * 0.5f - m_upperLimit.y, m_upperLimit.x, m_upperLimit.y, RED);
 
     EndDrawing();
 }
@@ -499,8 +504,8 @@ void Game::crosshairMove()
 
     billPositionRotating.x += billSpeed * (rightStickX + keyboardX);
     billPositionRotating.y += billSpeed * (- (rightStickY + keyboardY));
-    billPositionRotating.x = Clamp(billPositionRotating.x, player.getPosition().x - 5.0f, player.getPosition().x + 5.0f);
-    billPositionRotating.y = Clamp(billPositionRotating.y, player.getPosition().y - 2.0f, player.getPosition().y + 2.5f);
+    billPositionRotating.x = Clamp(billPositionRotating.x, player.getPosition().x - 10.0f, player.getPosition().x + 10.0f);
+    billPositionRotating.y = Clamp(billPositionRotating.y, player.getPosition().y - 5.0f, player.getPosition().y + 5.5f);
 }
 
 void Game::reboundZ(Vector3 t_impactPoint)
@@ -700,39 +705,39 @@ void Game::cameraMove()
 {
     float speed = 0.2f;
 
-    Vector2 lowerLimit = player.getLowerLimit();
-    Vector2 upperLimit = player.getUpperLimit();
+    m_lowerLimit = player.getLowerLimit();
+    m_upperLimit = player.getUpperLimit();
 
-    if (player.getPosition().x < lowerLimit.x && camPos.x > player.getPosition().x)
+    if (player.getPosition().x < m_lowerLimit.x && camPos.x > player.getPosition().x)
     {
         camPos.x -= speed;
-        lowerLimit.x -= speed;
-        upperLimit.x -= speed;
+        m_lowerLimit.x -= speed;
+        m_upperLimit.x -= speed;
     }
-    if (player.getPosition().y < lowerLimit.y && camPos.y > player.getPosition().y)
+    if (player.getPosition().y < m_lowerLimit.y && camPos.y > player.getPosition().y)
     {
         camPos.y -= speed;
-        lowerLimit.y -= speed;
-        upperLimit.y -= speed;
+        m_lowerLimit.y -= speed;
+        m_upperLimit.y -= speed;
     }
 
-    if (player.getPosition().x > upperLimit.x && camPos.x < player.getPosition().x)
+    if (player.getPosition().x > m_upperLimit.x && camPos.x < player.getPosition().x)
     {
         camPos.x += speed;
-        upperLimit.x += speed;
-        lowerLimit.x += speed;
+        m_upperLimit.x += speed;
+        m_lowerLimit.x += speed;
     }
-    if (player.getPosition().y > upperLimit.y && camPos.y < player.getPosition().y)
+    if (player.getPosition().y > m_upperLimit.y && camPos.y < player.getPosition().y)
     {
         camPos.y += speed;
-        upperLimit.y += speed;
-        lowerLimit.y += speed;
+        m_upperLimit.y += speed;
+        m_lowerLimit.y += speed;
     }
     camera.target = billPositionRotating;
     camera.target.z = billPositionRotating.z - 15.0f;
 
-    player.updateLimits(lowerLimit, upperLimit);
-    diffBetweenLimits = upperLimit.x - lowerLimit.x;
+    player.updateLimits(m_lowerLimit, m_upperLimit);
+    diffBetweenLimits = m_upperLimit.x - m_lowerLimit.x;
 }
 
 void Game::fogVisibility()

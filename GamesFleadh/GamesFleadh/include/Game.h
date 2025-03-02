@@ -193,5 +193,8 @@ private:
 
 
 	float diffBetweenLimits = 0.0f;
+
+	Vector2 m_lowerLimit;
+	Vector2 m_upperLimit;
 };
 
