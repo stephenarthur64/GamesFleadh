@@ -35,6 +35,8 @@ void Feeder::spawn(Vector3 t_position)
 {// Position is set from Tile (TileIsCurrent) -> StreetFurniture (SetRelativePosition) -> Feeder (Spawn)
 	m_health = 2;
 
+	currentState = new IdleState;
+
 	m_position.x = t_position.x - 1.0f;
 	m_position.y = t_position.y + 0.0f;
 	m_position.z = t_position.z + 1.0f;

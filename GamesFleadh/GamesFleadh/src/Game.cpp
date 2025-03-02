@@ -671,14 +671,24 @@ void Game::checkCollisions()
 
 void Game::mapMove()
 {
-    if (player.getPosition().z > -64.0f - playerZOffsetFromCamera) return;
+    if (player.getPosition().z > -64.0f - playerZOffsetFromCamera && player.isAlive()) return;
 
-    m_tileCurrent = m_tileNext;
+    if (player.isAlive())
 
-    while (m_tileNext == m_tileCurrent)
     {
-        m_tileNext = rand() % m_terrainTileCollection.size();
-        std::cout << "m_tileNext is " << m_tileNext << ".\n";
+        m_tileCurrent = m_tileNext;
+
+        while (m_tileNext == m_tileCurrent)
+        {
+            m_tileNext = rand() % m_terrainTileCollection.size();
+            std::cout << "m_tileNext is " << m_tileNext << ".\n";
+        }
+        camPos.z = 0.0f;
+    }
+    else
+    {
+        m_tileCurrent = 0;
+        m_tileNext = 1;
     }
 
     for (Tile& item : m_terrainTileCollection)
@@ -699,8 +709,6 @@ void Game::mapMove()
     }
 
     float mapLength = 64.0f;
-    
-    camPos.z = 0.0f;
 }
 
 void Game::cameraMove()
