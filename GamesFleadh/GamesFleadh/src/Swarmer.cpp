@@ -1,5 +1,6 @@
 #include "Swarmer.h"
 
+// Swarmer::Swarmer(Player* t_playerRef) : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(5.0f), m_playerReference(t_playerRef)
 Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(5.0f)
 {
 	currentState = new IdleState;
@@ -10,6 +11,11 @@ Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_D
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Enemy/Swarmer/Swarmer.glb", &animsCount);
 }
 
+//Swarmer::~Swarmer()
+//{
+//	delete(m_playerReference);
+//}
+
 void Swarmer::rotate(int t_direction)
 {
 }
@@ -19,7 +25,7 @@ void Swarmer::init()
 	m_body = LoadModel("ASSETS/3D/Enemy/Swarmer/Swarmer.glb");
 	//setLimits(3, 0);
 	setHitbox();
-	fxBoom = LoadSound("ASSETS/Audio/SFX/buzzBlastImpactRedux.mp3");
+	fxBoom = LoadSound("ASSETS/Audio/SFX/Buzz/buzzBlastImpactRedux.mp3");
 	SetSoundVolume(fxBoom, 0.3);
 	explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
@@ -90,6 +96,8 @@ void Swarmer::kill()
 	active = true;
 
 	PlaySound(fxBoom);
+
+	// m_playerReference->addHealth(20); // RS: Ideally this should give Buzzz health when Swarmer is killed
 
 	handleInput(EVENT_MOVE);
 }

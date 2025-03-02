@@ -88,13 +88,13 @@ void Player::init()
 	m_body = LoadModel("ASSETS/3D/Player/Buzzz/Buzz.glb");
 	setHitBox();
 
-	shootingSFX = LoadSound("ASSETS/Audio/SFX/buzzHasThatThangOnHim.mp3");
+	shootingSFX = LoadSound("ASSETS/Audio/SFX/Buzz/buzzHasThatThangOnHim.mp3");
 	SetSoundVolume(shootingSFX, 0.3);
 
-	environmentHitSFX = LoadSound("ASSETS/Audio/SFX/buzzEnvironmentHitRedux.mp3");
+	environmentHitSFX = LoadSound("ASSETS/Audio/SFX/Buzz/buzzEnvironmentHitRedux.mp3");
 	SetSoundVolume(environmentHitSFX, 0.3);
 
-	enemyHitSFX = LoadSound("ASSETS/Audio/SFX/buzzGetHitRedux.mp3");
+	enemyHitSFX = LoadSound("ASSETS/Audio/SFX/Buzz/buzzGetHitRedux.mp3");
 	SetSoundVolume(enemyHitSFX, 0.3);
 
 	m_position.y += 2.0f;

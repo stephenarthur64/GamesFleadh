@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "reasings.h"
 #include <raymath.h>
+#include <player.h>
 
 #define NUM_FRAMES_PER_LINE     5
 #define NUM_LINES               5
@@ -12,7 +13,9 @@ class Swarmer :
     public GameObject
 {
 public:
+	// Swarmer(Player* t_playerRef);
 	Swarmer();
+	// ~Swarmer();
 
 	virtual void rotate(int t_direction);
 	virtual void init();
@@ -70,5 +73,7 @@ private:
 
 	bool active = false;
 	int framesCounter = 0;
+
+	Player* m_playerReference;
 };
 

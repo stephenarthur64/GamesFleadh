@@ -80,7 +80,7 @@ void Feeder::init()
 	//m_body = LoadModel("ASSETS/RS/animTest.glb");
 	setHitBox();
 	m_mudBomb.init(1);
-	fxBoom = LoadSound("ASSETS/Audio/SFX/buzzBlastImpactRedux.mp3");
+	fxBoom = LoadSound("ASSETS/Audio/SFX/Buzz/buzzBlastImpactRedux.mp3");
 	SetSoundVolume(fxBoom, 0.3);
 	explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width

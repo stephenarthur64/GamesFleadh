@@ -119,7 +119,7 @@ private:
 	int score;
 	int activeMap;
 
-	bool autoScroll{ false };
+	bool autoScroll{ true };
 
 	const float playerZOffsetFromCamera = 5.0f;
 	Player player;
@@ -170,6 +170,7 @@ private:
 	BoundingBox heightMapBounds;
 
 	Music bgm;
+	bool m_bgm_toggle = true;
 
 	std::vector<Tile> m_terrainTileCollection;
 

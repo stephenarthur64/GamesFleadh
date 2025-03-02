@@ -142,7 +142,7 @@ void Game::loadAssets()
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.1);
-    //PlayMusicStream(bgm);
+    PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -321,6 +321,7 @@ void Game::update()
         player.updateBullet();
         camera.position = camPos;
         checkCollisions();
+
         player.update(camera.position, billPositionRotating);
     }
     else if (state == GameState::TITLE)
@@ -334,7 +335,7 @@ void Game::update()
 
 void Game::inputControl()
 {
-    if (IsKeyDown(KEY_W) || leftStickY < 0)
+    if (IsKeyDown(KEY_I) || leftStickY < 0)
     {
         camDirection = 0.0f;
         if (leftStickY < 0)
@@ -348,7 +349,7 @@ void Game::inputControl()
         player.updateHitBox(camDirection);
         camPos.z += camDirection;
     }
-    if (IsKeyDown(KEY_S) || leftStickY > 0)
+    if (IsKeyDown(KEY_K) || leftStickY > 0)
     {
         if (leftStickY > 0)
         {
@@ -362,28 +363,40 @@ void Game::inputControl()
         camPos.z += camDirection;
     }
 
-    if (IsKeyDown(KEY_UP))
+    if (IsKeyDown(KEY_W))
     {
         player.move({0, -1, 0});
     }
-    if (IsKeyDown(KEY_DOWN))
+    if (IsKeyDown(KEY_S))
     {
         player.move({0,1,0});
     }
-    if (IsKeyDown(KEY_LEFT))
+    if (IsKeyDown(KEY_A))
     {
         player.move({-1,0,0});
     }
-    if (IsKeyDown(KEY_RIGHT))
+    if (IsKeyDown(KEY_D))
     {
         player.move({1,0,0});
     }
 
-    if (IsKeyReleased(KEY_SPACE) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
+    if (IsKeyReleased(KEY_F5) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
     {// RS: Toggle! Is nice, you like.
         autoScroll = !autoScroll;
         player.setAuto(autoScroll);
         std::cout << "Good god.";
+    }
+
+    if (IsKeyReleased(KEY_F1))
+    {
+        if (IsMusicStreamPlaying(bgm))
+        {
+            StopMusicStream(bgm);
+        }
+        else
+        {
+            PlayMusicStream(bgm);
+        }
     }
 
     /*if (IsKeyPressed(KEY_Z))
@@ -396,7 +409,7 @@ void Game::inputControl()
     //    std::cout << "\nPlacing objects.\n";
     //    // placeObjectsFromImage(imgPlacementTest);
     //}
-    if (IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
+    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER)|| IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         player.shootBullet(billPositionRotating);
     }
@@ -458,11 +471,11 @@ void Game::inputControl()
 
 void Game::crosshairMove()
 {
-    if (IsKeyDown(KEY_I))
+    if (IsKeyDown(KEY_UP))
     {
         keyboardY = -1.0f;
     }
-    else if (IsKeyDown(KEY_K))
+    else if (IsKeyDown(KEY_DOWN))
     {
         keyboardY = 1.0f;
     }
@@ -471,11 +484,11 @@ void Game::crosshairMove()
         keyboardY = 0.0f;
     }
 
-    if (IsKeyDown(KEY_J))
+    if (IsKeyDown(KEY_LEFT))
     {
         keyboardX = -1.0f;
     }
-    else if (IsKeyDown(KEY_L))
+    else if (IsKeyDown(KEY_RIGHT))
     {
         keyboardX = 1.0f;
     }

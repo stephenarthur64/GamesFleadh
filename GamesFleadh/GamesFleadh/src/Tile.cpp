@@ -227,34 +227,34 @@ void Tile::processFurnitureMap(Image t_furnitureMap)
                 std::string furnType = FURNITURE_DUMMY_ZERO;
                 
                 if (col.r == 255 && col.b == 0 && col.g == 0)
-                {
+                {// RED
                     furnType = FURNITURE_DEFAULT_MUSH;
                     typeEnum = DEFAULT_MUSHROOM;
                 }
                     
                 if (col.r == 0 && col.b == 255 && col.g == 0) 
-                {
+                {// BLUE
                     furnType = FURNITURE_BATCH_MUSH;
                     typeEnum = BATCH_MUSHROOM;
                 }
                 if (col.r == 0 && col.b == 0 && col.g == 255) 
-                {
+                {// GREEN
                     furnType = FURNITURE_BUMPY_MUSH;
                     typeEnum = BUMPY_MUSHROOM;
                 }
                 if (col.r == 255 && col.b == 255 && col.g == 0) 
-                {
+                {// MAGENTA
                     furnType = FURNITURE_CHUNKY_MUSH;
                     typeEnum = CHUNKY_MUSHROOM;
                 }
                 if (col.r == 255 && col.b == 0 && col.g == 255) 
-                {
+                {// YELLOW
                     furnType = FURNITURE_POINTY_MUSH;
                     typeEnum = POINTY_MUSHROOM;
                 }
                 
                 if (col.r == 0 && col.b == 255 && col.g == 255) 
-                {
+                {// AQUA
                     furnType = "";
                     typeEnum = SWARMER;
                 }
