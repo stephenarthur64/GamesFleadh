@@ -21,12 +21,14 @@ public:
 	virtual void rotate(int t_direction) = 0;
 	virtual void init() = 0;
 	virtual void render() = 0;
+	virtual void respawn() {};
 	virtual void shootSound() {};
 	void animation(int index);
 	void rotateYaw(int t_direction);
 
 	void resetAnimation();
-	void holdAnimation(int t_frameStart, int t_frameEnd);
+	bool holdAnimation(int t_index);
+	void setDead() { m_alive = false; }
 
 	bool m_inPlay = false;
 
@@ -36,6 +38,8 @@ protected:
 	BoundingBox m_hitbox;
 	Color m_colour;
 	State* currentState;
+
+	bool m_alive;
 
 	float m_roll;
 	float m_pitch;

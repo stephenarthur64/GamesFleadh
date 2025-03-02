@@ -57,7 +57,10 @@ private:
 
 	const float MAX_DISTANCE;
 	//we bring the boom-jamie cullen
-	Sound fxBoom;
+	Sound sfxDie;
+	Sound sfxAlert;
+	Sound sfxAttack;
+	Sound sfxScan;
 
 	// Load explosion texture
 	Texture2D explosion;

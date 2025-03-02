@@ -102,11 +102,16 @@ void Game::loadAssets()
     fogVignette = LoadTexture("ASSETS/2D/Fog/OrangeVignette.png");
     fogBar = LoadTexture("ASSETS/2D/UI/FogBar.png");
     fogGradient = LoadTexture("ASSETS/2D/UI/FogGradient.png");
+    scoreBack = LoadTexture("ASSETS/2D/UI/ScoreBox.png");
+
+    healthBar = LoadTexture("ASSETS/2D/UI/HealthBarVertical.png");
+    healthGradient = LoadTexture("ASSETS/2D/UI/HealthBarVerticalFill.png");
+
+    healthSource = { 0, 0, (float)healthGradient.width, (float)healthGradient.height };
+    healthDest = { 27, 900, (float)healthGradient.width + 10, (float)healthGradient.height };
 
     gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
     gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
-
-    healthBar = LoadTexture("ASSETS/2D/UI/HealthBar.png");
 
     bill = LoadTexture("ASSETS/2D/Crosshair/crosshair.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
@@ -234,6 +239,13 @@ void Game::render()
     
     EndMode3D();
 
+    if (gameOverTick > 0)
+    {
+        countdownRespawn = ((180 - gameOverTick) / 60.0f) + 1;
+        DrawText(TextFormat("BUZZZ HAS FAILED!\n\nRESPAWNING....\n   %d", countdownRespawn), (SCREEN_WIDTH / 2.0f) - 150.0f, SCREEN_HEIGHT / 2.0f, 30, RED);
+    }
+
+    
     if (g_render2DDebug)
     {      
         DrawFPS(10, 30);
@@ -245,6 +257,7 @@ void Game::render()
         DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
         DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
+
         //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
 
         /*for (int i = 0; i < MAX_MUSHROOMS; i++)
@@ -286,11 +299,13 @@ void Game::render()
     }
     else
     {
-        DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
-        DrawTexture(healthBar, 0, 1000, WHITE);
-        DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
+        DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 20, WHITE);
+        DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
+        DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
         DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
+        DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
         DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
+        DrawTexture(healthBar, 0, 710.0f, WHITE);
     }
 
     
@@ -306,9 +321,19 @@ void Game::update()
     inputControl();
     if (state == GameState::GAMEPLAY)
     {
+        if (!(player.isAlive()))
+        {
+            gameOverTick++;
+
+            if (gameOverTick > 180)
+            {
+                gameBegins();
+            }
+        }
+
         player.updateZPos(camPos.z - playerZOffsetFromCamera);
         player.faceCrosshair(billPositionRotating);
-
+        healthBarUpdate();
         for (int i = 0; i < MAX_SWARMERS; i++)
         {
             swarmer[i].checkDistanceFromPlayer(player.getPosition());
@@ -324,10 +349,9 @@ void Game::update()
         }
 
         player.updateBullet();
-        camera.position = camPos;
         checkCollisions();
-
-        player.update(camera.position, billPositionRotating);
+        player.update(camPos, billPositionRotating);
+        camera.position = camPos;
     }
     else if (state == GameState::TITLE)
     {
@@ -340,7 +364,12 @@ void Game::update()
 
 void Game::inputControl()
 {
-    if (IsKeyDown(KEY_I) || leftStickY < 0)
+    if (!(player.isAlive()))
+    {
+        return;
+    }
+
+    if (IsKeyDown(KEY_W) || leftStickY < 0)
     {
         camDirection = 0.0f;
         if (leftStickY < 0)
@@ -530,7 +559,12 @@ void Game::gamepadInit()
 
 void Game::gameBegins()
 {
-    
+    gameOverTick = 0;
+    score = 0;
+    camPos = { 0.0f, 5.0f, -2.0f };
+    mapMove();
+    billPositionRotating = { 0.0f, 6.0f, 5.0f };
+    player.respawn();
 }
 
 void Game::gamepadUpdate()
@@ -624,7 +658,12 @@ void Game::checkCollisions()
     {// Colliding with terrain in front
         player.worldCollision(true);
         player.hitSound(0);
-        //reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
+        player.setAuto(false);
+    }
+    else
+    {
+        player.setAuto(autoScroll);
     }
 
     // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
@@ -635,7 +674,6 @@ void Game::checkCollisions()
     {
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
-        player.enemyCollision(true);
         player.reboundFurniture(m_collisionData);
     }
     else
@@ -669,14 +707,24 @@ void Game::checkCollisions()
 
 void Game::mapMove()
 {
-    if (player.getPosition().z > -64.0f - playerZOffsetFromCamera) return;
+    if (player.getPosition().z > -64.0f - playerZOffsetFromCamera && player.isAlive()) return;
 
-    m_tileCurrent = m_tileNext;
+    if (player.isAlive())
 
-    while (m_tileNext == m_tileCurrent)
     {
-        m_tileNext = rand() % m_terrainTileCollection.size();
-        std::cout << "m_tileNext is " << m_tileNext << ".\n";
+        m_tileCurrent = m_tileNext;
+
+        while (m_tileNext == m_tileCurrent)
+        {
+            m_tileNext = rand() % m_terrainTileCollection.size();
+            std::cout << "m_tileNext is " << m_tileNext << ".\n";
+        }
+        camPos.z = 0.0f;
+    }
+    else
+    {
+        m_tileCurrent = 0;
+        m_tileNext = 1;
     }
 
     for (Tile& item : m_terrainTileCollection)
@@ -697,47 +745,14 @@ void Game::mapMove()
     }
 
     float mapLength = 64.0f;
-    
-    camPos.z = 0.0f;
 }
 
 void Game::cameraMove()
 {
-    float speed = 0.2f;
+    player.cameraMove(camPos);
 
-    m_lowerLimit = player.getLowerLimit();
-    m_upperLimit = player.getUpperLimit();
-
-    if (player.getPosition().x < m_lowerLimit.x && camPos.x > player.getPosition().x)
-    {
-        camPos.x -= speed;
-        m_lowerLimit.x -= speed;
-        m_upperLimit.x -= speed;
-    }
-    if (player.getPosition().y < m_lowerLimit.y && camPos.y > player.getPosition().y)
-    {
-        camPos.y -= speed;
-        m_lowerLimit.y -= speed;
-        m_upperLimit.y -= speed;
-    }
-
-    if (player.getPosition().x > m_upperLimit.x && camPos.x < player.getPosition().x)
-    {
-        camPos.x += speed;
-        m_upperLimit.x += speed;
-        m_lowerLimit.x += speed;
-    }
-    if (player.getPosition().y > m_upperLimit.y && camPos.y < player.getPosition().y)
-    {
-        camPos.y += speed;
-        m_upperLimit.y += speed;
-        m_lowerLimit.y += speed;
-    }
     camera.target = billPositionRotating;
     camera.target.z = billPositionRotating.z - 15.0f;
-
-    player.updateLimits(m_lowerLimit, m_upperLimit);
-    diffBetweenLimits = m_upperLimit.x - m_lowerLimit.x;
 }
 
 void Game::fogVisibility()
@@ -765,6 +780,20 @@ void Game::reduceFog()
     {
         fogTick = 0;
     }
+}
+
+void Game::healthBarUpdate()
+{
+    float heightPercent;
+    const float MAX_HEIGHT = 427.0f;
+    const int MAX_TICK = 700;
+
+    //healthDest.height = EaseLinearInOut(healthTick, heightHealth, MAX_HEIGHT, MAX_TICK);
+    heightPercent = healthDest.height / MAX_HEIGHT;
+
+    heightPercent = 3.14;
+
+    healthDest.height = player.getHealth() * heightPercent;
 }
 
 

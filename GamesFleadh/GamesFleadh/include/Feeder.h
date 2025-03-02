@@ -60,7 +60,11 @@ private:
 	const int BULLET_TICK_MAX;
 	const int DAMAGE_TICK_MAX;
 
-	Sound fxBoom;
+	Sound sfxDeath;
+	Sound sfxHit;
+	Sound sfxFeeding;
+	Sound sfxMissileHit;
+	Sound sfxMissileLaunch;
 
 	// Load explosion texture
 	Texture2D explosion;

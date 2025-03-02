@@ -6,22 +6,22 @@
 
 State* DeathState::handleInput(Event t_event)
 {
-	if (t_event == Event::EVENT_MOVE)
-	{
-		return new IdleState;
-	}
 
 	return nullptr;
 }
 
 void DeathState::update(GameObject* obj)
 {
-	obj->animation(DEATH);
+	if (!(obj->holdAnimation(DEATH)))
+	{
+		obj->animation(DEATH);
+	}
 }
 
 void DeathState::enter(GameObject* obj)
 {
 	obj->resetAnimation();
+	obj->setDead();
 }
 
 void DeathState::exit(GameObject* obj)

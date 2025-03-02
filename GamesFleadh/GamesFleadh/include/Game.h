@@ -58,6 +58,7 @@ public:
 
 	void fogVisibility();
 	void reduceFog();
+	void healthBarUpdate();
 
 private:
 	GameState state;
@@ -80,12 +81,16 @@ private:
 	Vector3 camTopDownPos;
 	
 	Texture2D healthBar;
+	Texture2D healthGradient;
 	Texture2D fogBar;
 	Texture2D fogGradient;
 	Texture2D fogVignette;
+	Texture2D scoreBack;
 
 	Rectangle gradientSource;
 	Rectangle gradientDest;
+	Rectangle healthSource;
+	Rectangle healthDest;
 
 	Color fogOpacity;
 
@@ -93,6 +98,9 @@ private:
 
 	int fogTick = 0;
 	float heightVal = 0;
+
+	int healthTick = 0;
+	float heightHealth = 0;
 
 	float camSpeed = 0.2f;
 	float camDirection;
@@ -118,6 +126,8 @@ private:
 
 	int score;
 	int activeMap;
+	int gameOverTick;
+	int countdownRespawn;
 
 	bool autoScroll{ true };
 

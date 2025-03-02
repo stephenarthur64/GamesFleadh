@@ -35,6 +35,8 @@ void Feeder::spawn(Vector3 t_position)
 {// Position is set from Tile (TileIsCurrent) -> StreetFurniture (SetRelativePosition) -> Feeder (Spawn)
 	m_health = 2;
 
+	currentState = new IdleState;
+
 	m_position.x = t_position.x - 1.0f;
 	m_position.y = t_position.y + 0.0f;
 	m_position.z = t_position.z + 1.0f;
@@ -56,9 +58,9 @@ void Feeder::collision(bool t_collision)
 {
 	if (t_collision)
 	{
+		PlaySound(sfxHit);
 		damageTick = 0;
 
-		m_colour = RED;
 		m_health--;
 		handleInput(Event::EVENT_DAMAGE);
 
@@ -80,8 +82,15 @@ void Feeder::init()
 	//m_body = LoadModel("ASSETS/RS/animTest.glb");
 	setHitBox();
 	m_mudBomb.init(1);
-	fxBoom = LoadSound("ASSETS/Audio/SFX/Buzz/buzzBlastImpactRedux.mp3");
-	SetSoundVolume(fxBoom, 0.3);
+	sfxDeath = LoadSound("ASSETS/Audio/SFX/Feeder/feederDeath.mp3");
+	sfxHit = LoadSound("ASSETS/Audio/SFX/Feeder/feederHit.mp3");
+	sfxMissileLaunch = LoadSound("ASSETS/Audio/SFX/Feeder/feederMissileLaunchRedux.mp3");
+	// ------------------------------------------------- Not Implemented Yet
+	sfxFeeding = LoadSound("ASSETS/Audio/SFX/Feeder/feederFeeding.mp3");
+	sfxMissileHit = LoadSound("ASSETS/Audio/SFX/Feeder/feederMissileHitRedux.mp3");
+	SetSoundVolume(sfxDeath, 0.3);
+	SetSoundVolume(sfxHit, 0.3);
+	SetSoundVolume(sfxMissileLaunch, 0.05);
 	explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
 	frameHeight = (float)(explosion.height / NUM_LINES);           // Sprite one frame rectangle height
@@ -126,6 +135,7 @@ void Feeder::shootBullet(Vector3 t_target)
 
 	if (m_spotted)
 	{
+		PlaySound(sfxMissileLaunch);
 		handleInput(EVENT_ATTACK);
 		m_target = t_target;
 		bulletTick = 0;
@@ -183,7 +193,7 @@ void Feeder::kill()
 
 	m_health = -1;
 
-	PlaySound(fxBoom);
+	PlaySound(sfxDeath);
 
 	//m_position.x = 1000.0f;
 }

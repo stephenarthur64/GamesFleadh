@@ -2,7 +2,7 @@
 
 
 Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false), m_poisonTick(-1), MAX_POISON_TICK(30),
-					m_hpColour(GREEN)
+					m_hpColour(WHITE)
 {
 	currentState = new NoInputState;
 	m_health = 100;
@@ -12,6 +12,8 @@ Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisone
 
 
 }
+
+
 
 void Player::move(Vector3 t_velocity)
 {
@@ -28,12 +30,6 @@ void Player::updateLimits(Vector2 t_low, Vector2 t_high)
 {
 	upperLimit = t_high;
 	lowerLimit = t_low;
-}
-
-void Player::reboundLimits(Vector3 &t_cam)
-{
-	lowerLimit = { t_cam.x - 1.0f, t_cam.y - 2.0f };
-	upperLimit = { t_cam.x + 1.0f, t_cam.y - 2.0f };
 }
 
 void Player::setHitBox()
@@ -56,7 +52,11 @@ void Player::worldCollision(bool collide)
 	if (collide)
 	{
 		handleInput(Event::EVENT_DAMAGE);
-		if(m_health > 0) m_health -= 10;
+
+		if (!m_alive && animCurrentFrame < 150)
+		{
+			animCurrentFrame = 150;
+		}
 	}
 }
 
@@ -97,10 +97,13 @@ void Player::init()
 	enemyHitSFX = LoadSound("ASSETS/Audio/SFX/Buzz/buzzGetHitRedux.mp3");
 	SetSoundVolume(enemyHitSFX, 0.3);
 
+	buzzingSFX = LoadSound("ASSETS/Audio/SFX/Buzz/buzzBuzz.mp3");
+	SetSoundVolume(buzzingSFX, 0.9);
+
 	m_position.y += 2.0f;
 
 	m_healthbar.x = 40;
-	m_healthbar.y = 1015;
+	m_healthbar.y = 35;
 	m_healthbar.width = HEALTHBAR_MAX;
 	m_healthbar.height = 40;
 
@@ -110,6 +113,7 @@ void Player::init()
 	}
 
 	m_boundingBoxRadius = boundingBoxRadius(getHitbox());
+	m_alive = true;
 }
 
 void Player::render()
@@ -120,6 +124,8 @@ void Player::render()
 	{
 		bullet[i].render();
 	}
+
+	DrawRectangle(lowerLimit.x, lowerLimit.y, upperLimit.x - lowerLimit.x, upperLimit.y - lowerLimit.y, RED);
 
 	if (g_renderWireDebug)
 	{
@@ -150,51 +156,82 @@ void Player::hitSound(int t_type)
 void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 {
 	currentState->update(this);
-	updateHealthbar();
-	if (m_poisoned && m_health > 10 && m_poisonTick > MAX_POISON_TICK)
+
+	if (m_alive)
 	{
-		m_health -= 5;
-		m_poisonTick = 0;
-	}
-	else if (m_health <= 10)
-	{
-		m_poisoned = false;
-		m_hpColour = GREEN;
+	//	PlaySound(buzzingSFX);
+		updateHealthbar();
+		if (m_health <= 0)
+		{
+			handleInput(EVENT_DIE);
+		}
+		if (m_poisoned && m_health > 10 && m_poisonTick > MAX_POISON_TICK)
+		{
+			m_health -= 5;
+			m_poisonTick = 0;
+		}
+		else if (m_health <= 10)
+		{
+			m_poisoned = false;
+			m_hpColour = WHITE;
+		}
+		else
+		{
+			m_poisonTick++;
+		}
+
+		if (m_reboundCounter > 0)
+		{
+			float frameTime = GetFrameTime();
+			m_reboundCounter -= frameTime;
+			Vector3 rebound = m_reboundDirection * m_reboundForce * frameTime;
+			m_position += rebound;
+			t_crosshair += rebound;
+			cameraMove(t_cam);
+			/*t_cam += rebound;
+			upperLimit.x += rebound.x;
+			upperLimit.y += rebound.y;
+
+			lowerLimit.x += rebound.x;
+			lowerLimit.y += rebound.y;*/
+		}
+		else if (m_reboundCounter < 0 && m_reboundCounter != -100)
+		{
+			//reboundLimits(t_cam);
+			m_reboundCounter = -100;
+		}
+
+
+		m_position.y = Clamp(m_position.y, 1.0f, 10.0f);
+		//t_cam.y = Clamp(m_position.y, -10.0f, 15.0f);
+		if (t_cam.y > 10.0f)
+		{
+			t_cam.y = 10.0f;
+		}
+		//std::cout << "Y position is: " << m_position.y << "\n";
 	}
 	else
 	{
-		m_poisonTick++;
+		death(t_cam, t_crosshair);
 	}
+}
 
-	if (m_reboundCounter > 0)
-	{
-		float frameTime = GetFrameTime();
-		m_reboundCounter -= frameTime;
-		Vector3 rebound = m_reboundDirection * m_reboundForce * frameTime;
-		m_position += rebound;
-		t_crosshair += rebound;
-		t_cam += rebound;
-		upperLimit.x += rebound.x;
-		upperLimit.y += rebound.y;
+void Player::reboundLimits(Vector3& t_cam)
+{
+	t_cam.x = m_position.x;
+	t_cam.y = m_position.y;
 
-		lowerLimit.x += rebound.x;
-		lowerLimit.y += rebound.y;
-	}
-	/*else if (m_reboundCounter < 0 && m_reboundCounter != -100)
-	{
-		reboundLimits(t_cam);
-		m_reboundCounter = -100;
-	}*/
+	lowerLimit = { t_cam.x - 1.0f, t_cam.y - 2.0f };
+	upperLimit = { t_cam.x + 1.0f, t_cam.y + 2.0f };
+}
 
-
-	m_position.y = Clamp(m_position.y, 1.0f, 10.0f);
-	//t_cam.y = Clamp(m_position.y, -10.0f, 15.0f);
-	if (t_cam.y > 10.0f)
-	{
-		t_cam.y = 10.0f;
-	}
-	//std::cout << "Y position is: " << m_position.y << "\n";
-
+void Player::respawn()
+{
+	m_position = { 0.0f, 3.0f, 0.0f };
+	m_health = 100;
+	currentState = new IdleState;
+	init();
+	m_alive = true;
 }
 
 void Player::updateHealthbar()
@@ -253,6 +290,36 @@ void Player::despawnBullet(int bulletNum)
 	bullet[bulletNum].despawn();
 }
 
+void Player::cameraMove(Vector3& t_cam)
+{
+	float speed = 0.2f;
+
+	if (m_position.x < lowerLimit.x && t_cam.x > m_position.x)
+	{
+		t_cam.x -= speed;
+		lowerLimit.x -= speed;
+		upperLimit.x -= speed;
+	}
+	else if (m_position.y < lowerLimit.y && t_cam.y > m_position.y)
+	{
+		t_cam.y -= speed;
+		lowerLimit.y -= speed;
+		upperLimit.y -= speed;
+	}
+	else if (m_position.x > upperLimit.x && t_cam.x < m_position.x)
+	{
+		t_cam.x += speed;
+		upperLimit.x += speed;
+		lowerLimit.x += speed;
+	}
+	else if (m_position.y > upperLimit.y && t_cam.y < m_position.y)
+	{
+		t_cam.y += speed;
+		upperLimit.y += speed;
+		lowerLimit.y += speed;
+	}	
+}
+
 void Player::rebound(Vector3 t_impactPoint)
 {
 	std::cout << "Rebound triggered.\n";
@@ -275,7 +342,7 @@ void Player::reboundFurniture(FurnitureCollisionData t_data)
 {
 	m_auto = false;
 	std::cout << "Rebound triggered.\n";
-	if (m_currentVelocity == Vector3{0.0f, 0.0f, 0.0f})
+	/*if (m_currentVelocity == Vector3{0.0f, 0.0f, 0.0f})
 	{
 		m_currentVelocity.z = 2.0f;
 	}
@@ -284,12 +351,25 @@ void Player::reboundFurniture(FurnitureCollisionData t_data)
 
 	Vector3 normal = Vector3Normalize(t_data.lastFurnitureCollision - m_position);
 
-	m_position.z += normal.z * 2.0f;
+	m_position.z += normal.z * 2.0f;*/
 
 	//m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
 	////m_reboundDirection.y = 0.0f;
 	//m_position.x = t_data.lastFurnitureCollision.x + normal.x * (t_data.lastFurnitureRadius + 0.1f);
 	//m_position.z = t_data.lastFurnitureCollision.z + normal.z * (t_data.lastFurnitureRadius + 0.1f);
+}
+
+void Player::death(Vector3 &t_cam, Vector3 &t_target)
+{
+	if (m_position.y > 0.5f)
+	{
+		m_position.y -= 0.1f;
+		t_target.y -= 0.1f;
+	}
+	if (t_cam.y > 1.5f)
+	{
+		t_cam.y -= 0.1f;
+	}
 }
 
 void Player::poisonPlayer(bool t_poison)

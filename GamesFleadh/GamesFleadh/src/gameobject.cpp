@@ -74,10 +74,14 @@ void GameObject::resetAnimation()
 	animCurrentFrame = 1;
 }
 
-void GameObject::holdAnimation(int t_frameStart, int t_frameEnd)
+bool GameObject::holdAnimation(int t_index)
 {
-	if (animCurrentFrame > t_frameEnd)
+	int frameMax = modelAnimations[t_index].frameCount;
+
+	if (animCurrentFrame >= frameMax - 1)
 	{
-		animCurrentFrame = t_frameStart;
+		animCurrentFrame = frameMax;
+		return true;
 	}
+	return false;
 }

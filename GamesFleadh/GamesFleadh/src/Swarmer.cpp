@@ -25,9 +25,10 @@ void Swarmer::init()
 	m_body = LoadModel("ASSETS/3D/Enemy/Swarmer/Swarmer.glb");
 	//setLimits(3, 0);
 	setHitbox();
-	fxBoom = LoadSound("ASSETS/Audio/SFX/Buzz/buzzBlastImpactRedux.mp3");
-	SetSoundVolume(fxBoom, 0.3);
-	explosion = LoadTexture("ASSETS/explosion.png");
+	sfxDie = LoadSound("ASSETS/Audio/SFX/Swarmer/swarmerGetsHitRedux.mp3");
+	sfxAlert = LoadSound("ASSETS/Audio/SFX/Swarmer/swarmerAlertRedux.mp3");
+	SetSoundVolume(sfxDie, 0.3);
+	//explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
 	frameHeight = (float)(explosion.height / NUM_LINES);           // Sprite one frame rectangle height
 	frameRec = { 0, 0, frameWidth, frameHeight };
@@ -95,7 +96,7 @@ void Swarmer::kill()
 	m_hitbox.max.x = 1001.0f;
 	active = true;
 
-	PlaySound(fxBoom);
+	PlaySound(sfxDie);
 
 	// m_playerReference->addHealth(20); // RS: Ideally this should give Buzzz health when Swarmer is killed
 

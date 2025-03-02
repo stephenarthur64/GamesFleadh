@@ -20,11 +20,14 @@ public:
 	const int getBulletMax() { return MAX_BULLETS; }
 	const float getCollisionRadius() { return m_collisionRadius; }
 	const float getBoundingBoxRadius() { return m_boundingBoxRadius; }
+	int getHealth() { return m_health; }
 	Vector2 getLowerLimit() { return lowerLimit; }
 	Vector2 getUpperLimit() { return upperLimit; }
 	void updateLimits(Vector2 t_low, Vector2 t_high);
 	
 	void reboundLimits(Vector3& t_cam);
+
+	virtual void respawn() override;
 
 	void addHealth(int t_amt) { m_health += t_amt; }
 	int currentBullet() { return bulletCount; }
@@ -44,7 +47,7 @@ public:
 	virtual void render() override;
 	void shootSound() override;
 	void hitSound(int t_type);
-	Rectangle getHealthBar() { return m_healthbar; }
+	float getHealthBarHeight() { return m_healthbar.height; }
 	Color getHealthBarColour() { return m_hpColour; }
 
 	void update(Vector3& t_cam, Vector3 &t_crosshair);
@@ -52,15 +55,19 @@ public:
 
 	void resetToOrigin();
 	void faceCrosshair(Vector3 t_crosshairPos);
-
 	void shootBullet(Vector3 t_target);
 	void updateBullet();
 	void despawnBullet(int bulletNum);
+
+	void cameraMove(Vector3& t_cam);
+	bool isAlive() { return m_alive; }
 
 	void rebound(Vector3 t_impactPoint);
 	// void rebound(Vector3 t_impactPoint);
 	void reboundFurniture(FurnitureCollisionData t_data); // This possibly needs the t_cam var from above now
 	
+	void death(Vector3& t_cam, Vector3& t_target);
+
 	void poisonPlayer(bool t_poison);
 	bool isPoisoned() { return m_poisoned; }
 
@@ -90,6 +97,9 @@ private:
 	Sound shootingSFX;
 	Sound environmentHitSFX;
 	Sound enemyHitSFX;
+	Sound buzzingSFX;
+	Sound deathSFX;
+
 
 	Quaternion crosshairRotation;
 	Rectangle m_healthbar;
@@ -111,7 +121,7 @@ private:
 
 	bool m_auto = false;
 
-	Vector2 lowerLimit = { -1.0f, 2.0f };
-	Vector2 upperLimit = { 1.0f, 2.5f };
+	Vector2 lowerLimit = { -1.0f, -2.0f };
+	Vector2 upperLimit = { 1.0f, 2.0f };
 };
 

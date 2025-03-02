@@ -5,6 +5,7 @@
 #include "DamageRState.h"
 #include "CollisionLState.h"
 #include "CollisionRState.h"
+#include "DeathState.h"
 
 State* NoInputState::handleInput(Event t_event)
 {
@@ -14,11 +15,13 @@ State* NoInputState::handleInput(Event t_event)
         {
             return new IdleState;
         }
-        if (t_event == EVENT_SHOOT)
-        {
-            return new ShootState;
-        }
     }
+
+    if (t_event == EVENT_SHOOT)
+    {
+        return new ShootState;
+    }
+
     if (t_event == EVENT_HIT_L)
     {
         return new DamageLState;
@@ -36,6 +39,12 @@ State* NoInputState::handleInput(Event t_event)
     {
         return new CollisionRState;
     }
+
+    if (t_event == EVENT_DIE)
+    {
+        return new DeathState;
+    }
+
     return nullptr;
 }
 
