@@ -80,8 +80,12 @@ void Feeder::init()
 	//m_body = LoadModel("ASSETS/RS/animTest.glb");
 	setHitBox();
 	m_mudBomb.init(1);
-	fxBoom = LoadSound("ASSETS/Audio/SFX/buzzBlastImpactRedux.mp3");
-	SetSoundVolume(fxBoom, 0.3);
+	sfxDeath = LoadSound("ASSETS/Audio/SFX/Feeder/feederDeath.mp3");
+	sfxHit = LoadSound("ASSETS/Audio/SFX/Feeder/feederHit.mp3");
+	sfxFeeding = LoadSound("ASSETS/Audio/SFX/Feeder/feederFeeding.mp3");
+	sfxMissileLaunch = LoadSound("ASSETS/Audio/SFX/Feeder/feederMissileLaunchRedux.mp3");
+	sfxMissileHit = LoadSound("ASSETS/Audio/SFX/Feeder/feederMissileHitRedux.mp3");
+	SetSoundVolume(sfxDeath, 0.3);
 	explosion = LoadTexture("ASSETS/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
 	frameHeight = (float)(explosion.height / NUM_LINES);           // Sprite one frame rectangle height
@@ -183,7 +187,7 @@ void Feeder::kill()
 
 	m_health = -1;
 
-	PlaySound(fxBoom);
+	PlaySound(sfxDeath);
 
 	//m_position.x = 1000.0f;
 }

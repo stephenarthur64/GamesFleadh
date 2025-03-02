@@ -30,12 +30,6 @@ void Player::updateLimits(Vector2 t_low, Vector2 t_high)
 	lowerLimit = t_low;
 }
 
-void Player::reboundLimits(Vector3 &t_cam)
-{
-	lowerLimit = { t_cam.x - 1.0f, t_cam.y - 2.0f };
-	upperLimit = { t_cam.x + 1.0f, t_cam.y - 2.0f };
-}
-
 void Player::setHitBox()
 {
 	Vector3 minOffset = { -hitboxOffsetMin, -0.1f, -1.0f };
@@ -121,6 +115,8 @@ void Player::render()
 		bullet[i].render();
 	}
 
+	DrawRectangle(lowerLimit.x, lowerLimit.y, upperLimit.x - lowerLimit.x, upperLimit.y - lowerLimit.y, RED);
+
 	if (g_renderWireDebug)
 	{
 		DrawBoundingBox(m_hitbox, RED);
@@ -171,20 +167,21 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 		float frameTime = GetFrameTime();
 		m_reboundCounter -= frameTime;
 		Vector3 rebound = m_reboundDirection * m_reboundForce * frameTime;
-		m_position += rebound;
+		/*m_position += rebound;
 		t_crosshair += rebound;
-		t_cam += rebound;
+		cameraMove(t_cam);*/
+		/*t_cam += rebound;
 		upperLimit.x += rebound.x;
 		upperLimit.y += rebound.y;
 
 		lowerLimit.x += rebound.x;
-		lowerLimit.y += rebound.y;
+		lowerLimit.y += rebound.y;*/
 	}
-	/*else if (m_reboundCounter < 0 && m_reboundCounter != -100)
+	else if (m_reboundCounter < 0 && m_reboundCounter != -100)
 	{
-		reboundLimits(t_cam);
+		//reboundLimits(t_cam);
 		m_reboundCounter = -100;
-	}*/
+	}
 
 
 	m_position.y = Clamp(m_position.y, 1.0f, 10.0f);
@@ -195,6 +192,15 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 	}
 	//std::cout << "Y position is: " << m_position.y << "\n";
 
+}
+
+void Player::reboundLimits(Vector3& t_cam)
+{
+	t_cam.x = m_position.x;
+	t_cam.y = m_position.y;
+
+	lowerLimit = { t_cam.x - 1.0f, t_cam.y - 2.0f };
+	upperLimit = { t_cam.x + 1.0f, t_cam.y + 2.0f };
 }
 
 void Player::updateHealthbar()
@@ -251,6 +257,36 @@ void Player::updateBullet()
 void Player::despawnBullet(int bulletNum)
 {
 	bullet[bulletNum].despawn();
+}
+
+void Player::cameraMove(Vector3& t_cam)
+{
+	float speed = 0.2f;
+
+	if (m_position.x < lowerLimit.x && t_cam.x > m_position.x)
+	{
+		t_cam.x -= speed;
+		lowerLimit.x -= speed;
+		upperLimit.x -= speed;
+	}
+	else if (m_position.y < lowerLimit.y && t_cam.y > m_position.y)
+	{
+		t_cam.y -= speed;
+		lowerLimit.y -= speed;
+		upperLimit.y -= speed;
+	}
+	else if (m_position.x > upperLimit.x && t_cam.x < m_position.x)
+	{
+		t_cam.x += speed;
+		upperLimit.x += speed;
+		lowerLimit.x += speed;
+	}
+	else if (m_position.y > upperLimit.y && t_cam.y < m_position.y)
+	{
+		t_cam.y += speed;
+		upperLimit.y += speed;
+		lowerLimit.y += speed;
+	}	
 }
 
 void Player::rebound(Vector3 t_impactPoint)

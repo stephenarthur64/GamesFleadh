@@ -230,7 +230,7 @@ void Game::render()
     }
     
     EndMode3D();
-
+    
     if (g_render2DDebug)
     {      
         DrawFPS(10, 30);
@@ -242,6 +242,7 @@ void Game::render()
         DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
         DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
+
         //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
 
         /*for (int i = 0; i < MAX_MUSHROOMS; i++)
@@ -289,8 +290,7 @@ void Game::render()
         DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
         DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
     }
-
-
+    
     EndDrawing();
 }
 
@@ -319,9 +319,9 @@ void Game::update()
         }
 
         player.updateBullet();
-        camera.position = camPos;
         checkCollisions();
-        player.update(camera.position, billPositionRotating);
+        player.update(camPos, billPositionRotating);
+        camera.position = camPos;
     }
     else if (state == GameState::TITLE)
     {
@@ -618,7 +618,7 @@ void Game::checkCollisions()
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
         player.enemyCollision(true);
-        player.reboundFurniture(m_collisionData);
+        //player.reboundFurniture(m_collisionData);
     }
     else
     {
@@ -685,41 +685,10 @@ void Game::mapMove()
 
 void Game::cameraMove()
 {
-    float speed = 0.2f;
+    player.cameraMove(camPos);
 
-    Vector2 lowerLimit = player.getLowerLimit();
-    Vector2 upperLimit = player.getUpperLimit();
-
-    if (player.getPosition().x < lowerLimit.x && camPos.x > player.getPosition().x)
-    {
-        camPos.x -= speed;
-        lowerLimit.x -= speed;
-        upperLimit.x -= speed;
-    }
-    if (player.getPosition().y < lowerLimit.y && camPos.y > player.getPosition().y)
-    {
-        camPos.y -= speed;
-        lowerLimit.y -= speed;
-        upperLimit.y -= speed;
-    }
-
-    if (player.getPosition().x > upperLimit.x && camPos.x < player.getPosition().x)
-    {
-        camPos.x += speed;
-        upperLimit.x += speed;
-        lowerLimit.x += speed;
-    }
-    if (player.getPosition().y > upperLimit.y && camPos.y < player.getPosition().y)
-    {
-        camPos.y += speed;
-        upperLimit.y += speed;
-        lowerLimit.y += speed;
-    }
     camera.target = billPositionRotating;
     camera.target.z = billPositionRotating.z - 15.0f;
-
-    player.updateLimits(lowerLimit, upperLimit);
-    diffBetweenLimits = upperLimit.x - lowerLimit.x;
 }
 
 void Game::fogVisibility()
