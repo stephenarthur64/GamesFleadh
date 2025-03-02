@@ -102,12 +102,13 @@ void Game::loadAssets()
     fogVignette = LoadTexture("ASSETS/2D/Fog/OrangeVignette.png");
     fogBar = LoadTexture("ASSETS/2D/UI/FogBar.png");
     fogGradient = LoadTexture("ASSETS/2D/UI/FogGradient.png");
+    scoreBack = LoadTexture("ASSETS/2D/UI/ScoreBox.png");
 
     healthBar = LoadTexture("ASSETS/2D/UI/HealthBarVertical.png");
     healthGradient = LoadTexture("ASSETS/2D/UI/HealthBarVerticalFill.png");
 
     healthSource = { 0, 0, (float)healthGradient.width, (float)healthGradient.height };
-    healthDest = { 28, 210, (float)healthGradient.width + 10, (float)healthGradient.height };
+    healthDest = { 27, 900, (float)healthGradient.width + 10, (float)healthGradient.height };
 
     gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
     gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
@@ -295,11 +296,13 @@ void Game::render()
     }
     else
     {
-        DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
+        DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 20, WHITE);
+        DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
+        DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
         DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
         DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, WHITE);
         DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
-        DrawTexture(healthBar, 0, 20.0f, WHITE);
+        DrawTexture(healthBar, 0, 710.0f, WHITE);
     }
     
     EndDrawing();

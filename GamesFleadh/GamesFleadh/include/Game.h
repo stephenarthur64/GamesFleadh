@@ -84,6 +84,7 @@ private:
 	Texture2D fogBar;
 	Texture2D fogGradient;
 	Texture2D fogVignette;
+	Texture2D scoreBack;
 
 	Rectangle gradientSource;
 	Rectangle gradientDest;
