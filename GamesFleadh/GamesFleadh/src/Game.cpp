@@ -810,7 +810,21 @@ void Game::checkCollisions()
     m_collision.distance = FLT_MAX;
     m_collision.hit = false;
 
-    m_collision = m_terrainTileCollection[m_tileCurrent].checkRay(m_ray, m_collision);
+    for (int i = 0; i < MAX_SWARMERS; i++)
+    {
+        m_collision = GetRayCollisionBox(m_ray, swarmer[i].getHitbox());
+    }
+
+    if ((m_collision.hit) && (m_collision.distance < m_collision.distance))
+    {
+        std::cout << "We hit a SWARMER!\n";
+
+    }
+    else
+    {
+        m_collision = m_terrainTileCollection[m_tileCurrent].checkRay(m_ray, m_collision);
+    }
+    
 }
 
 void Game::mapMove()
