@@ -85,6 +85,6 @@ extern bool g_renderWireDebug;
 
 extern bool g_render2DDebug;
 
-
+extern bool g_testForMushrooms;
 
 const int MAX_SWARMERS = 5;
