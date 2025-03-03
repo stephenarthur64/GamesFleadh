@@ -100,14 +100,14 @@ void Game::loadAssets()
     gameFont = LoadFont("ASSETS/2D/Font/BuzzzFont.ttf");
 
     fogOpacity = WHITE;
-    fogOpacity.a = 0;
+    fogOpacity.a = 255;
     fogVignette = LoadTexture("ASSETS/2D/Fog/OrangeVignette.png");
     fogBar = LoadTexture("ASSETS/2D/UI/FogBar.png");
     fogGradient = LoadTexture("ASSETS/2D/UI/FogGradient.png");
     scoreBack = LoadTexture("ASSETS/2D/UI/ScoreBox.png");
 
-    healthBar = LoadTexture("ASSETS/2D/UI/LongerHealthBar.png");
-    healthGradient = LoadTexture("ASSETS/2D/UI/LongerHealthBarFill.png");
+    healthBar = LoadTexture("ASSETS/2D/UI/HealthBarVertical.png");
+    healthGradient = LoadTexture("ASSETS/2D/UI/HealthBarVerticalFill.png");
 
     countdown[2] = LoadTexture("ASSETS/2D/UI/3.png");
     countdown[1] = LoadTexture("ASSETS/2D/UI/2.png");
@@ -137,7 +137,7 @@ void Game::loadAssets()
     SetSoundVolume(sfxSelect, 0.4);
 
     healthSource = { 0, 0, (float)healthGradient.width, (float)healthGradient.height };
-    healthDest = { 37, 900, (float)healthGradient.width + 10, (float)healthGradient.height };
+    healthDest = { 57, SCREEN_HEIGHT / 2.0f, (float)healthGradient.width + 10, (float)healthGradient.height };
 
     gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
     gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
@@ -290,9 +290,6 @@ void Game::render()
         DrawText(TextFormat("CROSSHAIR X POSITION: %f", m_crosshairOnScreenPos.x), 10, 440, 10, RED);
         DrawText(TextFormat("CROSSHAIR Y POSITION: %f", m_crosshairOnScreenPos.y), 10, 450, 10, RED);
 
-        //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
-        //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
-
         /*DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
         DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);*/
@@ -301,11 +298,11 @@ void Game::render()
     {
         if (state == GameState::GAMEPLAY)
         {
-            DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 20, WHITE);
-            DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
-            DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
+            DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 40, WHITE);
+            DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 55 }, 50, 5, WHITE);
+            DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 130 }, 20, 5, WHITE);
             DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
-            DrawTexture(healthBar, 10, 710.0f, WHITE);
+            DrawTexture(healthBar, 30, 350.0f, WHITE);
         }
         else if (state == GameState::TITLE)
         {
@@ -318,7 +315,7 @@ void Game::render()
             DrawTextureEx(arrow, { (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f) - 50.0f, (SCREEN_HEIGHT / 2.0f) + arrowYOffset }, 0.0f, 1.0f, WHITE);
             DrawTextureEx(arrow2, { (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f) + difficulty[selectedDifficulty].width + 10, (SCREEN_HEIGHT / 2.0f) + arrowYOffset }, 0.0f, 1.0f, WHITE);
             DrawTexture(leave, (SCREEN_WIDTH / 2.0f) - (leave.width / 2.0f), 800.0f, WHITE);
-            DrawText("Press [SPACE]/[RT] to select", (SCREEN_WIDTH / 2.0f) - 150.0f, 1000.0f, 20, DARKGRAY);
+            DrawTextEx(gameFont, "Press (SPACE)/(RT) to select", { (SCREEN_WIDTH / 2.0f) - 150.0f, 1000.0f }, 20, 2, DARKGRAY);
         }
     }
 
