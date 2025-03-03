@@ -3,6 +3,7 @@
 
 bool g_renderWireDebug = false;
 bool g_render2DDebug = false;
+bool g_testForMushrooms = true;
 
 Game::Game() : score(0), activeMap(1), state(GameState::TITLE)
 {
@@ -106,8 +107,8 @@ void Game::loadAssets()
     fogGradient = LoadTexture("ASSETS/2D/UI/FogGradient.png");
     scoreBack = LoadTexture("ASSETS/2D/UI/ScoreBox.png");
 
-    healthBar = LoadTexture("ASSETS/2D/UI/LongerHealthBar.png");
-    healthGradient = LoadTexture("ASSETS/2D/UI/LongerHealthBarFill.png");
+    healthBar = LoadTexture("ASSETS/2D/UI/HealthBarVertical.png");
+    healthGradient = LoadTexture("ASSETS/2D/UI/HealthBarVerticalFill.png");
 
     countdown[2] = LoadTexture("ASSETS/2D/UI/3.png");
     countdown[1] = LoadTexture("ASSETS/2D/UI/2.png");
