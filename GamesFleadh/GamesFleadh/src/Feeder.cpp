@@ -211,7 +211,7 @@ bool Feeder::isAlive()
 void Feeder::update(Vector3 t_target)
 {
 	currentState->update(this);
-	m_mudBomb.move();
+	m_mudBomb.directMove();
 	if (m_active && bulletTick < 0)
 	{
 		shootBullet(t_target);

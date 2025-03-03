@@ -14,6 +14,7 @@ public:
 	void spawn(Vector3 t_pos, float speed, Vector3 t_velocity);
 	void despawn();
 	void move();
+	void directMove();
 	void follow(Vector3 t_target);
 	void init(int t_type);
 	virtual void init() override {};

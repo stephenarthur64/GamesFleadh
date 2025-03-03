@@ -176,7 +176,10 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 		}
 		if (m_poisoned && m_posionHealthLost > 0 && m_poisonTick > MAX_POISON_TICK)
 		{
-			m_health += 5;
+			if (m_health < 100)
+			{
+				m_health += 5;
+			}
 			m_posionHealthLost -= 5;
 			m_poisonTick = 0;
 		}

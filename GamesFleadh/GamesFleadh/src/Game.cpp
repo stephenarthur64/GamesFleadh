@@ -50,7 +50,7 @@ void Game::init()
 
     // Define our custom camera to look into our 3d world
     camera = { 0 };
-    camPos = { 0.0f, 4.0f, -2.0f };             // Determines player's starting position!
+    camPos = { 0.0f, 2.0f, -2.0f };             // Determines player's starting position!
     camera.position = camPos;                   // Camera position
     camera.target = { 0.0f, 0.0f, -2300.0f };   // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };           // Camera up vector (rotation towards target)

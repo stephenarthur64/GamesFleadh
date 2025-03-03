@@ -47,6 +47,14 @@ void Bullet::move()
 	}
 }
 
+void Bullet::directMove()
+{
+	if (m_active)
+	{
+		m_position += m_direction * m_speed;
+	}
+}
+
 void Bullet::follow(Vector3 t_target)
 {
 	if (m_active)
