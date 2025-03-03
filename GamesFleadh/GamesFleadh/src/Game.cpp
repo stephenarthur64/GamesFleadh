@@ -391,18 +391,18 @@ void Game::inputControl()
 
     if (state == GameState::TITLE)
     {
-        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN))
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) || IsKeyReleased(KEY_DOWN))
         {
             PlaySound(sfxHover);
             arrowYOffset = 265.0f;
         }
-        else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_UP))
+        else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_UP) || IsKeyReleased(KEY_UP))
         {
             PlaySound(sfxHover);
             arrowYOffset = 130.0f;
         }
 
-        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) || IsKeyReleased(KEY_SPACE))
         {
             PlaySound(sfxSelect);
             if (arrowYOffset == 130.0f)
@@ -415,7 +415,7 @@ void Game::inputControl()
             }
         }
 
-        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || IsKeyReleased(KEY_RIGHT))
         {
             PlaySound(sfxHover);
             if (selectedDifficulty < 2)
@@ -427,7 +427,7 @@ void Game::inputControl()
                 selectedDifficulty = 0;
             }
         }
-        else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
+        else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT) || IsKeyReleased(KEY_LEFT))
         {
             PlaySound(sfxHover);
             if (selectedDifficulty > 0)
@@ -549,7 +549,10 @@ void Game::inputControl()
     player.move(normVelocity);
     //camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
 
-    crosshairMove();
+    if (state == GameState::GAMEPLAY)
+    {
+        crosshairMove();
+    }
     billPositionRotating.z = player.getPosition().z - 3.0f;
 
     if (player.isAuto())
