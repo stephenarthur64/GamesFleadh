@@ -26,6 +26,7 @@ public:
 
 	bool isColliding(Vector3 t_collider);
 	bool checkFurnitureItemsCollision(BoundingBox t_player);
+	RayCollision checkRay(Ray t_ray, RayCollision t_collision);
 	// bool checkRadialFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRad);
 	FurnitureCollisionData checkBoundsFurnitureItemsCollision(Vector3 t_playerPos, float t_playerRadius, BoundingBox t_playerBox);
 

@@ -31,6 +31,8 @@ void Tile::rotate(int direction){}
 /// </summary>
 void Tile::init(){} // Turns out most of this is done in the constructor. =/
 
+
+
 /// <summary>
 /// @brief Make tile and furniture visible
 /// </summary>
@@ -117,6 +119,36 @@ bool Tile::isColliding(Vector3 t_collider)
         return false;
     }
 	return false;
+}
+
+RayCollision Tile::checkRay(Ray t_ray, RayCollision t_collision)
+{
+    RayCollision meshHitInfo = { 0 };
+
+    // meshHitInfo = GetRayCollisionMesh(t_ray, m_body.meshes[0], m_body.transform);
+
+    /*if (meshHitInfo.hit)
+    {
+        if ((!t_collision.hit) || (t_collision.distance > meshHitInfo.distance)) t_collision = meshHitInfo;
+    }*/
+
+    /*if (meshHitInfo.hit)
+    {
+        return meshHitInfo;
+    }
+    else
+    {*/
+        for (StreetFurniture& item : m_furnitureVec)
+        {
+            meshHitInfo = item.checkRay(t_ray, t_collision);
+            
+            if (meshHitInfo.hit)
+            {
+                return meshHitInfo;
+            }
+        }
+    //}
+    return t_collision;
 }
 
 //bool Tile::checkFurnitureItemsCollision(BoundingBox t_player)

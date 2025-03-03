@@ -235,7 +235,7 @@ void Game::render()
         DrawSphereWires(heightMapBounds.min, 2.5f, 6, 6, GREEN);
         DrawSphereWires(heightMapBounds.max, 2.5f, 6, 6, PURPLE);
 
-        DrawLine3D(g_furnCollisionItem, g_furnCollisionPlyr, PURPLE);
+        DrawLine3D(player.getPosition(), m_collision.point, PURPLE);
 
         //DrawSphere(objectPlacementTest, 2.0f, ORANGE);
 
@@ -262,12 +262,19 @@ void Game::render()
         DrawFPS(10, 30);
         DrawTexture(fogVignette, 0, 0, fogOpacity);
 
+        DrawText(TextFormat("CROSSHAIR X POSITION: %f", m_crosshairOnScreenPos.x), 10, 440, 10, RED);
+        DrawText(TextFormat("CROSSHAIR Y POSITION: %f", m_crosshairOnScreenPos.y), 10, 450, 10, RED);
+
         //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
         //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
 
-        DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
+        /*DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
-        DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
+        DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);*/
+
+        // Vector2 GetWorldToScreen(Vector3 position, Camera camera);
+
+        
 
         //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
 
@@ -429,6 +436,12 @@ void Game::inputControl()
         player.move({1,0,0});
     }
 
+    if (IsKeyReleased(KEY_P) || IsKeyReleased(KEY_TAB))
+    {
+        // Dummy function to trigger breakpoint.
+        std::cout << "This could trigger a breakpoint.";
+    }
+
     if (IsKeyReleased(KEY_F5) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
     {// RS: Toggle! Is nice, you like.
         autoScroll = !autoScroll;
@@ -460,7 +473,14 @@ void Game::inputControl()
     //}
     if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER)|| IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
-        player.shootBullet(billPositionRotating);
+        if (m_collision.hit)
+        {
+            player.shootBullet(m_collision.point);
+        }
+        else
+        {
+            player.shootBullet(billPositionRotating);
+        }
     }
 
     if (IsKeyReleased(KEY_BACKSPACE))
@@ -711,6 +731,16 @@ void Game::checkCollisions()
         player.hitSound(1);
         player.poisonPlayer(true);
     }
+
+    m_ray = { 0 };
+    m_crosshairOnScreenPos = GetWorldToScreen(billPositionRotating, camera); // Check origin of billboard
+    
+    m_ray = GetScreenToWorldRay(m_crosshairOnScreenPos, camera);
+
+    m_collision.distance = FLT_MAX;
+    m_collision.hit = false;
+
+    m_collision = m_terrainTileCollection[m_tileCurrent].checkRay(m_ray, m_collision);
 }
 
 void Game::mapMove()

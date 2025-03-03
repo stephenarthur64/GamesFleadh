@@ -61,6 +61,8 @@ public:
 
 	bool checkMudbombPlayerCollision(BoundingBox t_player);
 
+	RayCollision checkRay(Ray t_ray, RayCollision t_collision);
+
 	void makeFeederSeekPlayer(bool t_seeking, Player player);
 
 	void makeFeederEat();

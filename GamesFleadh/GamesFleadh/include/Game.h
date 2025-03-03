@@ -18,6 +18,8 @@
 
 #define PS_ALIAS     "playstation"
 
+#define FLT_MAX     340282346638528859811704183484516925440.0f     // Maximum value of a float, from bit pattern 01111111011111111111111111111111
+
 #include "Input.h"
 #include "Command.h"
 #include "Globals.h"
@@ -210,5 +212,9 @@ private:
 
 	Vector2 m_lowerLimit;
 	Vector2 m_upperLimit;
+
+	Ray m_ray = { 0 };
+	Vector2 m_crosshairOnScreenPos = Vector2Zero();
+	RayCollision m_collision = { 0 };
 };
 
