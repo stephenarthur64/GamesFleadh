@@ -501,12 +501,12 @@ void Game::inputControl()
         std::cout << "This could trigger a breakpoint.";
     }
 
-    if (IsKeyReleased(KEY_F5) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
-    {// RS: Toggle! Is nice, you like.
-        autoScroll = !autoScroll;
-        player.setAuto(autoScroll);
-        std::cout << "Good god.";
-    }
+    //if (IsKeyReleased(KEY_F5) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
+    //{// RS: Toggle! Is nice, you like.
+    //    autoScroll = !autoScroll;
+    //    player.setAuto(autoScroll);
+    //    std::cout << "Good god.";
+    //}
 
     if (IsKeyReleased(KEY_F1))
     {
@@ -558,11 +558,6 @@ void Game::inputControl()
     {
         std::cout << "\nToggling Debug Wireframes!\n";
         g_renderWireDebug = !g_renderWireDebug;
-    }
-
-    if (IsKeyReleased(KEY_K)) // DEBUG, REMOVE ---------------------------------------------------------------------------------------------------------------
-    {
-        player.FORCEKILLDEBUG();
     }
 
 
@@ -665,7 +660,7 @@ void Game::gameBegins()
     player.respawn();
     player.setStartingSpeed(selectedDifficulty);
     darkenColour.a = 0;
-    //PlayMusicStream(bgm);
+    PlayMusicStream(bgm);
     PauseMusicStream(titleScreenTrack);
 }
 
