@@ -199,6 +199,7 @@ private:
 
 	Music bgm;
 	bool m_bgm_toggle = true;
+	Music titleScreenTrack;
 
 	std::vector<Tile> m_terrainTileCollection;
 

@@ -170,7 +170,10 @@ void Game::loadAssets()
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.1);
-    //PlayMusicStream(bgm);
+
+    titleScreenTrack = LoadMusicStream("ASSETS/Audio/SFX/Environment/environmentalAmbience.mp3");
+    SetMusicVolume(titleScreenTrack, 0.4);
+    PlayMusicStream(titleScreenTrack);
 }
 
 void Game::setupSkybox()
@@ -284,45 +287,6 @@ void Game::render()
         DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
         DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
-
-        //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
-
-        /*for (int i = 0; i < MAX_MUSHROOMS; i++)
-        {
-            if (mushroom[i].isActive())
-            {
-                DrawText(TextFormat("FEEDER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
-            }
-        }
-        if (swarmer[0].isActive())
-        {
-            DrawText(TextFormat("SWARMER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
-        }
-    DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
-    DrawTexture(healthBar, 0, 1000, WHITE);
-
-    DrawTexture(fogVignette, 0, 0, fogOpacity);
-    //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
-    //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
-    DrawTexturePro(fogGradient, gradientSource, gradientDest, {(float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
-    DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
-  
-    DrawText(TextFormat("DIFF IN LIMITS: %f", diffBetweenLimits), 10, 440, 10, RED);
-    //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
-    DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
-    
-
-        /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
-        DrawText((TextFormat("NormalX: %f, NormalZ: %f", worldNormalX, worldNormalZ)), 10, 45, 32, ORANGE);
-        DrawText((TextFormat("TexU: %f, TexV: %f", texUcoord, texVcoord)), 10, 90, 32, PURPLE);
-        DrawText((TextFormat("World Y Normal: %f", worldYNormalFromCol)), 10, 135, 32, BROWN);
-        DrawText((TextFormat("World Y Pos: %f", worldYPos)), 10, 170, 32, SKYBLUE);
-        DrawText((TextFormat("CAMERA XPos: %f, YPos: %f, ZPos: %f", camPos.x, camPos.y, camPos.z)), 10, 202, 32, GREEN);
-        //DrawText((TextFormat("Map 01 Position x %f, y %f, z %f", mapPosition.x, mapPosition.y, mapPosition.z)), 10, 247, 32, ORANGE);
-        //DrawText((TextFormat("Map 02 Position x %f, y %f, z %f", mapPosition2.x, mapPosition2.y, mapPosition2.z)), 10, 280, 32, SKYBLUE);
-
-        DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
-        DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);*/
     }
     else
     {
@@ -359,11 +323,11 @@ void Game::render()
 
 void Game::update()
 {
-    UpdateMusicStream(bgm);
     gamepadUpdate();
     inputControl();
     if (state == GameState::GAMEPLAY)
     {
+        UpdateMusicStream(bgm);
         if (!(player.isAlive()))
         {
             gameOverTick++;
@@ -402,6 +366,7 @@ void Game::update()
     }
     else if (state == GameState::TITLE)
     {
+        UpdateMusicStream(titleScreenTrack);
         camera.target = player.getPosition();
         for (Tile& item : m_terrainTileCollection)
         {
@@ -665,6 +630,8 @@ void Game::gameBegins()
     player.respawn();
     player.setStartingSpeed(selectedDifficulty);
     darkenColour.a = 0;
+    //PlayMusicStream(bgm);
+    PauseMusicStream(titleScreenTrack);
 }
 
 void Game::gamepadUpdate()
