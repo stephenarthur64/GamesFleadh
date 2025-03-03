@@ -227,7 +227,7 @@ void Game::render()
 
     player.render();
 
-    
+
 
     for (Tile& tileToDraw : m_terrainTileCollection)
     {
@@ -245,7 +245,7 @@ void Game::render()
     {
         streetF[i].render();
     }*/
-    
+
     if (g_renderWireDebug)
     {
         //DrawSphereWires(Vector3{ 0.0f, 0.0f, 0.0f }, 0.25f, 8, 8, ORANGE); // Marks origin.
@@ -270,7 +270,7 @@ void Game::render()
     DrawBillboardPro(camera, bill, source, billPositionRotating, billUp, size, origin, rotation, WHITE);
     //DrawBillboardPro(camera, bill, source, billPositionRotating + Vector3{0.0f, 0.0f, -5.0f}, billUp, size, origin, rotation, WHITE);
     //DrawBillboardPro(camera, bill, source, Vector3Lerp(player.getPosition(), billPositionRotating, 0.5f), billUp, size, origin, rotation, RED);
-    
+
     EndMode3D();
 
     if (gameOverTick > 0)
@@ -281,9 +281,9 @@ void Game::render()
         //DrawText(TextFormat("BUZZZ HAS FAILED!\n\nRESPAWNING....\n   %d", countdownRespawn), (SCREEN_WIDTH / 2.0f) - 150.0f, SCREEN_HEIGHT / 2.0f, 30, RED);
     }
 
-    
+
     if (g_render2DDebug)
-    {      
+    {
         DrawFPS(10, 30);
         DrawTexture(fogVignette, 0, 0, fogOpacity);
 
@@ -295,7 +295,7 @@ void Game::render()
 
         /*DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
-        DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
+        DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);*/
     }
     else
     {
@@ -322,7 +322,7 @@ void Game::render()
         }
     }
 
-    
+
     // DrawRectangleLines(SCREEN_WIDTH * 0.5 - m_upperLimit.x, SCREEN_HEIGHT * 0.5f - m_upperLimit.y, m_upperLimit.x, m_upperLimit.y, RED);
 
     EndDrawing();
@@ -529,7 +529,7 @@ void Game::inputControl()
     //    std::cout << "\nPlacing objects.\n";
     //    // placeObjectsFromImage(imgPlacementTest);
     //}
-    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER)|| IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
+    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
     {
         if (m_collision.hit)
         {
@@ -602,6 +602,7 @@ void Game::inputControl()
         command->execute(&player);
     }
 }
+
 
 void Game::crosshairMove()
 {
