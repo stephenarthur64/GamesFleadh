@@ -402,11 +402,18 @@ void Player::poisonPlayer(bool t_poison)
 void Player::increaseAcceleration()
 {
 	m_acceleration += 0.1f;
+	speedMultiplier += 1;
 }
 
 void Player::stopAcceleration()
 {
-	m_acceleration = 0.12f;
+	m_acceleration = m_maxAcceleration;
+}
+
+void Player::setStartingSpeed(int t_difficulty)
+{
+	m_maxAcceleration = m_maxAcceleration + (0.05 * t_difficulty);
+	m_acceleration = m_maxAcceleration;
 }
 
 

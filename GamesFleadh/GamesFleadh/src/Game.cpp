@@ -35,7 +35,7 @@ void Game::run()
 
     init();
 
-    while (!WindowShouldClose())
+    while (!endGame && !WindowShouldClose())
     {
         update();
         render();
@@ -431,6 +431,18 @@ void Game::inputControl()
             arrowYOffset = 130.0f;
         }
 
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
+        {
+            if (arrowYOffset == 130.0f)
+            {
+                gameBegins();
+            }
+            else if (arrowYOffset == 265.0f)
+            {
+                endGame = true;
+            }
+        }
+
         if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
         {
             if (selectedDifficulty < 2)
@@ -644,19 +656,21 @@ void Game::gamepadInit()
 
 void Game::gameBegins()
 {
+    state = GameState::GAMEPLAY;
     gameOverTick = 0;
     score = 0;
     camPos = { 0.0f, 5.0f, -2.0f };
     mapMove();
     billPositionRotating = { 0.0f, 6.0f, 5.0f };
     player.respawn();
+    player.setStartingSpeed(selectedDifficulty);
     darkenColour.a = 0;
 }
 
 void Game::gamepadUpdate()
 {
 
-    if (IsGamepadAvailable(gamepad))
+    if (IsGamepadAvailable(gamepad) && state == GameState::GAMEPLAY)
     {
         // Get axis values
         leftStickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
@@ -709,7 +723,7 @@ void Game::checkCollisions()
         {// Feeder collision set to true in Furniture (follow if statement above)
             player.despawnBullet(i);
             reduceFog();
-            score += 10;
+            score += 10 + (5 * selectedDifficulty) * player.getSpeedMultiplier();
         }
 
         for (int j = 0; j < MAX_SWARMERS; j++)
@@ -719,7 +733,7 @@ void Game::checkCollisions()
                 swarmer[j].collision(true);
                 reduceFog();
                 player.despawnBullet(i);
-                score += 10;
+                score += 10 + (5 * selectedDifficulty) * player.getSpeedMultiplier();
             }
         }
     }
@@ -892,5 +906,6 @@ void Game::healthBarUpdate()
 
     healthDest.height = player.getHealth() * heightPercent;
 }
+
 
 

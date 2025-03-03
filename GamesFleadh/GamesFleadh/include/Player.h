@@ -76,6 +76,10 @@ public:
 	void increaseAcceleration();
 	void stopAcceleration();
 
+	void setStartingSpeed(int t_difficulty);
+
+	int getSpeedMultiplier() { return speedMultiplier; }
+
 	float boundingBoxRadius(BoundingBox box)
 	{
 		float dx = box.max.x - box.min.x;
@@ -135,5 +139,7 @@ private:
 	Vector2 upperLimit = { 1.0f, 2.0f };
 
 	float m_acceleration = 0.12f;
+	float m_maxAcceleration = 0.12f;
+	int speedMultiplier = 0;
 };
 

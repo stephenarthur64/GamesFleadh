@@ -219,6 +219,7 @@ private:
 	const float oobResetCounterMax = 0.33f;
 	float oobResetCounterCur = 0.0f;
 
+	bool endGame = false;
 
 	float diffBetweenLimits = 0.0f;
 
