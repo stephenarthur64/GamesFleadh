@@ -1,6 +1,6 @@
 #include "Feeder.h"
 
-Feeder::Feeder() : MAX_DISTANCE(8.0f), m_spotted(false), m_active(false), BULLET_TICK_MAX(120), DAMAGE_TICK_MAX(60)
+Feeder::Feeder() : MAX_DISTANCE(8.0f), m_spotted(false), m_active(false), BULLET_TICK_MAX(120), DAMAGE_TICK_MAX(60), boomColor(WHITE)
 {
 	currentState = new IdleState;
 	m_health = 1;
@@ -9,6 +9,7 @@ Feeder::Feeder() : MAX_DISTANCE(8.0f), m_spotted(false), m_active(false), BULLET
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Enemy/Feeder/Feeder.glb", &animsCount);// <------------ Here for Animation of Feeder
+	boomColor.a = 255;
 	//modelAnimations = LoadModelAnimations("ASSETS/RS/animTest.glb", &animsCount);
 }
 
@@ -91,7 +92,7 @@ void Feeder::init()
 	SetSoundVolume(sfxDeath, 0.3);
 	SetSoundVolume(sfxHit, 0.3);
 	SetSoundVolume(sfxMissileLaunch, 0.05);
-	explosion = LoadTexture("ASSETS/explosion.png");
+	explosion = LoadTexture("ASSETS/2D/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
 	frameHeight = (float)(explosion.height / NUM_LINES);           // Sprite one frame rectangle height
 	frameRec = { 0, 0, frameWidth, frameHeight };
@@ -112,7 +113,7 @@ void Feeder::renderBoom(Camera &t_camera)
 {
 	if (boomActive)
 	{
-		DrawBillboard(t_camera, explosion, m_position, 2.0f, WHITE);
+		DrawBillboard(t_camera, explosion, m_position, boomScale, boomColor);
 		//DrawTextureRec(explosion, frameRec, position, WHITE);
 	}
 }
@@ -158,25 +159,22 @@ void Feeder::boom()
 {
 	if (boomActive)
 	{
-		framesCounter++;
+		int alpha;
+		int direction = -1;
 
-		if (framesCounter > 2)
+		if (boomActive)
 		{
-			currentFrame++;
+			alpha = boomColor.a + (direction * 8);
 
-			if (currentFrame >= NUM_FRAMES_PER_LINE)
+			if (alpha > 0)
 			{
-				currentFrame = 0;
-				currentLine++;
-
-				if (currentLine >= NUM_LINES)
-				{
-					currentLine = 0;
-					boomActive = false;
-				}
+				boomColor.a = alpha;
+				boomScale += 0.2f;
 			}
-
-			framesCounter = 0;
+			else
+			{
+				boomActive = false;
+			}
 		}
 	}
 }

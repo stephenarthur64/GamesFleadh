@@ -47,6 +47,14 @@ void Tile::render()
     }
 }
 
+void Tile::renderBoom(Camera& t_camera)
+{
+    for (StreetFurniture item : m_furnitureVec)
+    {
+        item.renderBoom(t_camera);
+    }
+}
+
 /// <summary>
 /// @brief On/Off. Should also set associated furniture 'existance'
 /// </summary>

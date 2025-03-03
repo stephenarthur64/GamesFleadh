@@ -1,7 +1,7 @@
 #include "Swarmer.h"
 
 // Swarmer::Swarmer(Player* t_playerRef) : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(5.0f), m_playerReference(t_playerRef)
-Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(10.0f)
+Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(10.0f), boomColor(WHITE)
 {
 	currentState = new IdleState;
 	m_health = 1;
@@ -9,6 +9,7 @@ Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_D
 	animsCount = 0;
 	animCurrentFrame = 0;
 	modelAnimations = LoadModelAnimations("ASSETS/3D/Enemy/Swarmer/Swarmer.glb", &animsCount);
+	boomColor.a = 255;
 }
 
 //Swarmer::~Swarmer()
@@ -28,7 +29,7 @@ void Swarmer::init()
 	sfxDie = LoadSound("ASSETS/Audio/SFX/Swarmer/swarmerGetsHitRedux.mp3");
 	sfxAlert = LoadSound("ASSETS/Audio/SFX/Swarmer/swarmerAlertRedux.mp3");
 	SetSoundVolume(sfxDie, 0.3);
-	//explosion = LoadTexture("ASSETS/explosion.png");
+	explosion = LoadTexture("ASSETS/2D/explosion.png");
 	frameWidth = (float)(explosion.width / NUM_FRAMES_PER_LINE);   // Sprite one frame rectangle width
 	frameHeight = (float)(explosion.height / NUM_LINES);           // Sprite one frame rectangle height
 	frameRec = { 0, 0, frameWidth, frameHeight };
@@ -48,7 +49,7 @@ void Swarmer::renderBoom(Camera t_camera)
 {
 	if (active)
 	{
-		DrawBillboard(t_camera, explosion, m_position, 2.0f, WHITE);
+		DrawBillboard(t_camera, explosion, m_position, boomScale, boomColor);
 	}
 }
 
@@ -107,26 +108,22 @@ void Swarmer::boom()
 {
 	if (active)
 	{
-		framesCounter++;
+		int alpha;
+		int direction = -1;
 
-		if (framesCounter > 2)
+		if (active)
 		{
-			currentFrame++;
+			alpha = boomColor.a + (direction * 5);
 
-			if (currentFrame >= NUM_FRAMES_PER_LINE)
+			if (alpha > 0)
 			{
-				currentFrame = 0;
-				currentLine++;
-
-				if (currentLine >= NUM_LINES)
-				{
-					currentLine = 0;
-					active = false;
-					m_position.x = 1000.0f;
-				}
+				boomColor.a = alpha;
+				boomScale -= 0.1f;
 			}
-
-			framesCounter = 0;
+			else
+			{
+				active = false;
+			}
 		}
 	}
 }

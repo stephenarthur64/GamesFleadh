@@ -18,6 +18,7 @@ public:
 	void rotate(int direction) override;
 	void init() override; 
 	void render() override;
+	void renderBoom(Camera& t_camera);
 
 	void setInPlay(bool t_exists);
 	void makeTileCurrent(bool t_current);

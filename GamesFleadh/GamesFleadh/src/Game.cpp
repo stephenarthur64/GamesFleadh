@@ -4,7 +4,7 @@
 bool g_renderWireDebug = false;
 bool g_render2DDebug = false;
 
-Game::Game() : score(0), activeMap(1), state(GameState::GAMEPLAY)
+Game::Game() : score(0), activeMap(1), state(GameState::TITLE)
 {
     leftStickX = 0.0f;
     leftStickY = 0.0f;
@@ -115,6 +115,21 @@ void Game::loadAssets()
     countdownText = LoadTexture("ASSETS/2D/UI/RespawnText.png");
     darkenScreen = LoadTexture("ASSETS/2D/UI/DarkenLayer.png");
 
+    logo = LoadTexture("ASSETS/2D/UI/titleFINAL.png");
+    subtitle = LoadTexture("ASSETS/2D/UI/Play.png");
+
+    controllerInputs = LoadTexture("ASSETS/2D/UI/Controller.png");
+    keyboardInputs = LoadTexture("ASSETS/2D/UI/Keyboard.png");
+
+    arrow = LoadTexture("ASSETS/2D/UI/LeftArrow.png");
+    arrow2 = LoadTexture("ASSETS/2D/UI/RightArrow.png");
+
+    difficulty[0] = LoadTexture("ASSETS/2D/UI/EasyDifficulty.png");
+    difficulty[1] = LoadTexture("ASSETS/2D/UI/DefaultDifficulty.png");
+    difficulty[2] = LoadTexture("ASSETS/2D/UI/HardDifficulty.png");
+
+    leave = LoadTexture("ASSETS/2D/UI/QuitGame.png");
+
     healthSource = { 0, 0, (float)healthGradient.width, (float)healthGradient.height };
     healthDest = { 37, 900, (float)healthGradient.width + 10, (float)healthGradient.height };
 
@@ -208,6 +223,7 @@ void Game::render()
     for (Tile& tileToDraw : m_terrainTileCollection)
     {
         tileToDraw.render();
+        tileToDraw.renderBoom(camera);
     }
 
     for (int i = 0; i < MAX_SWARMERS; i++)
@@ -310,13 +326,29 @@ void Game::render()
     }
     else
     {
-        DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 20, WHITE);
-        DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
-        DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
-        DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
-        DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
-        DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
-        DrawTexture(healthBar, 10, 710.0f, WHITE);
+        if (state == GameState::GAMEPLAY)
+        {
+            DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 20, WHITE);
+            DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
+            DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
+            DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
+            DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
+            DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
+            DrawTexture(healthBar, 10, 710.0f, WHITE);
+        }
+        else if (state == GameState::TITLE)
+        {
+            DrawTexture(darkenScreen, 0, 0, WHITE);
+            DrawTextureEx(logo, { (SCREEN_WIDTH / 2.0f) - (logo.width / 2.0f) + 220.0f, (SCREEN_HEIGHT / 2.0f) - (logo.height / 2.0f) },0.0f, 0.75f, WHITE);
+            DrawTexture(subtitle, (SCREEN_WIDTH / 2.0f) - (subtitle.width / 2.0f), (SCREEN_HEIGHT / 2.0f), WHITE);
+            DrawTexture(controllerInputs, SCREEN_WIDTH - (controllerInputs.width + 100.0f), SCREEN_HEIGHT / 2.0f, WHITE);
+            DrawTexture(keyboardInputs, 100.0f, SCREEN_HEIGHT / 2.0f, WHITE);
+            DrawTexture(difficulty[selectedDifficulty], (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f), (SCREEN_HEIGHT / 2.0f) + 100.0f, WHITE);
+            DrawTextureEx(arrow, { (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f) - 50.0f, (SCREEN_HEIGHT / 2.0f) + arrowYOffset }, 0.0f, 1.0f, WHITE);
+            DrawTextureEx(arrow2, { (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f) + difficulty[selectedDifficulty].width + 10, (SCREEN_HEIGHT / 2.0f) + arrowYOffset }, 0.0f, 1.0f, WHITE);
+            DrawTexture(leave, (SCREEN_WIDTH / 2.0f) - (leave.width / 2.0f), 800.0f, WHITE);
+            DrawText("Press [SPACE]/[RT] to select", (SCREEN_WIDTH / 2.0f) - 150.0f, 1000.0f, 20, DARKGRAY);
+        }
     }
 
     
@@ -371,6 +403,10 @@ void Game::update()
     else if (state == GameState::TITLE)
     {
         camera.target = player.getPosition();
+        for (Tile& item : m_terrainTileCollection)
+        {
+            item.update(player.getPosition());
+        }
     }
     cameraMove();
     // UpdateCamera(&camera, CAMERA_PERSPECTIVE);
@@ -382,6 +418,41 @@ void Game::inputControl()
     if (!(player.isAlive()))
     {
         return;
+    }
+
+    if (state == GameState::TITLE)
+    {
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN))
+        {
+            arrowYOffset = 265.0f;
+        }
+        else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_UP))
+        {
+            arrowYOffset = 130.0f;
+        }
+
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
+        {
+            if (selectedDifficulty < 2)
+            {
+                selectedDifficulty++;
+            }
+            else
+            {
+                selectedDifficulty = 0;
+            }
+        }
+        else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
+        {
+            if (selectedDifficulty > 0)
+            {
+                selectedDifficulty--;
+            }
+            else
+            {
+                selectedDifficulty = 2;
+            }
+        }
     }
 
     if (IsKeyDown(KEY_I) || leftStickY < 0)
