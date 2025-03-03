@@ -408,6 +408,7 @@ void Player::increaseAcceleration()
 void Player::stopAcceleration()
 {
 	m_acceleration = m_maxAcceleration;
+	speedMultiplier = 0;
 }
 
 void Player::setStartingSpeed(int t_difficulty)
