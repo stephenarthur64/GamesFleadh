@@ -441,6 +441,11 @@ void Game::inputControl()
         }
     }
 
+    if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_MIDDLE_RIGHT) || IsKeyReleased(KEY_BACKSPACE))
+    {
+        state = GameState::TITLE;
+    }
+
     if (IsKeyDown(KEY_I) || leftStickY < 0)
     {
         camDirection = 0.0f;
