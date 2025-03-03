@@ -483,7 +483,7 @@ FurnitureCollisionData StreetFurniture::checkBoundsFurnitureItemsCollision(Vecto
 			default:
 				break;
 			}
-			m_data.collision = true;
+			m_data = { m_position,combinedRadius, true };
 			return m_data; // Collision detected!
 		}
 	}

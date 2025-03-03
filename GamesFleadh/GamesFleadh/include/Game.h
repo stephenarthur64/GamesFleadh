@@ -54,10 +54,9 @@ public:
 	void cameraMove();
 	void crosshairMove();
 
-	void reboundZ(Vector3 t_impactPoint);
-
 	void fogVisibility();
 	void reduceFog();
+	void darkenScreenUpdate();
 	void healthBarUpdate();
 
 private:
@@ -86,6 +85,11 @@ private:
 	Texture2D fogGradient;
 	Texture2D fogVignette;
 	Texture2D scoreBack;
+
+	Texture2D countdown[3];
+	Texture2D countdownText;
+	Texture2D darkenScreen;
+	Color darkenColour;
 
 	Rectangle gradientSource;
 	Rectangle gradientDest;

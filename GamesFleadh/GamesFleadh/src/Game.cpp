@@ -74,6 +74,7 @@ void Game::init()
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
     m_gameIsBeginning = false;
+    darkenColour.a = 0;
 }
 
 void Game::loadAssets()
@@ -107,8 +108,15 @@ void Game::loadAssets()
     healthBar = LoadTexture("ASSETS/2D/UI/HealthBarVertical.png");
     healthGradient = LoadTexture("ASSETS/2D/UI/HealthBarVerticalFill.png");
 
+    countdown[2] = LoadTexture("ASSETS/2D/UI/3.png");
+    countdown[1] = LoadTexture("ASSETS/2D/UI/2.png");
+    countdown[0] = LoadTexture("ASSETS/2D/UI/1.png");
+
+    countdownText = LoadTexture("ASSETS/2D/UI/RespawnText.png");
+    darkenScreen = LoadTexture("ASSETS/2D/UI/DarkenLayer.png");
+
     healthSource = { 0, 0, (float)healthGradient.width, (float)healthGradient.height };
-    healthDest = { 27, 900, (float)healthGradient.width + 10, (float)healthGradient.height };
+    healthDest = { 37, 900, (float)healthGradient.width + 10, (float)healthGradient.height };
 
     gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
     gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
@@ -147,7 +155,7 @@ void Game::loadAssets()
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.1);
-    PlayMusicStream(bgm);
+    //PlayMusicStream(bgm);
 }
 
 void Game::setupSkybox()
@@ -242,8 +250,10 @@ void Game::render()
 
     if (gameOverTick > 0)
     {
-        countdownRespawn = ((180 - gameOverTick) / 60.0f) + 1;
-        DrawText(TextFormat("BUZZZ HAS FAILED!\n\nRESPAWNING....\n   %d", countdownRespawn), (SCREEN_WIDTH / 2.0f) - 150.0f, SCREEN_HEIGHT / 2.0f, 30, RED);
+        DrawTexture(darkenScreen, 0, 0, darkenColour);
+        DrawTexture(countdownText, (SCREEN_WIDTH / 2.0f) - (countdownText.width / 2.0f), 200.0f, WHITE);
+        DrawTexture(countdown[countdownRespawn], (SCREEN_WIDTH / 2.0f) - (countdown[countdownRespawn].width / 2.0f), (SCREEN_HEIGHT / 2.0f) - (countdown[countdownRespawn].height / 2.0f), WHITE);
+        //DrawText(TextFormat("BUZZZ HAS FAILED!\n\nRESPAWNING....\n   %d", countdownRespawn), (SCREEN_WIDTH / 2.0f) - 150.0f, SCREEN_HEIGHT / 2.0f, 30, RED);
     }
 
     
@@ -306,7 +316,7 @@ void Game::render()
         DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
         DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
         DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
-        DrawTexture(healthBar, 0, 710.0f, WHITE);
+        DrawTexture(healthBar, 10, 710.0f, WHITE);
     }
 
     
@@ -325,7 +335,11 @@ void Game::update()
         if (!(player.isAlive()))
         {
             gameOverTick++;
-
+            if (gameOverTick > 0)
+            {
+                darkenScreenUpdate();
+                countdownRespawn = ((180 - gameOverTick) / 60.0f);
+            }
             if (gameOverTick > 180)
             {
                 gameBegins();
@@ -370,7 +384,7 @@ void Game::inputControl()
         return;
     }
 
-    if (IsKeyDown(KEY_W) || leftStickY < 0)
+    if (IsKeyDown(KEY_I) || leftStickY < 0)
     {
         camDirection = 0.0f;
         if (leftStickY < 0)
@@ -467,12 +481,16 @@ void Game::inputControl()
         g_renderWireDebug = !g_renderWireDebug;
     }
 
+    if (IsKeyReleased(KEY_K)) // DEBUG, REMOVE ---------------------------------------------------------------------------------------------------------------
+    {
+        player.FORCEKILLDEBUG();
+    }
 
 
     Vector3 normVelocity = Vector3Normalize({ leftStickX, leftStickY, 0 });
 
     player.move(normVelocity);
-    camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
+    //camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
 
     crosshairMove();
     billPositionRotating.z = player.getPosition().z - 3.0f;
@@ -538,12 +556,7 @@ void Game::crosshairMove()
     billPositionRotating.y = Clamp(billPositionRotating.y, player.getPosition().y - 5.0f, player.getPosition().y + 5.5f);
 }
 
-void Game::reboundZ(Vector3 t_impactPoint)
-{
-    std::cout << "Rebound triggered.\n";
-    m_reboundCounter = m_reboundCountMax;
-    // m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
-}
+
 
 void Game::gamepadInit()
 {
@@ -566,6 +579,7 @@ void Game::gameBegins()
     mapMove();
     billPositionRotating = { 0.0f, 6.0f, 5.0f };
     player.respawn();
+    darkenColour.a = 0;
 }
 
 void Game::gamepadUpdate()
@@ -659,15 +673,8 @@ void Game::checkCollisions()
     {// Colliding with terrain in front
         player.worldCollision(true);
         player.hitSound(0);
-        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
-        player.setAuto(false);
+        player.reboundZ(camPos);
     }
-    else
-    {
-        player.setAuto(autoScroll);
-    }
-
-    // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
     m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
 
@@ -781,6 +788,19 @@ void Game::reduceFog()
     {
         fogTick = 0;
     }
+}
+
+void Game::darkenScreenUpdate()
+{
+    int val = darkenColour.a + 10;
+    
+    if (val > 255)
+    {
+        val = 255;
+    }
+
+    darkenColour.a = val;
+    
 }
 
 void Game::healthBarUpdate()

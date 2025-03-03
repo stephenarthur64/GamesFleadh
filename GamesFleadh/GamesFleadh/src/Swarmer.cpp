@@ -1,7 +1,7 @@
 #include "Swarmer.h"
 
 // Swarmer::Swarmer(Player* t_playerRef) : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(5.0f), m_playerReference(t_playerRef)
-Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(5.0f)
+Swarmer::Swarmer() : m_speed(0.05f), m_direction(NORTH), m_spotted(false), MAX_DISTANCE(10.0f)
 {
 	currentState = new IdleState;
 	m_health = 1;
@@ -176,7 +176,7 @@ void Swarmer::hover()
 	if (m_direction == NORTH)
 	{
 
-		newPosition.x = EaseElasticOut(hoverTick, m_lowerLimit, m_upperLimit - m_lowerLimit, 300);
+		newPosition.x = EaseLinearOut(hoverTick, m_lowerLimit, m_upperLimit - m_lowerLimit, 300);
 		movement.x = newPosition.x - m_position.x;
 		m_position.x = newPosition.x;
 
@@ -185,7 +185,7 @@ void Swarmer::hover()
 
 		hoverTick++;
 
-		if (hoverTick >= 140)
+		if (hoverTick >= 300)
 		{
 			m_direction = SOUTH;
 			hoverTick = 0;
@@ -194,7 +194,7 @@ void Swarmer::hover()
 
 	if (m_direction == SOUTH)
 	{
-		newPosition.x = EaseElasticOut(hoverTick, m_upperLimit, m_lowerLimit - m_upperLimit, 300);
+		newPosition.x = EaseLinearOut(hoverTick, m_upperLimit, m_lowerLimit - m_upperLimit, 300);
 		movement.x = newPosition.x - m_position.x;
 		m_position.x = newPosition.x;
 
@@ -203,7 +203,7 @@ void Swarmer::hover()
 
 		hoverTick++;
 
-		if (hoverTick >= 140)
+		if (hoverTick >= 300)
 		{
 			m_direction = NORTH;
 			hoverTick = 0;
@@ -233,6 +233,11 @@ void Swarmer::checkDistanceFromPlayer(Vector3 t_playerPos)
 	}
 
 	if (distance <= 0.5f)
+	{
+		m_spotted = false;
+	}
+
+	if (t_playerPos.z < m_position.z)
 	{
 		m_spotted = false;
 	}

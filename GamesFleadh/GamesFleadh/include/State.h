@@ -2,7 +2,7 @@
 #include <raylib.h>
 #include "events.h"
 
-enum StateIndex{DEFAULT, ATTACK, DEATH, DAMAGE, ALERT, CHASE, SHOOT, HIT_L, HIT_R, COLLIDE_L, COLLIDE_R, IDLE_1, IDLE_2, IDLE_3, DASH};
+enum StateIndex{DEFAULT, ATTACK, DEATH, DAMAGE, ALERT, CHASE, SHOOT, HIT_R, HIT_L, COLLIDE_L, COLLIDE_R, IDLE_1, IDLE_2, IDLE_3, DASH};
 
 class GameObject;
 class MovingUpState;

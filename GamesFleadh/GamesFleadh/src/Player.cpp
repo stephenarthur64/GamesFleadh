@@ -2,7 +2,7 @@
 
 
 Player::Player() : m_speed(0.2f),  bulletCount(0), HEALTHBAR_MAX(450), m_poisoned(false), m_poisonTick(-1), MAX_POISON_TICK(30),
-					m_hpColour(WHITE)
+					m_hpColour(WHITE), m_posionHealthLost(0)
 {
 	currentState = new NoInputState;
 	m_health = 100;
@@ -67,6 +67,15 @@ void Player::enemyCollision(bool collide)
 		handleInput(Event::EVENT_DAMAGE);
 		m_health -= 10;
 	}
+}
+
+void Player::reboundZ(Vector3 &t_cam)
+{
+	std::cout << "Rebound triggered.\n";
+	m_reboundCounter = m_reboundCountMax;
+	m_auto = false;
+	m_reboundDirection = { 0.0f, 0.0f, 5.0f };
+	// m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);	
 }
 
 void Player::updateZPos(float newXPos)
@@ -165,12 +174,13 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 		{
 			handleInput(EVENT_DIE);
 		}
-		if (m_poisoned && m_health > 10 && m_poisonTick > MAX_POISON_TICK)
+		if (m_poisoned && m_posionHealthLost > 0 && m_poisonTick > MAX_POISON_TICK)
 		{
-			m_health -= 5;
+			m_health += 5;
+			m_posionHealthLost -= 5;
 			m_poisonTick = 0;
 		}
-		else if (m_health <= 10)
+		else if (m_posionHealthLost <= 0)
 		{
 			m_poisoned = false;
 			m_hpColour = WHITE;
@@ -187,9 +197,9 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 			Vector3 rebound = m_reboundDirection * m_reboundForce * frameTime;
 			m_position += rebound;
 			t_crosshair += rebound;
+			t_cam.z += rebound.z * 3.0f;
 			cameraMove(t_cam);
-			/*t_cam += rebound;
-			upperLimit.x += rebound.x;
+		/*	upperLimit.x += rebound.x;
 			upperLimit.y += rebound.y;
 
 			lowerLimit.x += rebound.x;
@@ -292,32 +302,36 @@ void Player::despawnBullet(int bulletNum)
 
 void Player::cameraMove(Vector3& t_cam)
 {
-	float speed = 0.2f;
+	float speed = 0.8f;
 
-	if (m_position.x < lowerLimit.x && t_cam.x > m_position.x)
-	{
-		t_cam.x -= speed;
-		lowerLimit.x -= speed;
-		upperLimit.x -= speed;
-	}
-	else if (m_position.y < lowerLimit.y && t_cam.y > m_position.y)
-	{
-		t_cam.y -= speed;
-		lowerLimit.y -= speed;
-		upperLimit.y -= speed;
-	}
-	else if (m_position.x > upperLimit.x && t_cam.x < m_position.x)
-	{
-		t_cam.x += speed;
-		upperLimit.x += speed;
-		lowerLimit.x += speed;
-	}
-	else if (m_position.y > upperLimit.y && t_cam.y < m_position.y)
-	{
-		t_cam.y += speed;
-		upperLimit.y += speed;
-		lowerLimit.y += speed;
-	}	
+	//if (m_position.y < lowerLimit.y && t_cam.y > m_position.y)
+	//{
+	//	t_cam.y -= speed;
+	//	lowerLimit.y -= speed;
+	//	upperLimit.y -= speed;
+	//}
+	//else if (m_position.y > upperLimit.y && t_cam.y < m_position.y)
+	//{
+	//	t_cam.y += speed;
+	//	upperLimit.y += speed;
+	//	lowerLimit.y += speed;
+	//}	
+
+	Vector3 temp = { m_position.x, m_position.y + 2.0f, t_cam.z };
+
+	//if (Vector3DistanceSqr(temp, t_cam) > 0.5f)
+	//{
+	//	speed = 1.0f;
+	//}
+	//else
+	//{
+	//	//speed = 0.0f;
+	//}
+
+	//Vector3 targetPos = temp - t_cam;
+	//t_cam += Vector3Normalize(targetPos) * speed;
+
+	t_cam = Vector3Lerp(t_cam, temp, speed);
 }
 
 void Player::rebound(Vector3 t_impactPoint)
@@ -342,21 +356,23 @@ void Player::reboundFurniture(FurnitureCollisionData t_data)
 {
 	m_auto = false;
 	std::cout << "Rebound triggered.\n";
-	/*if (m_currentVelocity == Vector3{0.0f, 0.0f, 0.0f})
+	if (m_currentVelocity == Vector3{0.0f, 0.0f, 0.0f})
 	{
 		m_currentVelocity.z = 2.0f;
 	}
 
 	m_reboundCounter = m_reboundCountMax;
 
-	Vector3 normal = Vector3Normalize(t_data.lastFurnitureCollision - m_position);
+	t_data.lastFurnitureCollision.y = m_position.y;
 
-	m_position.z += normal.z * 2.0f;*/
+	m_reboundDirection = Vector3Normalize(m_position - t_data.lastFurnitureCollision) * 2.0f;
 
-	//m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
-	////m_reboundDirection.y = 0.0f;
-	//m_position.x = t_data.lastFurnitureCollision.x + normal.x * (t_data.lastFurnitureRadius + 0.1f);
-	//m_position.z = t_data.lastFurnitureCollision.z + normal.z * (t_data.lastFurnitureRadius + 0.1f);
+	/*m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
+
+	m_reboundDirection.z = normal.z * 2.0f;*/
+	//m_reboundDirection.y = 0.0f;
+	/*m_position.x = t_data.lastFurnitureCollision.x + normal.x * (t_data.lastFurnitureRadius + 0.1f);
+	m_position.z = t_data.lastFurnitureCollision.z + normal.z * (t_data.lastFurnitureRadius + 0.1f);*/
 }
 
 void Player::death(Vector3 &t_cam, Vector3 &t_target)
@@ -377,5 +393,7 @@ void Player::poisonPlayer(bool t_poison)
 	m_poisoned = t_poison;
 	m_poisonTick = 0;
 	m_hpColour = ORANGE;
+	m_health -= 50;
+	m_posionHealthLost = 50;
 }
 

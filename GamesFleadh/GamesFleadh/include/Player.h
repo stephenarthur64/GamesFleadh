@@ -40,6 +40,7 @@ public:
 	
 	void worldCollision(bool collide);
 	void enemyCollision(bool collide);
+	void reboundZ(Vector3 &t_cam);
 
 	void updateZPos(float newXPos);
 	virtual void rotate(int t_direction) override;
@@ -81,6 +82,11 @@ public:
 		return 0.5f * sqrt(dx * dx + dy * dy + dz * dz);
 	}
 
+
+
+	void FORCEKILLDEBUG() { m_health = 0; }
+
+
 private:
 	//Weapon m_weapon;
 
@@ -116,6 +122,7 @@ private:
 	bool m_poisoned;
 	int m_poisonTick;
 	const int MAX_POISON_TICK;
+	int m_posionHealthLost;
 
 	float m_boundingBoxRadius = 0.0f;
 

@@ -3,7 +3,7 @@
 Feeder::Feeder() : MAX_DISTANCE(8.0f), m_spotted(false), m_active(false), BULLET_TICK_MAX(120), DAMAGE_TICK_MAX(60)
 {
 	currentState = new IdleState;
-	m_health = 2;
+	m_health = 1;
 	m_position = { 2.0f, 2.0f, -10.0f }; // Position is set from Tile (TileIsCurrent) -> StreetFurniture (SetRelativePosition) -> Feeder (Spawn)
 	m_colour = WHITE;
 	animsCount = 0;
@@ -33,7 +33,7 @@ void Feeder::updateHitBox()
 
 void Feeder::spawn(Vector3 t_position)
 {// Position is set from Tile (TileIsCurrent) -> StreetFurniture (SetRelativePosition) -> Feeder (Spawn)
-	m_health = 2;
+	m_health = 1;
 
 	currentState = new IdleState;
 
@@ -211,7 +211,7 @@ bool Feeder::isAlive()
 void Feeder::update(Vector3 t_target)
 {
 	currentState->update(this);
-	m_mudBomb.follow(t_target);
+	m_mudBomb.move();
 	if (m_active && bulletTick < 0)
 	{
 		shootBullet(t_target);
@@ -274,6 +274,11 @@ void Feeder::checkDistanceFromPlayer(Vector3 t_playerPos)
 	}
 
 	if (distance <= 0.5f)
+	{
+		m_spotted = false;
+	}
+
+	if (t_playerPos.z < m_position.z)
 	{
 		m_spotted = false;
 	}

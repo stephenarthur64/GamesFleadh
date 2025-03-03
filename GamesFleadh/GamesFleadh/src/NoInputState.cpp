@@ -50,7 +50,7 @@ State* NoInputState::handleInput(Event t_event)
 
 void NoInputState::update(GameObject* obj)
 {
-    if (tick < 180)
+    if (tick > 60 && tick < 240)
     {
         obj->animation(randNum);
     }
@@ -60,7 +60,7 @@ void NoInputState::update(GameObject* obj)
     }
     tick++;
 
-    if (tick > 240)
+    if (tick > 300)
     {
         obj->resetAnimation();
         tick = 0;
