@@ -519,71 +519,86 @@ bool StreetFurniture::checkMudbombPlayerCollision(BoundingBox t_player)
 
 RayCollision StreetFurniture::checkRay(Ray t_ray, RayCollision t_collision)
 {
-	for (int c = 0; c < m_modelBoundingBoxes.size(); c++)
+	if (m_hasFeeder)
 	{
-		RayCollision boxHitInfo = GetRayCollisionBox(t_ray, m_modelBoundingBoxes[c]);
+		RayCollision boxHitInfo = GetRayCollisionBox(t_ray, m_feeder.getHitbox());
 
 		if ((boxHitInfo.hit) && (boxHitInfo.distance < t_collision.distance))
 		{
-			switch (m_typeEnum)
-			{
-			case NONE:
-				std::cout << "\nRay hits mushroom type: " << "NONE\n";
-				break;
-			case DEFAULT_MUSHROOM:
-				std::cout << "\nRay hits mushroom type: " << "DEFAULT_MUSHROOM\n"; "";
-				break;
-			case BATCH_MUSHROOM:
-				std::cout << "\nRay hits mushroom type: " << "BATCH_MUSHROOM\n"; "";
-				break;
-			case BUMPY_MUSHROOM:
-				std::cout << "\nRay hits mushroom type: " << "BUMPY_MUSHROOM\n"; "";
-				break;
-			case CHUNKY_MUSHROOM:
-				/*std::cout << "\nRay hits mushroom type: " << "CHUNKY_MUSHROOM\n"; "";*/
-				std::cout << "\nThis should not return - these are reeds!\n"; "";
-				break;
-			case POINTY_MUSHROOM:
-				std::cout << "\nRay hits mushroom type: " << "POINTY_MUSHROOM\n"; "";
-				break;
-			case NOT_MUSHROOM:
-				std::cout << "\nRay hits mushroom type: " << "NOT_MUSHROOM\n";
-				break;
-			default:
-				break;
-			}
-
-			//RayCollision meshHitInfo = { 0 };
-
-			// for (int m = 0; m < m_body.meshCount; m++)
-			////for (Mesh aMesh : m_body.meshes)
-			//{
-			//	meshHitInfo = GetRayCollisionMesh(t_ray, m_body.meshes[m], m_body.transform);
-			//	if (meshHitInfo.hit)
-			//	{
-			//		if ((!t_collision.hit) || (t_collision.distance > meshHitInfo.distance)) t_collision = meshHitInfo;
-
-			//		break;
-			//	}
-			//}
-
-			/*if (meshHitInfo.hit)
-			{
-				return meshHitInfo;
-			}*/
-
-			//// Save the closest hit mesh
-			//if ((!t_collision.hit) || (t_collision.distance > boxHitInfo.distance)) t_collision = boxHitInfo;
-
-			//break;  // Stop once one mesh collision is detected, the colliding mesh is m
-		}
-
-		if (boxHitInfo.hit)
-		{
-			std::cout << "We hit something!\n\n";
+			std::cout << "We hit a FEEDER!\n";
 			return boxHitInfo;
 		}
 	}
+
+	if (g_testForMushrooms)
+	{
+		for (int c = 0; c < m_modelBoundingBoxes.size(); c++)
+		{
+			RayCollision boxHitInfo = GetRayCollisionBox(t_ray, m_modelBoundingBoxes[c]);
+
+			if ((boxHitInfo.hit) && (boxHitInfo.distance < t_collision.distance))
+			{
+				switch (m_typeEnum)
+				{
+				case NONE:
+					std::cout << "\nRay hits mushroom type: " << "NONE\n";
+					break;
+				case DEFAULT_MUSHROOM:
+					std::cout << "\nRay hits mushroom type: " << "DEFAULT_MUSHROOM\n"; "";
+					break;
+				case BATCH_MUSHROOM:
+					std::cout << "\nRay hits mushroom type: " << "BATCH_MUSHROOM\n"; "";
+					break;
+				case BUMPY_MUSHROOM:
+					std::cout << "\nRay hits mushroom type: " << "BUMPY_MUSHROOM\n"; "";
+					break;
+				case CHUNKY_MUSHROOM:
+					/*std::cout << "\nRay hits mushroom type: " << "CHUNKY_MUSHROOM\n"; "";*/
+					std::cout << "\nThis should not return - these are reeds!\n"; "";
+					break;
+				case POINTY_MUSHROOM:
+					std::cout << "\nRay hits mushroom type: " << "POINTY_MUSHROOM\n"; "";
+					break;
+				case NOT_MUSHROOM:
+					std::cout << "\nRay hits mushroom type: " << "NOT_MUSHROOM\n";
+					break;
+				default:
+					break;
+				}
+
+				//RayCollision meshHitInfo = { 0 };
+
+				// for (int m = 0; m < m_body.meshCount; m++)
+				////for (Mesh aMesh : m_body.meshes)
+				//{
+				//	meshHitInfo = GetRayCollisionMesh(t_ray, m_body.meshes[m], m_body.transform);
+				//	if (meshHitInfo.hit)
+				//	{
+				//		if ((!t_collision.hit) || (t_collision.distance > meshHitInfo.distance)) t_collision = meshHitInfo;
+
+				//		break;
+				//	}
+				//}
+
+				/*if (meshHitInfo.hit)
+				{
+					return meshHitInfo;
+				}*/
+
+				//// Save the closest hit mesh
+				//if ((!t_collision.hit) || (t_collision.distance > boxHitInfo.distance)) t_collision = boxHitInfo;
+
+				//break;  // Stop once one mesh collision is detected, the colliding mesh is m
+			}
+
+			if (boxHitInfo.hit)
+			{
+				std::cout << "We hit something!\n\n";
+				return boxHitInfo;
+			}
+		}
+	}
+	
 	return t_collision;
 }
 

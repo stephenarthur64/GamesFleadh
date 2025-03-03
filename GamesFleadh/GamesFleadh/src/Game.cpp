@@ -3,6 +3,7 @@
 
 bool g_renderWireDebug = false;
 bool g_render2DDebug = false;
+bool g_testForMushrooms = true;
 
 Game::Game() : score(0), activeMap(1), state(GameState::TITLE)
 {
@@ -497,12 +498,12 @@ void Game::inputControl()
         std::cout << "This could trigger a breakpoint.";
     }
 
-    if (IsKeyReleased(KEY_F5) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
-    {// RS: Toggle! Is nice, you like.
-        autoScroll = !autoScroll;
-        player.setAuto(autoScroll);
-        std::cout << "Good god.";
-    }
+    //if (IsKeyReleased(KEY_F5) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
+    //{// RS: Toggle! Is nice, you like.
+    //    autoScroll = !autoScroll;
+    //    player.setAuto(autoScroll);
+    //    std::cout << "Good god.";
+    //}
 
     if (IsKeyReleased(KEY_F1))
     {
@@ -554,11 +555,6 @@ void Game::inputControl()
     {
         std::cout << "\nToggling Debug Wireframes!\n";
         g_renderWireDebug = !g_renderWireDebug;
-    }
-
-    if (IsKeyReleased(KEY_K)) // DEBUG, REMOVE ---------------------------------------------------------------------------------------------------------------
-    {
-        player.FORCEKILLDEBUG();
     }
 
 
@@ -661,7 +657,7 @@ void Game::gameBegins()
     player.respawn();
     player.setStartingSpeed(selectedDifficulty);
     darkenColour.a = 0;
-    //PlayMusicStream(bgm);
+    PlayMusicStream(bgm);
     PauseMusicStream(titleScreenTrack);
 }
 
@@ -807,7 +803,21 @@ void Game::checkCollisions()
     m_collision.distance = FLT_MAX;
     m_collision.hit = false;
 
-    m_collision = m_terrainTileCollection[m_tileCurrent].checkRay(m_ray, m_collision);
+    for (int i = 0; i < MAX_SWARMERS; i++)
+    {
+        m_collision = GetRayCollisionBox(m_ray, swarmer[i].getHitbox());
+    }
+
+    if ((m_collision.hit) && (m_collision.distance < m_collision.distance))
+    {
+        std::cout << "We hit a SWARMER!\n";
+
+    }
+    else
+    {
+        m_collision = m_terrainTileCollection[m_tileCurrent].checkRay(m_ray, m_collision);
+    }
+    
 }
 
 void Game::mapMove()
