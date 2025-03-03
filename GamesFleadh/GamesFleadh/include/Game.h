@@ -93,6 +93,15 @@ private:
 	Texture2D darkenScreen;
 	Color darkenColour;
 
+	Texture2D logo;
+	Texture2D subtitle;
+	Texture2D controllerInputs;
+	Texture2D keyboardInputs;
+	Texture2D arrow;
+	Texture2D arrow2;
+	Texture2D difficulty[3];
+	Texture2D leave;
+
 	Rectangle gradientSource;
 	Rectangle gradientDest;
 	Rectangle healthSource;
@@ -105,11 +114,16 @@ private:
 	int fogTick = 0;
 	float heightVal = 0;
 
+	int selectedDifficulty = 0;
+
 	int healthTick = 0;
 	float heightHealth = 0;
 
 	float camSpeed = 0.2f;
 	float camDirection;
+
+	float arrowYOffset = 130.0f;
+	bool difficultySwitch = false;
 
 	int gamepad = 0;
 
@@ -187,6 +201,9 @@ private:
 
 	Music bgm;
 	bool m_bgm_toggle = true;
+	Music titleScreenTrack;
+	Sound sfxHover;
+	Sound sfxSelect;
 
 	std::vector<Tile> m_terrainTileCollection;
 
@@ -207,6 +224,7 @@ private:
 	const float oobResetCounterMax = 0.33f;
 	float oobResetCounterCur = 0.0f;
 
+	bool endGame = false;
 
 	float diffBetweenLimits = 0.0f;
 

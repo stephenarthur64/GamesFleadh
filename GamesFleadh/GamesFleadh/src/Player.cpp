@@ -71,11 +71,13 @@ void Player::enemyCollision(bool collide)
 
 void Player::reboundZ(Vector3 &t_cam)
 {
-	std::cout << "Rebound triggered.\n";
-	m_reboundCounter = m_reboundCountMax;
-	m_auto = false;
-	m_reboundDirection = { 0.0f, 0.0f, 5.0f };
-	// m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);	
+	if (m_alive)
+	{
+		std::cout << "Rebound triggered.\n";
+		m_reboundCounter = m_reboundCountMax;
+		m_auto = false;
+		m_reboundDirection = { 0.0f, 0.0f, 5.0f };
+	}
 }
 
 void Player::updateZPos(float newXPos)
@@ -134,8 +136,6 @@ void Player::render()
 		bullet[i].render();
 	}
 
-	DrawRectangle(lowerLimit.x, lowerLimit.y, upperLimit.x - lowerLimit.x, upperLimit.y - lowerLimit.y, RED);
-
 	if (g_renderWireDebug)
 	{
 		DrawBoundingBox(m_hitbox, RED);
@@ -193,7 +193,7 @@ void Player::update(Vector3 &t_cam, Vector3 &t_crosshair)
 			m_poisonTick++;
 		}
 
-		if (m_reboundCounter > 0)
+		if (m_reboundCounter > 0 && m_alive)
 		{
 			float frameTime = GetFrameTime();
 			m_reboundCounter -= frameTime;
@@ -307,34 +307,12 @@ void Player::cameraMove(Vector3& t_cam)
 {
 	float speed = 0.8f;
 
-	//if (m_position.y < lowerLimit.y && t_cam.y > m_position.y)
-	//{
-	//	t_cam.y -= speed;
-	//	lowerLimit.y -= speed;
-	//	upperLimit.y -= speed;
-	//}
-	//else if (m_position.y > upperLimit.y && t_cam.y < m_position.y)
-	//{
-	//	t_cam.y += speed;
-	//	upperLimit.y += speed;
-	//	lowerLimit.y += speed;
-	//}	
-
 	Vector3 temp = { m_position.x, m_position.y + 2.0f, t_cam.z };
 
-	//if (Vector3DistanceSqr(temp, t_cam) > 0.5f)
-	//{
-	//	speed = 1.0f;
-	//}
-	//else
-	//{
-	//	//speed = 0.0f;
-	//}
-
-	//Vector3 targetPos = temp - t_cam;
-	//t_cam += Vector3Normalize(targetPos) * speed;
-
-	t_cam = Vector3Lerp(t_cam, temp, speed);
+	if (m_alive)
+	{
+		t_cam = Vector3Lerp(t_cam, temp, speed);
+	}
 }
 
 void Player::rebound(Vector3 t_impactPoint)
@@ -369,13 +347,6 @@ void Player::reboundFurniture(FurnitureCollisionData t_data)
 	t_data.lastFurnitureCollision.y = m_position.y;
 
 	m_reboundDirection = Vector3Normalize(m_position - t_data.lastFurnitureCollision) * 2.0f;
-
-	/*m_reboundDirection = Vector3Reflect(m_currentVelocity, normal);
-
-	m_reboundDirection.z = normal.z * 2.0f;*/
-	//m_reboundDirection.y = 0.0f;
-	/*m_position.x = t_data.lastFurnitureCollision.x + normal.x * (t_data.lastFurnitureRadius + 0.1f);
-	m_position.z = t_data.lastFurnitureCollision.z + normal.z * (t_data.lastFurnitureRadius + 0.1f);*/
 }
 
 void Player::death(Vector3 &t_cam, Vector3 &t_target)
@@ -399,4 +370,24 @@ void Player::poisonPlayer(bool t_poison)
 	m_health -= 50;
 	m_posionHealthLost = 50;
 }
+
+
+void Player::increaseAcceleration()
+{
+	m_acceleration += 0.01f;
+	speedMultiplier += 1;
+}
+
+void Player::stopAcceleration()
+{
+	m_acceleration = m_maxAcceleration;
+	speedMultiplier = 0;
+}
+
+void Player::setStartingSpeed(int t_difficulty)
+{
+	m_maxAcceleration = m_maxAcceleration + (0.02 * t_difficulty);
+	m_acceleration = m_maxAcceleration;
+}
+
 

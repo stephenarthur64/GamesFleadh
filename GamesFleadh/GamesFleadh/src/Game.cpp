@@ -4,7 +4,7 @@
 bool g_renderWireDebug = false;
 bool g_render2DDebug = false;
 
-Game::Game() : score(0), activeMap(1), state(GameState::GAMEPLAY)
+Game::Game() : score(0), activeMap(1), state(GameState::TITLE)
 {
     leftStickX = 0.0f;
     leftStickY = 0.0f;
@@ -35,7 +35,7 @@ void Game::run()
 
     init();
 
-    while (!WindowShouldClose())
+    while (!endGame && !WindowShouldClose())
     {
         update();
         render();
@@ -47,6 +47,7 @@ void Game::init()
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
     //ToggleFullscreen();
     InitAudioDevice();
+    HideCursor();
 
     // Define our custom camera to look into our 3d world
     camera = { 0 };
@@ -89,7 +90,7 @@ void Game::loadAssets()
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_03, ASSET_FURNITUREMAP_03, ASSET_TILE_MODEL_02, GULLY_DIFFUSE_03));
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_04, ASSET_FURNITUREMAP_04, ASSET_TILE_MODEL_03, GULLY_DIFFUSE_04));
     // m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
-
+    
     for (int i = 0; i < MAX_SWARMERS; i++)
     {
         Vector3 pos = m_terrainTileCollection[m_tileCurrent].getSwarmerPos(i);
@@ -114,6 +115,26 @@ void Game::loadAssets()
 
     countdownText = LoadTexture("ASSETS/2D/UI/RespawnText.png");
     darkenScreen = LoadTexture("ASSETS/2D/UI/DarkenLayer.png");
+
+    logo = LoadTexture("ASSETS/2D/UI/titleFINAL.png");
+    subtitle = LoadTexture("ASSETS/2D/UI/Play.png");
+
+    controllerInputs = LoadTexture("ASSETS/2D/UI/Controller.png");
+    keyboardInputs = LoadTexture("ASSETS/2D/UI/Keyboard.png");
+
+    arrow = LoadTexture("ASSETS/2D/UI/LeftArrow.png");
+    arrow2 = LoadTexture("ASSETS/2D/UI/RightArrow.png");
+
+    difficulty[0] = LoadTexture("ASSETS/2D/UI/EasyDifficulty.png");
+    difficulty[1] = LoadTexture("ASSETS/2D/UI/DefaultDifficulty.png");
+    difficulty[2] = LoadTexture("ASSETS/2D/UI/HardDifficulty.png");
+
+    leave = LoadTexture("ASSETS/2D/UI/QuitGame.png");
+
+    sfxHover = LoadSound("ASSETS/Audio/SFX/UI/hoverSoundEffect.mp3");
+    sfxSelect = LoadSound("ASSETS/Audio/SFX/UI/SelectionSoundEffect.m4a");
+    SetSoundVolume(sfxHover, 0.4);
+    SetSoundVolume(sfxSelect, 0.4);
 
     healthSource = { 0, 0, (float)healthGradient.width, (float)healthGradient.height };
     healthDest = { 37, 900, (float)healthGradient.width + 10, (float)healthGradient.height };
@@ -155,7 +176,10 @@ void Game::loadAssets()
 
     bgm = LoadMusicStream("ASSETS/Audio/Music/hiveMindSet.wav");
     SetMusicVolume(bgm, 0.1);
-    //PlayMusicStream(bgm);
+
+    titleScreenTrack = LoadMusicStream("ASSETS/Audio/SFX/Environment/environmentalAmbience.mp3");
+    SetMusicVolume(titleScreenTrack, 0.4);
+    PlayMusicStream(titleScreenTrack);
 }
 
 void Game::setupSkybox()
@@ -208,6 +232,7 @@ void Game::render()
     for (Tile& tileToDraw : m_terrainTileCollection)
     {
         tileToDraw.render();
+        tileToDraw.renderBoom(camera);
     }
 
     for (int i = 0; i < MAX_SWARMERS; i++)
@@ -270,60 +295,31 @@ void Game::render()
 
         /*DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
-        DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);*/
-
-        // Vector2 GetWorldToScreen(Vector3 position, Camera camera);
-
-        
-
-        //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
-
-        /*for (int i = 0; i < MAX_MUSHROOMS; i++)
-        {
-            if (mushroom[i].isActive())
-            {
-                DrawText(TextFormat("FEEDER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
-            }
-        }
-        if (swarmer[0].isActive())
-        {
-            DrawText(TextFormat("SWARMER KILLED: +%i SCORE", 10), 10, 90, 15, RED);
-        }
-    DrawRectangleRec(player.getHealthBar(), player.getHealthBarColour());
-    DrawTexture(healthBar, 0, 1000, WHITE);
-
-    DrawTexture(fogVignette, 0, 0, fogOpacity);
-    //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
-    //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
-    DrawTexturePro(fogGradient, gradientSource, gradientDest, {(float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
-    DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
-  
-    DrawText(TextFormat("DIFF IN LIMITS: %f", diffBetweenLimits), 10, 440, 10, RED);
-    //DrawText(TextFormat("SCORE: %i", score), 10, 70, 25, RED);
-    DrawTextEx(gameFont, TextFormat("SCORE: %i", score), { (SCREEN_WIDTH / 2.0f) - 150, 20 }, 25, 5, WHITE);
-    
-
-        /*DrawText((TextFormat("PLAYER XPos: %f, YPos: %f, ZPos: %f", player.getPosition().x, player.getPosition().y, player.getPosition().z)), 10, 10, 32, GREEN);
-        DrawText((TextFormat("NormalX: %f, NormalZ: %f", worldNormalX, worldNormalZ)), 10, 45, 32, ORANGE);
-        DrawText((TextFormat("TexU: %f, TexV: %f", texUcoord, texVcoord)), 10, 90, 32, PURPLE);
-        DrawText((TextFormat("World Y Normal: %f", worldYNormalFromCol)), 10, 135, 32, BROWN);
-        DrawText((TextFormat("World Y Pos: %f", worldYPos)), 10, 170, 32, SKYBLUE);
-        DrawText((TextFormat("CAMERA XPos: %f, YPos: %f, ZPos: %f", camPos.x, camPos.y, camPos.z)), 10, 202, 32, GREEN);
-        //DrawText((TextFormat("Map 01 Position x %f, y %f, z %f", mapPosition.x, mapPosition.y, mapPosition.z)), 10, 247, 32, ORANGE);
-        //DrawText((TextFormat("Map 02 Position x %f, y %f, z %f", mapPosition2.x, mapPosition2.y, mapPosition2.z)), 10, 280, 32, SKYBLUE);
-
-        DrawText((TextFormat("BoundingBoxMin: x %f, y %f, z %f", heightMapBounds.min.x, heightMapBounds.min.y, heightMapBounds.min.z)), 10, 316, 32, GREEN);
-        DrawText((TextFormat("BoundingBoxMax: x %f, y %f, z %f", heightMapBounds.max.x, heightMapBounds.max.y, heightMapBounds.max.z)), 10, 340, 32, PURPLE);*/
+        DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);
     }
     else
     {
-        DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 20, WHITE);
-        DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
-        DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
-        DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
-        DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
-        DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);        
-        DrawTexture(healthBar, 10, 710.0f, WHITE);
+        if (state == GameState::GAMEPLAY)
+        {
+            DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 20, WHITE);
+            DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
+            DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
+            DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
+            DrawTexture(healthBar, 10, 710.0f, WHITE);
+        }
+        else if (state == GameState::TITLE)
+        {
+            DrawTexture(darkenScreen, 0, 0, WHITE);
+            DrawTextureEx(logo, { (SCREEN_WIDTH / 2.0f) - (logo.width / 2.0f) + 220.0f, (SCREEN_HEIGHT / 2.0f) - (logo.height / 2.0f) },0.0f, 0.75f, WHITE);
+            DrawTexture(subtitle, (SCREEN_WIDTH / 2.0f) - (subtitle.width / 2.0f), (SCREEN_HEIGHT / 2.0f), WHITE);
+            DrawTexture(controllerInputs, SCREEN_WIDTH - (controllerInputs.width + 100.0f), SCREEN_HEIGHT / 2.0f, WHITE);
+            DrawTexture(keyboardInputs, 100.0f, SCREEN_HEIGHT / 2.0f, WHITE);
+            DrawTexture(difficulty[selectedDifficulty], (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f), (SCREEN_HEIGHT / 2.0f) + 100.0f, WHITE);
+            DrawTextureEx(arrow, { (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f) - 50.0f, (SCREEN_HEIGHT / 2.0f) + arrowYOffset }, 0.0f, 1.0f, WHITE);
+            DrawTextureEx(arrow2, { (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f) + difficulty[selectedDifficulty].width + 10, (SCREEN_HEIGHT / 2.0f) + arrowYOffset }, 0.0f, 1.0f, WHITE);
+            DrawTexture(leave, (SCREEN_WIDTH / 2.0f) - (leave.width / 2.0f), 800.0f, WHITE);
+            DrawText("Press [SPACE]/[RT] to select", (SCREEN_WIDTH / 2.0f) - 150.0f, 1000.0f, 20, DARKGRAY);
+        }
     }
 
     
@@ -334,11 +330,11 @@ void Game::render()
 
 void Game::update()
 {
-    UpdateMusicStream(bgm);
     gamepadUpdate();
     inputControl();
     if (state == GameState::GAMEPLAY)
     {
+        UpdateMusicStream(bgm);
         if (!(player.isAlive()))
         {
             gameOverTick++;
@@ -377,7 +373,12 @@ void Game::update()
     }
     else if (state == GameState::TITLE)
     {
+        UpdateMusicStream(titleScreenTrack);
         camera.target = player.getPosition();
+        for (Tile& item : m_terrainTileCollection)
+        {
+            item.update(player.getPosition());
+        }
     }
     cameraMove();
     // UpdateCamera(&camera, CAMERA_PERSPECTIVE);
@@ -389,6 +390,63 @@ void Game::inputControl()
     if (!(player.isAlive()))
     {
         return;
+    }
+
+    if (state == GameState::TITLE)
+    {
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) || IsKeyReleased(KEY_DOWN))
+        {
+            PlaySound(sfxHover);
+            arrowYOffset = 265.0f;
+        }
+        else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_UP) || IsKeyReleased(KEY_UP))
+        {
+            PlaySound(sfxHover);
+            arrowYOffset = 130.0f;
+        }
+
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) || IsKeyReleased(KEY_SPACE))
+        {
+            PlaySound(sfxSelect);
+            if (arrowYOffset == 130.0f)
+            {
+                gameBegins();
+            }
+            else if (arrowYOffset == 265.0f)
+            {
+                endGame = true;
+            }
+        }
+
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || IsKeyReleased(KEY_RIGHT))
+        {
+            PlaySound(sfxHover);
+            if (selectedDifficulty < 2)
+            {
+                selectedDifficulty++;
+            }
+            else
+            {
+                selectedDifficulty = 0;
+            }
+        }
+        else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT) || IsKeyReleased(KEY_LEFT))
+        {
+            PlaySound(sfxHover);
+            if (selectedDifficulty > 0)
+            {
+                selectedDifficulty--;
+            }
+            else
+            {
+                selectedDifficulty = 2;
+            }
+        }
+    }
+
+    if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_MIDDLE_RIGHT) || IsKeyReleased(KEY_BACKSPACE))
+    {
+        state = GameState::TITLE;
     }
 
     if (IsKeyDown(KEY_I) || leftStickY < 0)
@@ -512,12 +570,15 @@ void Game::inputControl()
     player.move(normVelocity);
     //camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
 
-    crosshairMove();
+    if (state == GameState::GAMEPLAY)
+    {
+        crosshairMove();
+    }
     billPositionRotating.z = player.getPosition().z - 3.0f;
 
     if (player.isAuto())
     {// RS: How are we not doing this stuff with GETFRAMETIME(), are we barbarians?
-        camPos.z += -0.12f;
+        camPos.z -= player.getAcceleration();
     }
 
     if (m_reboundCounter > 0)
@@ -593,19 +654,23 @@ void Game::gamepadInit()
 
 void Game::gameBegins()
 {
+    state = GameState::GAMEPLAY;
     gameOverTick = 0;
     score = 0;
     camPos = { 0.0f, 5.0f, -2.0f };
     mapMove();
     billPositionRotating = { 0.0f, 6.0f, 5.0f };
     player.respawn();
+    player.setStartingSpeed(selectedDifficulty);
     darkenColour.a = 0;
+    //PlayMusicStream(bgm);
+    PauseMusicStream(titleScreenTrack);
 }
 
 void Game::gamepadUpdate()
 {
 
-    if (IsGamepadAvailable(gamepad))
+    if (IsGamepadAvailable(gamepad) && state == GameState::GAMEPLAY)
     {
         // Get axis values
         leftStickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
@@ -658,7 +723,7 @@ void Game::checkCollisions()
         {// Feeder collision set to true in Furniture (follow if statement above)
             player.despawnBullet(i);
             reduceFog();
-            score += 10;
+            score += 10 + (5 * selectedDifficulty) * player.getSpeedMultiplier();
         }
 
         for (int j = 0; j < MAX_SWARMERS; j++)
@@ -668,7 +733,7 @@ void Game::checkCollisions()
                 swarmer[j].collision(true);
                 reduceFog();
                 player.despawnBullet(i);
-                score += 10;
+                score += 10 + (5 * selectedDifficulty) * player.getSpeedMultiplier();
             }
         }
     }
@@ -679,6 +744,7 @@ void Game::checkCollisions()
         player.handleInput(EVENT_COLLIDE_R);
         player.hitSound(0);
         player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+        player.stopAcceleration();
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
@@ -687,6 +753,7 @@ void Game::checkCollisions()
         player.handleInput(EVENT_COLLIDE_L);
         player.hitSound(0);
         player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+        player.stopAcceleration();
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
@@ -694,6 +761,7 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.hitSound(0);
         player.reboundZ(camPos);
+        player.stopAcceleration();
     }
 
     m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
@@ -703,6 +771,7 @@ void Game::checkCollisions()
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
         player.reboundFurniture(m_collisionData);
+        player.stopAcceleration();
     }
     else
     {
@@ -782,6 +851,7 @@ void Game::mapMove()
         swarmer[i].spawn(pos, 2, 0);
     }
 
+    player.increaseAcceleration();
     float mapLength = 64.0f;
 }
 
@@ -846,5 +916,6 @@ void Game::healthBarUpdate()
 
     healthDest.height = player.getHealth() * heightPercent;
 }
+
 
 

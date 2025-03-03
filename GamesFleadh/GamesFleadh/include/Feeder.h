@@ -80,6 +80,9 @@ private:
 
 	bool boomActive = false;
 	int framesCounter = 0;
+	int boomDirection = 1;
+	Color boomColor;
+	float boomScale = 0.0f;
 
 	Vector3 m_target;
 

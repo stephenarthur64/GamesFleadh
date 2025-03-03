@@ -61,9 +61,11 @@ private:
 	Sound sfxAlert;
 	Sound sfxAttack;
 	Sound sfxScan;
+	Sound sfxChase;
 
 	// Load explosion texture
 	Texture2D explosion;
+	Color boomColor;
 
 	// Init variables for animation
 	float frameWidth;   // Sprite one frame rectangle width
@@ -76,6 +78,7 @@ private:
 
 	bool active = false;
 	int framesCounter = 0;
+	float boomScale = 2.0f;
 
 	Player* m_playerReference;
 };
