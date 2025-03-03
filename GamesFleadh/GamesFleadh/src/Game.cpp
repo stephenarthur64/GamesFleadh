@@ -121,7 +121,7 @@ void Game::loadAssets()
     gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
     gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
 
-    bill = LoadTexture("ASSETS/2D/Crosshair/ArrowCrosshair.png");
+    bill = LoadTexture("ASSETS/2D/Crosshair/HexagonCrosshair.png"); // ArrowCrosshair.png");
     source = { 0.0f, 0.0f, (float)bill.width, (float)bill.height };
     billUp = { 0.0f, 1.0f, 0.0f };
     size = { source.width / source.height, 1.0f };
@@ -373,7 +373,7 @@ void Game::update()
         camera.target = player.getPosition();
     }
     cameraMove();
-    UpdateCamera(&camera, CAMERA_PERSPECTIVE);
+    // UpdateCamera(&camera, CAMERA_PERSPECTIVE);
     //fogVisibility();
 }
 
