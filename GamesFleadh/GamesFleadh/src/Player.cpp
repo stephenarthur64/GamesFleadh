@@ -134,8 +134,6 @@ void Player::render()
 		bullet[i].render();
 	}
 
-	DrawRectangle(lowerLimit.x, lowerLimit.y, upperLimit.x - lowerLimit.x, upperLimit.y - lowerLimit.y, RED);
-
 	if (g_renderWireDebug)
 	{
 		DrawBoundingBox(m_hitbox, RED);
@@ -399,4 +397,16 @@ void Player::poisonPlayer(bool t_poison)
 	m_health -= 50;
 	m_posionHealthLost = 50;
 }
+
+
+void Player::increaseAcceleration()
+{
+	m_acceleration += 0.1f;
+}
+
+void Player::stopAcceleration()
+{
+	m_acceleration = 0.12f;
+}
+
 

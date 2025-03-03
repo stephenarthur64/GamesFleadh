@@ -89,7 +89,7 @@ void Game::loadAssets()
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_03, ASSET_FURNITUREMAP_03, ASSET_TILE_MODEL_02, GULLY_DIFFUSE_03));
     m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_04, ASSET_FURNITUREMAP_04, ASSET_TILE_MODEL_03, GULLY_DIFFUSE_04));
     // m_terrainTileCollection.push_back(Tile(ASSET_HEIGHTMAP_01, ASSET_FURNITUREMAP_01, ASSET_TILE_MODEL_01, GULLY_DIFFUSE_01));
-
+    
     for (int i = 0; i < MAX_SWARMERS; i++)
     {
         Vector3 pos = m_terrainTileCollection[m_tileCurrent].getSwarmerPos(i);
@@ -497,7 +497,7 @@ void Game::inputControl()
 
     if (player.isAuto())
     {// RS: How are we not doing this stuff with GETFRAMETIME(), are we barbarians?
-        camPos.z += -0.12f;
+        camPos.z -= player.getAcceleration();
     }
 
     if (m_reboundCounter > 0)
@@ -659,6 +659,7 @@ void Game::checkCollisions()
         player.handleInput(EVENT_COLLIDE_R);
         player.hitSound(0);
         player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
+        player.stopAcceleration();
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL))
@@ -667,6 +668,7 @@ void Game::checkCollisions()
         player.handleInput(EVENT_COLLIDE_L);
         player.hitSound(0);
         player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
+        player.stopAcceleration();
     }
 
     if (m_terrainTileCollection[m_tileCurrent].isColliding(player.getPosition() + PLAYER_COLLISION_OFFSET_FRONT))
@@ -674,6 +676,7 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.hitSound(0);
         player.reboundZ(camPos);
+        player.stopAcceleration();
     }
 
     m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
@@ -683,6 +686,7 @@ void Game::checkCollisions()
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
         player.reboundFurniture(m_collisionData);
+        player.stopAcceleration();
     }
     else
     {
@@ -752,6 +756,7 @@ void Game::mapMove()
         swarmer[i].spawn(pos, 2, 0);
     }
 
+    player.increaseAcceleration();
     float mapLength = 64.0f;
 }
 

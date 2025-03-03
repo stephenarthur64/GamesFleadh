@@ -72,6 +72,10 @@ public:
 	void poisonPlayer(bool t_poison);
 	bool isPoisoned() { return m_poisoned; }
 
+	float getAcceleration() { return m_acceleration; }
+	void increaseAcceleration();
+	void stopAcceleration();
+
 	float boundingBoxRadius(BoundingBox box)
 	{
 		float dx = box.max.x - box.min.x;
@@ -85,7 +89,6 @@ public:
 
 
 	void FORCEKILLDEBUG() { m_health = 0; }
-
 
 private:
 	//Weapon m_weapon;
@@ -130,5 +133,7 @@ private:
 
 	Vector2 lowerLimit = { -1.0f, -2.0f };
 	Vector2 upperLimit = { 1.0f, 2.0f };
+
+	float m_acceleration = 0.12f;
 };
 
