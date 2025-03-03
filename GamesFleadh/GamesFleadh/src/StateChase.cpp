@@ -1,6 +1,7 @@
 #include "StateChase.h"
 #include "IdleState.h"
 #include "ShootState.h"
+#include "DeathState.h"
 
 State* StateChase::handleInput(Event t_event)
 {
@@ -11,6 +12,11 @@ State* StateChase::handleInput(Event t_event)
     if (t_event == EVENT_SHOOT)
     {
         return new ShootState;
+    }
+
+    if (t_event == EVENT_DIE)
+    {
+        return new DeathState;
     }
 
     return nullptr;

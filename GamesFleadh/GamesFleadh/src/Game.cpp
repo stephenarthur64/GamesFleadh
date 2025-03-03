@@ -47,6 +47,7 @@ void Game::init()
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
     //ToggleFullscreen();
     InitAudioDevice();
+    HideCursor();
 
     // Define our custom camera to look into our 3d world
     camera = { 0 };
@@ -129,6 +130,11 @@ void Game::loadAssets()
     difficulty[2] = LoadTexture("ASSETS/2D/UI/HardDifficulty.png");
 
     leave = LoadTexture("ASSETS/2D/UI/QuitGame.png");
+
+    sfxHover = LoadSound("ASSETS/Audio/SFX/UI/hoverSoundEffect.mp3");
+    sfxSelect = LoadSound("ASSETS/Audio/SFX/UI/SelectionSoundEffect.m4a");
+    SetSoundVolume(sfxHover, 0.4);
+    SetSoundVolume(sfxSelect, 0.4);
 
     healthSource = { 0, 0, (float)healthGradient.width, (float)healthGradient.height };
     healthDest = { 37, 900, (float)healthGradient.width + 10, (float)healthGradient.height };
@@ -295,9 +301,7 @@ void Game::render()
             DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 20, WHITE);
             DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
             DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
-            DrawTexturePro(fogGradient, gradientSource, gradientDest, { (float)fogGradient.width / 2.0f, (float)fogGradient.height / 2.0f }, 180.0f, WHITE);
             DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
-            DrawTexture(fogBar, SCREEN_WIDTH - 60, 100, WHITE);
             DrawTexture(healthBar, 10, 710.0f, WHITE);
         }
         else if (state == GameState::TITLE)
@@ -389,15 +393,18 @@ void Game::inputControl()
     {
         if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN))
         {
+            PlaySound(sfxHover);
             arrowYOffset = 265.0f;
         }
         else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_UP))
         {
+            PlaySound(sfxHover);
             arrowYOffset = 130.0f;
         }
 
         if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
         {
+            PlaySound(sfxSelect);
             if (arrowYOffset == 130.0f)
             {
                 gameBegins();
@@ -410,6 +417,7 @@ void Game::inputControl()
 
         if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT))
         {
+            PlaySound(sfxHover);
             if (selectedDifficulty < 2)
             {
                 selectedDifficulty++;
@@ -421,6 +429,7 @@ void Game::inputControl()
         }
         else if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT))
         {
+            PlaySound(sfxHover);
             if (selectedDifficulty > 0)
             {
                 selectedDifficulty--;

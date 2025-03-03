@@ -61,6 +61,7 @@ private:
 	Sound sfxAlert;
 	Sound sfxAttack;
 	Sound sfxScan;
+	Sound sfxChase;
 
 	// Load explosion texture
 	Texture2D explosion;

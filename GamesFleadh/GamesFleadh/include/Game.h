@@ -200,6 +200,8 @@ private:
 	Music bgm;
 	bool m_bgm_toggle = true;
 	Music titleScreenTrack;
+	Sound sfxHover;
+	Sound sfxSelect;
 
 	std::vector<Tile> m_terrainTileCollection;
 
