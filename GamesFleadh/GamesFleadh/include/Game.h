@@ -54,8 +54,6 @@ public:
 	void cameraMove();
 	void crosshairMove();
 
-	void reboundZ(Vector3 t_impactPoint);
-
 	void fogVisibility();
 	void reduceFog();
 	void darkenScreenUpdate();

@@ -35,15 +35,15 @@ void Bullet::move()
 {
 	if (m_active)
 	{
-		/*distance += 0.5f;
+		distance += 0.5f;
 		m_velocity.z -= 0.5f;
 
 
-		m_position = Vector3MoveTowards(m_position, m_velocity, distance);*/
+		m_position = Vector3MoveTowards(m_position, m_velocity, distance);
 		
 		//m_position += m_velocity;
 
-		m_position += m_direction * m_speed;
+		//m_position += m_direction * m_speed;
 	}
 }
 

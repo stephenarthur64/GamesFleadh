@@ -490,7 +490,7 @@ void Game::inputControl()
     Vector3 normVelocity = Vector3Normalize({ leftStickX, leftStickY, 0 });
 
     player.move(normVelocity);
-    camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
+    //camPos += normVelocity * Vector3{ 0.1, -0.1, 0.1 };
 
     crosshairMove();
     billPositionRotating.z = player.getPosition().z - 3.0f;
@@ -556,12 +556,7 @@ void Game::crosshairMove()
     billPositionRotating.y = Clamp(billPositionRotating.y, player.getPosition().y - 5.0f, player.getPosition().y + 5.5f);
 }
 
-void Game::reboundZ(Vector3 t_impactPoint)
-{
-    std::cout << "Rebound triggered.\n";
-    m_reboundCounter = m_reboundCountMax;
-    // m_reboundDirection = Vector3Normalize(m_position - t_impactPoint);
-}
+
 
 void Game::gamepadInit()
 {
@@ -678,15 +673,8 @@ void Game::checkCollisions()
     {// Colliding with terrain in front
         player.worldCollision(true);
         player.hitSound(0);
-        reboundZ(PLAYER_COLLISION_OFFSET_FRONT - camPos);
-        player.setAuto(false);
+        player.reboundZ(camPos);
     }
-    else
-    {
-        player.setAuto(autoScroll);
-    }
-
-    // m_terrainTileCollection[m_tileCurrent].checkFurnitureItemsCollision(player.getHitbox()); // Deprecated, if we're just doing radius checks.
 
     m_collisionData = m_terrainTileCollection[m_tileCurrent].checkBoundsFurnitureItemsCollision(player.getPosition(), player.getCollisionRadius(), player.getHitbox());
 

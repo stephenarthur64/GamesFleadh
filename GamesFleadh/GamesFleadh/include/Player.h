@@ -40,6 +40,7 @@ public:
 	
 	void worldCollision(bool collide);
 	void enemyCollision(bool collide);
+	void reboundZ(Vector3 &t_cam);
 
 	void updateZPos(float newXPos);
 	virtual void rotate(int t_direction) override;
@@ -121,6 +122,7 @@ private:
 	bool m_poisoned;
 	int m_poisonTick;
 	const int MAX_POISON_TICK;
+	int m_posionHealthLost;
 
 	float m_boundingBoxRadius = 0.0f;
 
