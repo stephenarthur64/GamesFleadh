@@ -9,6 +9,8 @@
 #include <time.h>
 #include "AchievementManager.h"
 
+#include <SDL.h>
+
 
 // RS: Again, added for skybox - shader for skybox depends on platform.
 #if defined(PLATFORM_DESKTOP)
@@ -61,6 +63,8 @@ public:
 	void reduceFog();
 	void darkenScreenUpdate();
 	void healthBarUpdate();
+
+	void Rumble(SDL_GameController* controller, Uint16 lowFreq, Uint16 highFreq, Uint32 duration);
 
 private:
 	GameState state;
@@ -239,5 +243,7 @@ private:
 	AchievementManager achievementManager;
 
 	int travelled = 0;
+
+	SDL_GameController* controller;
 };
 

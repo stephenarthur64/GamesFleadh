@@ -45,6 +45,25 @@ void Game::run()
 
 void Game::init()
 {
+
+    //------------------------------------------------------------------------------------
+    // [7] ############## Connect to Controller ##########################################
+    //------------------------------------------------------------------------------------
+    // SDL_GameController* controller = NULL;
+    // SDL_Joystick *joystick = NULL; (For flight Controller)
+    if (SDL_NumJoysticks() > 0)
+    {
+        controller = SDL_GameControllerOpen(0);
+        // joystick = SDL_GameControllerGetJoystick(controller);
+        if (!controller)
+        {
+            TraceLog(LOG_ERROR, "SDL_GameControllerOpen(0) SDL_GameControllerGetJoystick(controller) : %s\n", SDL_GetError());
+        }
+        else {
+            TraceLog(LOG_INFO, "********************** SDL_GameControllerOpen(0); ************************************");
+        }
+    }
+
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
     //ToggleFullscreen();
     InitAudioDevice();
@@ -96,6 +115,20 @@ void Game::init()
     AchievementManager::addGoalToAchievement("12 Parsecs", &travelled, 30);
     AchievementManager::addGoalToAchievement("Tired Yet?", &travelled, 40);
     AchievementManager::addGoalToAchievement("True Dedication", &travelled, 50);
+
+
+    //------------------------------------------------------------------------------------
+        // [8] ##############  Poll SDL Events ###############################################
+        //      GetTime() is a SDL Call
+        //      SDL_GameControllerRumble(controller, 0, 0, rumble_duration);  // Stop rumbling
+        //------------------------------------------------------------------------------------
+    SDL_GameControllerUpdate();
+    Uint32 startTime = GetTime() * 1000;
+    Uint32 rumble_duration = 0; // Duration
+    if (GetTime() * 1000 - startTime >= rumble_duration) {
+        SDL_GameControllerRumble(controller, 0, 0, rumble_duration);  // Stop rumbling
+        TraceLog(LOG_INFO, "Stopping Rumbleeeeeee");
+    }
 }
 
 void Game::loadAssets()
@@ -349,6 +382,18 @@ void Game::render()
 
 void Game::update()
 {
+    // Rumble goodnees
+    SDL_GameControllerUpdate();
+    Uint32 startTime = GetTime() * 1000;
+    Uint32 rumble_duration = 0; // Duration
+    if (GetTime() * 1000 - startTime >= rumble_duration) {
+        SDL_GameControllerRumble(controller, 0, 0, rumble_duration);  // Stop rumbling
+        TraceLog(LOG_INFO, "Stopping Rumbleeeeeee");
+    }
+    // Set Rumble ON 
+    // Base on some event
+    Rumble(controller, 0x00FF, 0x00FF, rumble_duration);
+
     gamepadUpdate();
     inputControl();
     if (state == GameState::GAMEPLAY)
@@ -704,7 +749,6 @@ void Game::gamepadUpdate()
         if (leftTrigger < leftTriggerDeadzone) leftTrigger = -1.0f;
         if (rightTrigger < rightTriggerDeadzone) rightTrigger = -1.0f;
 
-      //  SetGamepadVibration(gamepad, 1.0f, 1.0f, 100.0f);
     }
 }
 
@@ -949,6 +993,14 @@ void Game::healthBarUpdate()
     heightPercent = 3.14;
 
     healthDest.height = player.getHealth() * heightPercent;
+}
+
+void Game::Rumble(SDL_GameController* controller, Uint16 lowFreq, Uint16 highFreq, Uint32 duration){
+    if (controller && SDL_GameControllerHasRumble(controller))
+    {
+        TraceLog(LOG_INFO, "Activating Rumbleeeeeee");
+        SDL_GameControllerRumble(controller, lowFreq, highFreq, duration);
+    }
 }
 
 
