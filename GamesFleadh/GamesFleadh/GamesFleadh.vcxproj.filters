@@ -236,10 +236,10 @@
     <ClCompile Include="src\CollisionLState.cpp">
       <Filter>Source Files\FSM</Filter>
     </ClCompile>
-    <ClCompile Include="src\Achievement.cpp">
+    <ClCompile Include="src\AchievementManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\AchievementManager.cpp">
+    <ClCompile Include="src\Achievement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

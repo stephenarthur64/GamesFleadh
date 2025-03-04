@@ -16,7 +16,23 @@ void AchievementManager::init()
     achievements.push_back(Achievement(box, "Hello World!", AchievementType::NONE));
 
     // Type::ENEMY
-    achievements.push_back(Achievement(box, "Test", AchievementType::ENEMY));
+    achievements.push_back(Achievement(box, "First Kill", AchievementType::ENEMY));
+    achievements.push_back(Achievement(box, "Defender", AchievementType::ENEMY));
+    achievements.push_back(Achievement(box, "Soldier Bee", AchievementType::ENEMY));
+    achievements.push_back(Achievement(box, "Tiny Titan", AchievementType::ENEMY));
+    achievements.push_back(Achievement(box, "Hive Hero", AchievementType::ENEMY));
+    achievements.push_back(Achievement(box, "Bee-hemoth", AchievementType::ENEMY));
+    achievements.push_back(Achievement(box, "Vs Harvesters", AchievementType::ENEMY));
+    achievements.push_back(Achievement(box, "Jazz Fan", AchievementType::ENEMY));
+
+    achievements.push_back(Achievement(box, "Tiny Traveller", AchievementType::MAP));
+    achievements.push_back(Achievement(box, "Long Way", AchievementType::MAP));
+    achievements.push_back(Achievement(box, "500 Miles", AchievementType::MAP));
+    achievements.push_back(Achievement(box, "Trench Run", AchievementType::MAP));
+    achievements.push_back(Achievement(box, "Spitfire", AchievementType::MAP));
+    achievements.push_back(Achievement(box, "12 Parsecs", AchievementType::MAP));
+    achievements.push_back(Achievement(box, "Tired Yet?", AchievementType::MAP));
+    achievements.push_back(Achievement(box, "True Dedication", AchievementType::MAP));
 
 }
 

@@ -79,7 +79,23 @@ void Game::init()
     darkenColour.a = 0;
 
     achievementManager.init();
-    AchievementManager::addGoalToAchievement("Test", &score, 10);
+    AchievementManager::addGoalToAchievement("First Kill", &score, 10);
+    AchievementManager::addGoalToAchievement("Defender", &score, 50);
+    AchievementManager::addGoalToAchievement("Soldier Bee", &score, 10);
+    AchievementManager::addGoalToAchievement("Tiny Titan", &score, 250);
+    AchievementManager::addGoalToAchievement("Hive Hero", &score, 300);
+    AchievementManager::addGoalToAchievement("Bee-hemoth", &score, 400);
+    AchievementManager::addGoalToAchievement("Vs Harvesters", &score, 500);
+    AchievementManager::addGoalToAchievement("Jazz Fan", &score, 1000);
+
+    AchievementManager::addGoalToAchievement("Tiny Traveller", &travelled, 3);
+    AchievementManager::addGoalToAchievement("Long Way", &travelled, 5);
+    AchievementManager::addGoalToAchievement("500 Miles", &travelled, 8);
+    AchievementManager::addGoalToAchievement("Trench Run", &travelled, 15);
+    AchievementManager::addGoalToAchievement("Spitfire", &travelled, 20);
+    AchievementManager::addGoalToAchievement("12 Parsecs", &travelled, 30);
+    AchievementManager::addGoalToAchievement("Tired Yet?", &travelled, 40);
+    AchievementManager::addGoalToAchievement("True Dedication", &travelled, 50);
 }
 
 void Game::loadAssets()
@@ -860,6 +876,8 @@ void Game::mapMove()
 
     m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
     m_terrainTileCollection[m_tileNext].makeFeederSeekPlayer(false, player);
+
+    travelled++;
 
     for (int i = 0; i < MAX_SWARMERS; i++)
     {

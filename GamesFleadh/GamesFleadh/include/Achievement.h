@@ -50,8 +50,8 @@ private:
 
     float scale = 1.0f;
     float scaleTimer = 0.0f;
-    const float START_SCALE = 2.0f;
-    const float END_SCALE = 1.0f;
+    const float START_SCALE = 1.5f;
+    const float END_SCALE = 1.2f;
 
     // Goal
     int* value = nullptr;

@@ -237,5 +237,7 @@ private:
 	RayCollision m_collision = { 0 };
 
 	AchievementManager achievementManager;
+
+	int travelled = 0;
 };
 

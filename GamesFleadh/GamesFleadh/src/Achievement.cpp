@@ -11,7 +11,7 @@ Achievement::Achievement(Texture2D& t_texture, std::string t_title, AchievementT
 {
     font = LoadFontEx("ASSETS/2D/Font/BuzzzFont.ttf", FONT_SIZE, 0, 0);
 
-    position = {-100, 50};
+    position = { -100, 50 };
 
     switch (type)
     {
@@ -95,11 +95,10 @@ void Achievement::draw(float t_yOffset)
             scale = END_SCALE;
         }
 
-        printf("\n\nScale: %f\n\n", scale);
-
         DrawTextureEx(texture, position, 0, scale, WHITE);
 
-        Vector2 titlePos = {position.x + 15, position.y + 25};
+        Vector2 textSize = MeasureTextEx(font, splitSentence(title).c_str(), FONT_SIZE, 5.0f);
+        Vector2 titlePos = {position.x + ((texture.width * scale) - textSize.x) / 2, position.y + 25};
         DrawTextEx(font, splitSentence(title).c_str(), titlePos, FONT_SIZE, 5.0f, titleColor);
     }
 }

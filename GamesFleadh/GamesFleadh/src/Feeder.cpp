@@ -176,10 +176,11 @@ void Feeder::boom()
 				boomActive = false;
 			}
 		}
-		else
-		{
-			boomColor.a = 0;
-		}
+	}
+	else
+	{
+		boomColor.a = 255;
+		boomScale = 0.0f;
 	}
 }
 
