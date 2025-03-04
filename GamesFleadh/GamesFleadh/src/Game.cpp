@@ -100,7 +100,7 @@ void Game::init()
     achievementManager.init();
     AchievementManager::addGoalToAchievement("First Kill", &score, 10);
     AchievementManager::addGoalToAchievement("Defender", &score, 50);
-    AchievementManager::addGoalToAchievement("Soldier Bee", &score, 10);
+    AchievementManager::addGoalToAchievement("Soldier Bee", &score, 100);
     AchievementManager::addGoalToAchievement("Tiny Titan", &score, 250);
     AchievementManager::addGoalToAchievement("Hive Hero", &score, 300);
     AchievementManager::addGoalToAchievement("Bee-hemoth", &score, 400);
@@ -392,7 +392,7 @@ void Game::update()
     }
     // Set Rumble ON 
     // Base on some event
-    Rumble(controller, 0xFFFF, 0xFFFF, rumble_duration);
+    // Rumble(controller, 0xFFFF, 0xFFFF, rumble_duration);
 
     gamepadUpdate();
     inputControl();
