@@ -61,6 +61,9 @@ public:
 	void darkenScreenUpdate();
 	void healthBarUpdate();
 
+	void painVignetteStart();
+	void painCountDown();
+
 private:
 	GameState state;
 
@@ -151,6 +154,12 @@ private:
 
 	bool autoScroll{ true };
 
+	float m_painCounterMax = 0.33f;
+	float m_painCounterCur = 0.0f;
+	int m_painAlphaMax = 128;
+	int m_painAlphaCur = 0.0f;
+	bool m_painShow = false;
+
 	const float playerZOffsetFromCamera = 5.0f;
 	Player player;
 	// Mushroom mushroom[2];
@@ -234,5 +243,10 @@ private:
 	Ray m_ray = { 0 };
 	Vector2 m_crosshairOnScreenPos = Vector2Zero();
 	RayCollision m_collision = { 0 };
+
+	float m_keyboardLookSensitivity = 2.0f;
+	float m_keyboardMoveSensitivity = 1.0f;
+	float m_controllerLookSensitivity = 1.0f;
+	float m_controllerMoveSensitivity = 1.0f;
 };
 

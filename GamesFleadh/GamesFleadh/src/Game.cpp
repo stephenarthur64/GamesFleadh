@@ -46,7 +46,7 @@ void Game::run()
 void Game::init()
 {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
-    //ToggleFullscreen();
+    ToggleFullscreen();
     InitAudioDevice();
     HideCursor();
 
@@ -291,6 +291,8 @@ void Game::render()
         DrawText(TextFormat("CROSSHAIR X POSITION: %f", m_crosshairOnScreenPos.x), 10, 440, 10, RED);
         DrawText(TextFormat("CROSSHAIR Y POSITION: %f", m_crosshairOnScreenPos.y), 10, 450, 10, RED);
 
+        if (g_testForMushrooms) DrawText("x", SCREEN_WIDTH - 32, SCREEN_HEIGHT - 32, 20, GREEN);
+
         /*DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
         DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);*/
@@ -304,6 +306,12 @@ void Game::render()
             DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 130 }, 20, 5, WHITE);
             DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
             DrawTexture(healthBar, 30, 350.0f, WHITE);
+
+            if (m_painShow)
+            {
+                Color fogVisiblity = Color{ 255, 255, 255, (unsigned char)m_painAlphaCur };
+                DrawTexture(fogVignette, 0, 0, fogVisiblity);
+            }
         }
         else if (state == GameState::TITLE)
         {
@@ -328,6 +336,8 @@ void Game::render()
 
 void Game::update()
 {
+    painCountDown();
+
     gamepadUpdate();
     inputControl();
     if (state == GameState::GAMEPLAY)
@@ -447,49 +457,49 @@ void Game::inputControl()
         state = GameState::TITLE;
     }
 
-    if (IsKeyDown(KEY_I) || leftStickY < 0)
-    {
-        camDirection = 0.0f;
-        if (leftStickY < 0)
-        {
-           //camDirection -= camSpeed * (-leftStickY);
-        }
-        else
-        {
-            camDirection -= camSpeed;
-        }
-        player.updateHitBox(camDirection);
-        camPos.z += camDirection;
-    }
-    if (IsKeyDown(KEY_K) || leftStickY > 0)
-    {
-        if (leftStickY > 0)
-        {
-            //camDirection = camSpeed * (-leftStickY);
-        }
-        else
-        {
-            camDirection = camSpeed;
-        }
-        player.updateHitBox(camDirection);
-        camPos.z += camDirection;
-    }
+    //if (IsKeyDown(KEY_I) || leftStickY < 0)
+    //{
+    //    camDirection = 0.0f;
+    //    if (leftStickY < 0)
+    //    {
+    //       //camDirection -= camSpeed * (-leftStickY);
+    //    }
+    //    else
+    //    {
+    //        camDirection -= camSpeed;
+    //    }
+    //    player.updateHitBox(camDirection);
+    //    camPos.z += camDirection;
+    //}
+    //if (IsKeyDown(KEY_K) || leftStickY > 0)
+    //{
+    //    if (leftStickY > 0)
+    //    {
+    //        //camDirection = camSpeed * (-leftStickY);
+    //    }
+    //    else
+    //    {
+    //        camDirection = camSpeed;
+    //    }
+    //    player.updateHitBox(camDirection);
+    //    camPos.z += camDirection;
+    //}
 
     if (IsKeyDown(KEY_W))
     {
-        player.move({0, -1, 0});
+        player.move({0, -1 * m_keyboardMoveSensitivity, 0});
     }
     if (IsKeyDown(KEY_S))
     {
-        player.move({0,1,0});
+        player.move({0,1 * m_keyboardMoveSensitivity,0});
     }
     if (IsKeyDown(KEY_A))
     {
-        player.move({-1,0,0});
+        player.move({-1 * m_keyboardMoveSensitivity,0,0});
     }
     if (IsKeyDown(KEY_D))
     {
-        player.move({1,0,0});
+        player.move({1 * m_keyboardMoveSensitivity,0,0});
     }
 
     if (IsKeyReleased(KEY_P) || IsKeyReleased(KEY_TAB))
@@ -599,26 +609,26 @@ void Game::inputControl()
 
 void Game::crosshairMove()
 {
-    if (IsKeyDown(KEY_UP))
+    if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_I))
     {
-        keyboardY = -1.0f;
+        keyboardY = -1.0f * m_keyboardLookSensitivity;
     }
-    else if (IsKeyDown(KEY_DOWN))
+    else if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_K))
     {
-        keyboardY = 1.0f;
+        keyboardY = 1.0f * m_keyboardLookSensitivity;
     }
     else
     {
         keyboardY = 0.0f;
     }
 
-    if (IsKeyDown(KEY_LEFT))
+    if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_J))
     {
-        keyboardX = -1.0f;
+        keyboardX = -1.0f * m_keyboardLookSensitivity;
     }
-    else if (IsKeyDown(KEY_RIGHT))
+    else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_L))
     {
-        keyboardX = 1.0f;
+        keyboardX = 1.0f * m_keyboardLookSensitivity;
     }
     else
     {
@@ -706,6 +716,7 @@ void Game::checkCollisions()
             }
             player.hitSound(1);
             player.enemyCollision(true);
+            painVignetteStart();
             swarmer[i].collision(true);
             swarmer[i].handleInput(EVENT_ATTACK);
         }
@@ -737,6 +748,7 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.handleInput(EVENT_COLLIDE_R);
         player.hitSound(0);
+        painVignetteStart();
         player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
         player.stopAcceleration();
     }
@@ -746,6 +758,7 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.handleInput(EVENT_COLLIDE_L);
         player.hitSound(0);
+        painVignetteStart();
         player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
         player.stopAcceleration();
     }
@@ -754,6 +767,7 @@ void Game::checkCollisions()
     {// Colliding with terrain in front
         player.worldCollision(true);
         player.hitSound(0);
+        painVignetteStart();
         player.reboundZ(camPos);
         player.stopAcceleration();
     }
@@ -764,6 +778,7 @@ void Game::checkCollisions()
     {
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
+        painVignetteStart();
         player.reboundFurniture(m_collisionData);
         player.stopAcceleration();
     }
@@ -792,6 +807,7 @@ void Game::checkCollisions()
             player.handleInput(EVENT_HIT_R);
         }
         player.hitSound(1);
+        painVignetteStart();
         player.poisonPlayer(true);
     }
 
@@ -800,7 +816,7 @@ void Game::checkCollisions()
     
     m_ray = GetScreenToWorldRay(m_crosshairOnScreenPos, camera);
 
-    m_collision.distance = FLT_MAX;
+    m_collision.distance = FLT_MAX; // Set distance to maximum.
     m_collision.hit = false;
 
     for (int i = 0; i < MAX_SWARMERS; i++)
@@ -808,7 +824,7 @@ void Game::checkCollisions()
         m_collision = GetRayCollisionBox(m_ray, swarmer[i].getHitbox());
     }
 
-    if ((m_collision.hit) && (m_collision.distance < m_collision.distance))
+    if ((m_collision.hit) && (m_collision.distance < FLT_MAX))
     {
         std::cout << "We hit a SWARMER!\n";
 
@@ -923,6 +939,29 @@ void Game::healthBarUpdate()
     heightPercent = 3.14;
 
     healthDest.height = player.getHealth() * heightPercent;
+}
+
+void Game::painVignetteStart()
+{
+    std::cout << "Pain starting!\n";
+    m_painCounterCur = m_painCounterMax;
+    m_painShow = true;
+    m_painAlphaCur = m_painAlphaMax;
+}
+
+void Game::painCountDown()
+{
+    if (m_painCounterCur > 0)
+    {
+        std::cout << "Counting down pain at " << m_painCounterCur << "\n";
+        m_painCounterCur -= GetFrameTime();
+        m_painAlphaCur -= GetFrameTime() * 8;
+    }
+    else
+    {
+        m_painShow = false;
+    }
+        
 }
 
 
