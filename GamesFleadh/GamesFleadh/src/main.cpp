@@ -9,9 +9,10 @@
 #include "Game.h"
 
 
-
 int main()
 {
+
+    // SDL Init
     if (SDL_Init(SDL_INIT_GAMECONTROLLER) < 0)
     {
         TraceLog(LOG_ERROR, "SDL_Init(SDL_INIT_GAMECONTROLLER) : %s\n", SDL_GetError());

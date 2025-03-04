@@ -392,7 +392,7 @@ void Game::update()
     }
     // Set Rumble ON 
     // Base on some event
-    Rumble(controller, 0x00FF, 0x00FF, rumble_duration);
+    Rumble(controller, 0xFFFF, 0xFFFF, rumble_duration);
 
     gamepadUpdate();
     inputControl();
