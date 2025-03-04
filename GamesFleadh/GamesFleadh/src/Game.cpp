@@ -553,6 +553,7 @@ void Game::inputControl()
     {
         if (m_collision.hit)
         {
+            player.handleInput(EVENT_SHOOT);
             player.shootBullet(m_collision.point);
         }
         else
