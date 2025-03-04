@@ -321,8 +321,8 @@ void Game::render()
         if (state == GameState::GAMEPLAY)
         {
             DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 40, WHITE);
-            DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 55 }, 50, 5, WHITE);
-            DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 130 }, 20, 5, WHITE);
+            DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 55 }, 50, 5, Color {190, 190, 190, 255});
+            DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 130 }, 20, 5, Color{ 190, 190, 190, 255 });
             DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
             DrawTexture(healthBar, 30, 350.0f, WHITE);
         }

@@ -20,11 +20,11 @@ Achievement::Achievement(Texture2D& t_texture, std::string t_title, AchievementT
         break;
 
     case AchievementType::ENEMY:
-        titleColor = ORANGE;
+        titleColor = Color{ 255, 176, 64, 255 };
         break;
 
     case AchievementType::MAP:
-        titleColor = BLUE;
+        titleColor = Color{ 141, 190, 155, 255 };
         break;
     }
 }
