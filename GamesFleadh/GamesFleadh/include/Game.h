@@ -7,6 +7,7 @@
 #include "reasings.h"
 #include <random>
 #include <time.h>
+#include "AchievementManager.h"
 
 
 // RS: Again, added for skybox - shader for skybox depends on platform.
@@ -234,5 +235,7 @@ private:
 	Ray m_ray = { 0 };
 	Vector2 m_crosshairOnScreenPos = Vector2Zero();
 	RayCollision m_collision = { 0 };
+
+	AchievementManager achievementManager;
 };
 

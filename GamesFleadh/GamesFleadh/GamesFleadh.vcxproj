@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Achievement.h" />
+    <ClInclude Include="include\AchievementManager.h" />
     <ClInclude Include="include\AttackState.h" />
     <ClInclude Include="include\Bullet.h" />
     <ClInclude Include="include\CollisionLState.h" />
@@ -55,6 +57,8 @@
     <ClInclude Include="include\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Achievement.cpp" />
+    <ClCompile Include="src\AchievementManager.cpp" />
     <ClCompile Include="src\AttackState.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\CollisionLState.cpp" />

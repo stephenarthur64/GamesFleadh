@@ -629,3 +629,13 @@ float StreetFurniture::exponentialScale(float scalar, float minimum, float maxim
 {
 	return minimum + (maximum - minimum) * (pow(base, scalar) - 1) / (base - 1);
 }
+
+void StreetFurniture::checkRayFeederCollision(Ray t_ray, RayCollision &t_collide)
+{
+	t_collide = GetRayCollisionBox(t_ray, m_feeder.getHitbox());
+
+	if (t_collide.hit == true)
+	{
+		int ye = 0;
+	}
+}

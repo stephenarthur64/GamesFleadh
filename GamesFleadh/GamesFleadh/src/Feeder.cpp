@@ -176,6 +176,10 @@ void Feeder::boom()
 				boomActive = false;
 			}
 		}
+		else
+		{
+			boomColor.a = 0;
+		}
 	}
 }
 

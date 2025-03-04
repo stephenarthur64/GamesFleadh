@@ -15,9 +15,15 @@ void Bullet::spawn(Vector3 t_pos, float t_speed, Vector3 t_velocity)
 	m_position = t_pos;
 	m_speed = t_speed;
 	m_active = true;
-	m_velocity = t_velocity;
+	m_target = t_velocity;
 	distance = 0;
 	//m_velocity *= {m_speed, m_speed, m_speed};
+
+	m_velocity = {
+		m_target.x - m_position.x,
+		m_target.y - m_position.y,
+		m_target.z - m_position.z
+	};
 
 	// Heere come de RoB code:
 	m_direction = t_velocity - t_pos;
@@ -35,15 +41,35 @@ void Bullet::move()
 {
 	if (m_active)
 	{
-		distance += 0.5f;
-		m_velocity.z -= 0.5f;
+		/*distance += 2.0f;
+		m_target += {0.5f, 0.5f, -2.0f};
 
 
-		m_position = Vector3MoveTowards(m_position, m_velocity, distance);
+		m_position = Vector3MoveTowards(m_position, m_target, distance);*/
 		
-		//m_position += m_velocity;
+		/*Vector3 velocity = Vector3Normalize(m_target) * m_speed;
 
-		//m_position += m_direction * m_speed;
+		m_position += velocity;*/
+
+		/*m_position += m_direction * m_speed;*/
+
+		// Calculate the length (magnitude) of the direction vector
+		float length = sqrtf(m_velocity.x * m_velocity.x +
+			m_velocity.y * m_velocity.y +
+			m_velocity.z * m_velocity.z);
+
+		// Normalize the direction vector
+		if (length > 0.0001f)
+		{
+			m_velocity.x /= length;
+			m_velocity.y /= length;
+			m_velocity.z /= length;
+		}
+
+		// Move projectile
+		m_position.x += m_velocity.x * m_speed;
+		m_position.y += m_velocity.y * m_speed;
+		m_position.z += m_velocity.z * m_speed;
 	}
 }
 

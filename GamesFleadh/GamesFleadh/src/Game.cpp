@@ -77,6 +77,9 @@ void Game::init()
 
     m_gameIsBeginning = false;
     darkenColour.a = 0;
+
+    achievementManager.init();
+    AchievementManager::addGoalToAchievement("Test", &score, 10);
 }
 
 void Game::loadAssets()
@@ -274,6 +277,8 @@ void Game::render()
 
     EndMode3D();
 
+    achievementManager.draw();
+
     if (gameOverTick > 0)
     {
         DrawTexture(darkenScreen, 0, 0, darkenColour);
@@ -333,6 +338,7 @@ void Game::update()
     if (state == GameState::GAMEPLAY)
     {
         UpdateMusicStream(bgm);
+        achievementManager.checkForChanges();
         if (!(player.isAlive()))
         {
             gameOverTick++;
@@ -808,7 +814,9 @@ void Game::checkCollisions()
         m_collision = GetRayCollisionBox(m_ray, swarmer[i].getHitbox());
     }
 
-    if ((m_collision.hit) && (m_collision.distance < m_collision.distance))
+    //m_terrainTileCollection[m_tileCurrent].checkFeederRayCollision(m_ray, m_collision);
+
+    if ((m_collision.hit) && (m_collision.distance < FLT_MAX))
     {
         std::cout << "We hit a SWARMER!\n";
 
