@@ -244,6 +244,21 @@ void Tile::update(Vector3 t_target)
     }
 }
 
+void Tile::checkFeederRayCollision(Ray t_ray, RayCollision &t_collide)
+{
+    for (StreetFurniture& item : m_furnitureVec)
+    {
+        if (item.feederCheck())
+        {
+            item.checkRayFeederCollision(t_ray, t_collide);
+            if (t_collide.hit)
+            {
+                return;
+            }
+        }
+    }
+}
+
 /// <summary>
 /// @brief Reads through image, identifies types of furniture and places them in level
 /// </summary>   

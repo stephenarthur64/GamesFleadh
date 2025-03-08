@@ -7,6 +7,9 @@
 #include "reasings.h"
 #include <random>
 #include <time.h>
+#include "AchievementManager.h"
+
+#include <SDL.h>
 
 
 // RS: Again, added for skybox - shader for skybox depends on platform.
@@ -60,6 +63,8 @@ public:
 	void reduceFog();
 	void darkenScreenUpdate();
 	void healthBarUpdate();
+
+	void Rumble(SDL_GameController* controller, Uint16 lowFreq, Uint16 highFreq, Uint32 duration);
 
 private:
 	GameState state;
@@ -234,5 +239,11 @@ private:
 	Ray m_ray = { 0 };
 	Vector2 m_crosshairOnScreenPos = Vector2Zero();
 	RayCollision m_collision = { 0 };
+
+	AchievementManager achievementManager;
+
+	int travelled = 0;
+
+	SDL_GameController* controller;
 };
 

@@ -366,7 +366,7 @@ void Player::poisonPlayer(bool t_poison)
 {
 	m_poisoned = t_poison;
 	m_poisonTick = 0;
-	m_hpColour = ORANGE;
+	m_hpColour = BLACK;
 	m_health -= 50;
 	m_posionHealthLost = 50;
 }

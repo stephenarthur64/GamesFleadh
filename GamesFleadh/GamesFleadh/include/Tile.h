@@ -43,6 +43,8 @@ public:
 
 	void update(Vector3 t_target);
 
+	void checkFeederRayCollision(Ray t_ray, RayCollision &t_collide);
+
 private:
 	Image m_heightMapImage;
 	Texture2D m_textureMapDiffuse;

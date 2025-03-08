@@ -1,0 +1,5 @@
+Link to Game Trailer:
+[https://setuo365-my.sharepoint.com/:v:/g/personal/c00301316_setu_ie/EVQBp5VHJ7JHl6dOtcjFJssBcY69HE2cNuW4UMArKUs4jg?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=Icn2F6](https://setuo365-my.sharepoint.com/:v:/g/personal/c00301316_setu_ie/EVQBp5VHJ7JHl6dOtcjFJssBcY69HE2cNuW4UMArKUs4jg?e=pKiG5x&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)
+
+Link to the Release Build:
+https://setuo365-my.sharepoint.com/:f:/g/personal/c00302210_setu_ie/Es1WlLJEX2dJtzc39SfbkYwBZSjag78mR_IYL3rwzRr0Fw?e=hU5Bxs

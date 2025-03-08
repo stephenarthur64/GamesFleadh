@@ -177,6 +177,11 @@ void Feeder::boom()
 			}
 		}
 	}
+	else
+	{
+		boomColor.a = 255;
+		boomScale = 0.0f;
+	}
 }
 
 void Feeder::kill()

@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Achievement.h" />
+    <ClInclude Include="include\AchievementManager.h" />
     <ClInclude Include="include\AttackState.h" />
     <ClInclude Include="include\Bullet.h" />
     <ClInclude Include="include\CollisionLState.h" />
@@ -55,6 +57,8 @@
     <ClInclude Include="include\Weapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Achievement.cpp" />
+    <ClCompile Include="src\AchievementManager.cpp" />
     <ClCompile Include="src\AttackState.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\CollisionLState.cpp" />
@@ -175,13 +179,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\include;.\raylib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;.\raylib\include;.\dependancies\SDL2-2.32.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\raylib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>raylib.lib;winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\raylib\lib;.\dependancies\SDL2-2.32.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>raylib.lib;winmm.lib;SDL2.lib;SDL2main.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

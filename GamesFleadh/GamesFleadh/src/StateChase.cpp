@@ -5,14 +5,16 @@
 
 State* StateChase::handleInput(Event t_event)
 {
-    if (t_event == EVENT_MOVE)
-    {
-        return new IdleState;
-    }
     if (t_event == EVENT_SHOOT)
     {
         return new ShootState;
     }
+
+    if (t_event == EVENT_MOVE)
+    {
+        return new IdleState;
+    }
+    
 
     if (t_event == EVENT_DIE)
     {

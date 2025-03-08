@@ -3,6 +3,7 @@
 
 bool g_renderWireDebug = false;
 bool g_render2DDebug = false;
+bool g_testForMushrooms = true;
 
 Game::Game() : score(0), activeMap(1), state(GameState::TITLE)
 {
@@ -44,6 +45,25 @@ void Game::run()
 
 void Game::init()
 {
+
+    //------------------------------------------------------------------------------------
+    // [7] ############## Connect to Controller ##########################################
+    //------------------------------------------------------------------------------------
+    // SDL_GameController* controller = NULL;
+    // SDL_Joystick *joystick = NULL; (For flight Controller)
+    if (SDL_NumJoysticks() > 0)
+    {
+        controller = SDL_GameControllerOpen(0);
+        // joystick = SDL_GameControllerGetJoystick(controller);
+        if (!controller)
+        {
+            TraceLog(LOG_ERROR, "SDL_GameControllerOpen(0) SDL_GameControllerGetJoystick(controller) : %s\n", SDL_GetError());
+        }
+        else {
+            TraceLog(LOG_INFO, "********************** SDL_GameControllerOpen(0); ************************************");
+        }
+    }
+
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
     //ToggleFullscreen();
     InitAudioDevice();
@@ -76,6 +96,39 @@ void Game::init()
 
     m_gameIsBeginning = false;
     darkenColour.a = 0;
+
+    achievementManager.init();
+    AchievementManager::addGoalToAchievement("First Kill", &score, 10);
+    AchievementManager::addGoalToAchievement("Defender", &score, 50);
+    AchievementManager::addGoalToAchievement("Soldier Bee", &score, 100);
+    AchievementManager::addGoalToAchievement("Tiny Titan", &score, 250);
+    AchievementManager::addGoalToAchievement("Hive Hero", &score, 300);
+    AchievementManager::addGoalToAchievement("Bee-hemoth", &score, 400);
+    AchievementManager::addGoalToAchievement("Vs Harvesters", &score, 500);
+    AchievementManager::addGoalToAchievement("Jazz Fan", &score, 1000);
+
+    AchievementManager::addGoalToAchievement("Tiny Traveller", &travelled, 3);
+    AchievementManager::addGoalToAchievement("Long Way", &travelled, 5);
+    AchievementManager::addGoalToAchievement("500 Miles", &travelled, 8);
+    AchievementManager::addGoalToAchievement("Trench Run", &travelled, 15);
+    AchievementManager::addGoalToAchievement("Spitfire", &travelled, 20);
+    AchievementManager::addGoalToAchievement("12 Parsecs", &travelled, 30);
+    AchievementManager::addGoalToAchievement("Tired Yet?", &travelled, 40);
+    AchievementManager::addGoalToAchievement("True Dedication", &travelled, 50);
+
+
+    //------------------------------------------------------------------------------------
+        // [8] ##############  Poll SDL Events ###############################################
+        //      GetTime() is a SDL Call
+        //      SDL_GameControllerRumble(controller, 0, 0, rumble_duration);  // Stop rumbling
+        //------------------------------------------------------------------------------------
+    SDL_GameControllerUpdate();
+    Uint32 startTime = GetTime() * 1000;
+    Uint32 rumble_duration = 0; // Duration
+    if (GetTime() * 1000 - startTime >= rumble_duration) {
+        SDL_GameControllerRumble(controller, 0, 0, rumble_duration);  // Stop rumbling
+        TraceLog(LOG_INFO, "Stopping Rumbleeeeeee");
+    }
 }
 
 void Game::loadAssets()
@@ -100,14 +153,14 @@ void Game::loadAssets()
     gameFont = LoadFont("ASSETS/2D/Font/BuzzzFont.ttf");
 
     fogOpacity = WHITE;
-    fogOpacity.a = 0;
+    fogOpacity.a = 255;
     fogVignette = LoadTexture("ASSETS/2D/Fog/OrangeVignette.png");
     fogBar = LoadTexture("ASSETS/2D/UI/FogBar.png");
     fogGradient = LoadTexture("ASSETS/2D/UI/FogGradient.png");
     scoreBack = LoadTexture("ASSETS/2D/UI/ScoreBox.png");
 
-    healthBar = LoadTexture("ASSETS/2D/UI/LongerHealthBar.png");
-    healthGradient = LoadTexture("ASSETS/2D/UI/LongerHealthBarFill.png");
+    healthBar = LoadTexture("ASSETS/2D/UI/HealthBarVertical.png");
+    healthGradient = LoadTexture("ASSETS/2D/UI/HealthBarVerticalFill.png");
 
     countdown[2] = LoadTexture("ASSETS/2D/UI/3.png");
     countdown[1] = LoadTexture("ASSETS/2D/UI/2.png");
@@ -137,7 +190,7 @@ void Game::loadAssets()
     SetSoundVolume(sfxSelect, 0.4);
 
     healthSource = { 0, 0, (float)healthGradient.width, (float)healthGradient.height };
-    healthDest = { 37, 900, (float)healthGradient.width + 10, (float)healthGradient.height };
+    healthDest = { 57, SCREEN_HEIGHT / 2.0f, (float)healthGradient.width + 10, (float)healthGradient.height };
 
     gradientSource = { 0, 0, (float)fogGradient.width, (float)fogGradient.height};
     gradientDest = { SCREEN_WIDTH - 30, 370, (float)fogGradient.width + 10, (float)fogGradient.height};
@@ -273,6 +326,8 @@ void Game::render()
 
     EndMode3D();
 
+    achievementManager.draw();
+
     if (gameOverTick > 0)
     {
         DrawTexture(darkenScreen, 0, 0, darkenColour);
@@ -290,9 +345,6 @@ void Game::render()
         DrawText(TextFormat("CROSSHAIR X POSITION: %f", m_crosshairOnScreenPos.x), 10, 440, 10, RED);
         DrawText(TextFormat("CROSSHAIR Y POSITION: %f", m_crosshairOnScreenPos.y), 10, 450, 10, RED);
 
-        //DrawTexture(fogGradient, SCREEN_WIDTH - 45, 155, WHITE);
-        //DrawTextureRec(fogGradient, gradientSource, { SCREEN_WIDTH - 45, 155 }, WHITE);
-
         /*DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
         DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);*/
@@ -301,11 +353,11 @@ void Game::render()
     {
         if (state == GameState::GAMEPLAY)
         {
-            DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 20, WHITE);
-            DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 35 }, 50, 5, WHITE);
-            DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 110 }, 20, 5, WHITE);
+            DrawTexture(scoreBack, (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f), 40, WHITE);
+            DrawTextEx(gameFont, TextFormat("%i", score), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 20, 55 }, 50, 5, Color {190, 190, 190, 255});
+            DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 130 }, 20, 5, Color{ 190, 190, 190, 255 });
             DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
-            DrawTexture(healthBar, 10, 710.0f, WHITE);
+            DrawTexture(healthBar, 30, 350.0f, WHITE);
         }
         else if (state == GameState::TITLE)
         {
@@ -318,7 +370,7 @@ void Game::render()
             DrawTextureEx(arrow, { (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f) - 50.0f, (SCREEN_HEIGHT / 2.0f) + arrowYOffset }, 0.0f, 1.0f, WHITE);
             DrawTextureEx(arrow2, { (SCREEN_WIDTH / 2.0f) - (difficulty[selectedDifficulty].width / 2.0f) + difficulty[selectedDifficulty].width + 10, (SCREEN_HEIGHT / 2.0f) + arrowYOffset }, 0.0f, 1.0f, WHITE);
             DrawTexture(leave, (SCREEN_WIDTH / 2.0f) - (leave.width / 2.0f), 800.0f, WHITE);
-            DrawText("Press [SPACE]/[RT] to select", (SCREEN_WIDTH / 2.0f) - 150.0f, 1000.0f, 20, DARKGRAY);
+            DrawTextEx(gameFont, "Press (SPACE)/(RT) to select", { (SCREEN_WIDTH / 2.0f) - 150.0f, 1000.0f }, 20, 2, DARKGRAY);
         }
     }
 
@@ -330,11 +382,24 @@ void Game::render()
 
 void Game::update()
 {
+    // Rumble goodnees
+    SDL_GameControllerUpdate();
+    Uint32 startTime = GetTime() * 1000;
+    Uint32 rumble_duration = 0; // Duration
+    if (GetTime() * 1000 - startTime >= rumble_duration) {
+        SDL_GameControllerRumble(controller, 0, 0, rumble_duration);  // Stop rumbling
+        TraceLog(LOG_INFO, "Stopping Rumbleeeeeee");
+    }
+    // Set Rumble ON 
+    // Base on some event
+    // Rumble(controller, 0xFFFF, 0xFFFF, rumble_duration);
+
     gamepadUpdate();
     inputControl();
     if (state == GameState::GAMEPLAY)
     {
         UpdateMusicStream(bgm);
+        achievementManager.checkForChanges();
         if (!(player.isAlive()))
         {
             gameOverTick++;
@@ -500,12 +565,12 @@ void Game::inputControl()
         std::cout << "This could trigger a breakpoint.";
     }
 
-    if (IsKeyReleased(KEY_F5) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
-    {// RS: Toggle! Is nice, you like.
-        autoScroll = !autoScroll;
-        player.setAuto(autoScroll);
-        std::cout << "Good god.";
-    }
+    //if (IsKeyReleased(KEY_F5) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1))
+    //{// RS: Toggle! Is nice, you like.
+    //    autoScroll = !autoScroll;
+    //    player.setAuto(autoScroll);
+    //    std::cout << "Good god.";
+    //}
 
     if (IsKeyReleased(KEY_F1))
     {
@@ -533,6 +598,7 @@ void Game::inputControl()
     {
         if (m_collision.hit)
         {
+            player.handleInput(EVENT_SHOOT);
             player.shootBullet(m_collision.point);
         }
         else
@@ -557,11 +623,6 @@ void Game::inputControl()
     {
         std::cout << "\nToggling Debug Wireframes!\n";
         g_renderWireDebug = !g_renderWireDebug;
-    }
-
-    if (IsKeyReleased(KEY_K)) // DEBUG, REMOVE ---------------------------------------------------------------------------------------------------------------
-    {
-        player.FORCEKILLDEBUG();
     }
 
 
@@ -664,7 +725,7 @@ void Game::gameBegins()
     player.respawn();
     player.setStartingSpeed(selectedDifficulty);
     darkenColour.a = 0;
-    //PlayMusicStream(bgm);
+    PlayMusicStream(bgm);
     PauseMusicStream(titleScreenTrack);
 }
 
@@ -689,7 +750,6 @@ void Game::gamepadUpdate()
         if (leftTrigger < leftTriggerDeadzone) leftTrigger = -1.0f;
         if (rightTrigger < rightTriggerDeadzone) rightTrigger = -1.0f;
 
-      //  SetGamepadVibration(gamepad, 1.0f, 1.0f, 100.0f);
     }
 }
 
@@ -810,7 +870,23 @@ void Game::checkCollisions()
     m_collision.distance = FLT_MAX;
     m_collision.hit = false;
 
-    m_collision = m_terrainTileCollection[m_tileCurrent].checkRay(m_ray, m_collision);
+    for (int i = 0; i < MAX_SWARMERS; i++)
+    {
+        m_collision = GetRayCollisionBox(m_ray, swarmer[i].getHitbox());
+    }
+
+    //m_terrainTileCollection[m_tileCurrent].checkFeederRayCollision(m_ray, m_collision);
+
+    if ((m_collision.hit) && (m_collision.distance < FLT_MAX))
+    {
+        std::cout << "We hit a SWARMER!\n";
+
+    }
+    else
+    {
+        m_collision = m_terrainTileCollection[m_tileCurrent].checkRay(m_ray, m_collision);
+    }
+    
 }
 
 void Game::mapMove()
@@ -845,6 +921,8 @@ void Game::mapMove()
 
     m_terrainTileCollection[m_tileCurrent].makeFeederSeekPlayer(true, player);
     m_terrainTileCollection[m_tileNext].makeFeederSeekPlayer(false, player);
+
+    travelled++;
 
     for (int i = 0; i < MAX_SWARMERS; i++)
     {
@@ -916,6 +994,14 @@ void Game::healthBarUpdate()
     heightPercent = 3.14;
 
     healthDest.height = player.getHealth() * heightPercent;
+}
+
+void Game::Rumble(SDL_GameController* controller, Uint16 lowFreq, Uint16 highFreq, Uint32 duration){
+    if (controller && SDL_GameControllerHasRumble(controller))
+    {
+        TraceLog(LOG_INFO, "Activating Rumbleeeeeee");
+        SDL_GameControllerRumble(controller, lowFreq, highFreq, duration);
+    }
 }
 
 

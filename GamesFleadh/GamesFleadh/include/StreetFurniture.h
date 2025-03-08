@@ -69,6 +69,10 @@ public:
 
 	float exponentialScale(float scalar, float minimum, float maximum, float base);
 
+	bool feederCheck() { return m_hasFeeder; }
+
+	void checkRayFeederCollision(Ray t_ray, RayCollision &t_collide);
+
 private:
 	//// Feeder* m_feeder{}; // Starts as null pointer
 	//std::unique_ptr<Feeder> m_feeder;
