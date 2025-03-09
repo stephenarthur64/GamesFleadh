@@ -360,6 +360,7 @@ void Player::death(Vector3 &t_cam, Vector3 &t_target)
 	{
 		t_cam.y -= 0.1f;
 	}
+	
 }
 
 void Player::poisonPlayer(bool t_poison)

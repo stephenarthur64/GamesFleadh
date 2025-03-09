@@ -11,7 +11,7 @@
 
 int main()
 {
-
+    // RUMBLE REQUIREMENT
     // SDL Init
     if (SDL_Init(SDL_INIT_GAMECONTROLLER) < 0)
     {

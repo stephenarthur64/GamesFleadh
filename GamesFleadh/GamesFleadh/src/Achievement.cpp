@@ -154,3 +154,13 @@ std::string Achievement::splitSentence(std::string t_original)
     
     return result;
 }
+
+void Achievement::lock()
+{
+    completed = false;
+
+    if (value != nullptr)
+    {
+        *value = 0;
+    }
+}

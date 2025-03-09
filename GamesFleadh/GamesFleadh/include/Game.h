@@ -9,7 +9,7 @@
 #include <time.h>
 #include "AchievementManager.h"
 
-#include <SDL.h>
+#include <SDL.h> // RUMBLE REQUIREMENT
 
 
 // RS: Again, added for skybox - shader for skybox depends on platform.
@@ -64,7 +64,14 @@ public:
 	void darkenScreenUpdate();
 	void healthBarUpdate();
 
-	void Rumble(SDL_GameController* controller, Uint16 lowFreq, Uint16 highFreq, Uint32 duration);
+	void Rumble(SDL_GameController* controller, Uint16 lowFreq, Uint16 highFreq, Uint32 duration); // RUMBLE REQUIREMENT
+	// void StartRumble(Uint16 lowFrequency, Uint16 highFrequency, Uint32 duration);
+	void UpdateRumble(SDL_GameController* controller);
+
+
+
+	void painVignetteStart();
+	void painCountDown();
 
 private:
 	GameState state;
@@ -156,6 +163,12 @@ private:
 
 	bool autoScroll{ true };
 
+	float m_painCounterMax = 0.33f;
+	float m_painCounterCur = 0.0f;
+	int m_painAlphaMax = 128;
+	int m_painAlphaCur = 0.0f;
+	bool m_painShow = false;
+
 	const float playerZOffsetFromCamera = 5.0f;
 	Player player;
 	// Mushroom mushroom[2];
@@ -244,6 +257,18 @@ private:
 
 	int travelled = 0;
 
-	SDL_GameController* controller;
+	SDL_GameController* controller; // RUMBLE REQUIREMENT
+
+	Uint32 m_rumbleStartTimeRS = 0;
+	Uint32 m_rumbleDurationRS = 0; // 250ms duration
+	bool m_isRumbling = false;
+	Uint32 m_rumbleCooldown = 200;  // Cooldown between rumbles (adjust as needed)
+
+	float m_keyboardLookSensitivity = 2.0f;
+	float m_keyboardMoveSensitivity = 1.0f;
+	float m_controllerLookSensitivity = 1.0f;
+	float m_controllerMoveSensitivity = 1.0f;
+
+	bool m_showPainVignette = false;
 };
 

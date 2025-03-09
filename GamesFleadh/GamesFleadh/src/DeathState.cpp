@@ -20,6 +20,7 @@ void DeathState::update(GameObject* obj)
 
 void DeathState::enter(GameObject* obj)
 {
+	
 	obj->resetAnimation();
 	obj->setDead();
 }

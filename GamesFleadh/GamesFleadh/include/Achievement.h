@@ -24,6 +24,7 @@ public:
     bool hasBeenCompleted() { return completed; }
 
     bool checkIfCompleted();
+    void lock();
 
 private:
     bool completed = false;
@@ -50,8 +51,8 @@ private:
 
     float scale = 1.0f;
     float scaleTimer = 0.0f;
-    const float START_SCALE = 1.5f;
-    const float END_SCALE = 1.2f;
+    const float START_SCALE = 1.5f; // 0.9f;
+    const float END_SCALE = 1.2f; // 0.6f;
 
     // Goal
     int* value = nullptr;

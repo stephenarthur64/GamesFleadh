@@ -45,7 +45,7 @@ void Game::run()
 
 void Game::init()
 {
-
+    // RUMBLE REQUIREMENT
     //------------------------------------------------------------------------------------
     // [7] ############## Connect to Controller ##########################################
     //------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ void Game::init()
     }
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Games Fleadh 2025");
-    //ToggleFullscreen();
+    ToggleFullscreen();
     InitAudioDevice();
     HideCursor();
 
@@ -117,6 +117,7 @@ void Game::init()
     AchievementManager::addGoalToAchievement("True Dedication", &travelled, 50);
 
 
+    //// RUMBLE REQUIREMENT
     //------------------------------------------------------------------------------------
         // [8] ##############  Poll SDL Events ###############################################
         //      GetTime() is a SDL Call
@@ -345,6 +346,8 @@ void Game::render()
         DrawText(TextFormat("CROSSHAIR X POSITION: %f", m_crosshairOnScreenPos.x), 10, 440, 10, RED);
         DrawText(TextFormat("CROSSHAIR Y POSITION: %f", m_crosshairOnScreenPos.y), 10, 450, 10, RED);
 
+        if (g_testForMushrooms) DrawText("x", SCREEN_WIDTH - 32, SCREEN_HEIGHT - 32, 20, GREEN);
+
         /*DrawText(TextFormat("PLAYER Z POSITION: %f", player.getPosition().z), 10, 430, 10, RED);
         DrawText(TextFormat("PLAYER Y POSITION: %f", player.getPosition().y), 10, 440, 10, RED);
         DrawText(TextFormat("PLAYER X POSITION: %f", player.getPosition().x), 10, 450, 10, RED);*/
@@ -358,6 +361,12 @@ void Game::render()
             DrawTextEx(gameFont, TextFormat("SCORE"), { (SCREEN_WIDTH / 2.0f) - (scoreBack.width / 2.0f) + 75, 130 }, 20, 5, Color{ 190, 190, 190, 255 });
             DrawTexturePro(healthGradient, healthSource, healthDest, { (float)healthGradient.width / 2.0f, (float)healthGradient.height / 2.0f }, 180.0f, player.getHealthBarColour());
             DrawTexture(healthBar, 30, 350.0f, WHITE);
+
+            if (m_painShow)
+            {
+                Color fogVisiblity = Color{ 255, 255, 255, (unsigned char)m_painAlphaCur };
+                DrawTexture(fogVignette, 0, 0, fogVisiblity);
+            }
         }
         else if (state == GameState::TITLE)
         {
@@ -382,6 +391,7 @@ void Game::render()
 
 void Game::update()
 {
+    // RUMBLE REQUIREMENT
     // Rumble goodnees
     SDL_GameControllerUpdate();
     Uint32 startTime = GetTime() * 1000;
@@ -392,7 +402,9 @@ void Game::update()
     }
     // Set Rumble ON 
     // Base on some event
-    // Rumble(controller, 0xFFFF, 0xFFFF, rumble_duration);
+    Rumble(controller, 0xFFFF, 0xFFFF, rumble_duration);
+
+    painCountDown();
 
     gamepadUpdate();
     inputControl();
@@ -448,6 +460,9 @@ void Game::update()
     cameraMove();
     // UpdateCamera(&camera, CAMERA_PERSPECTIVE);
     //fogVisibility();
+
+    // Continuously check if rumble should stop
+    UpdateRumble(controller);
 }
 
 void Game::inputControl()
@@ -470,7 +485,13 @@ void Game::inputControl()
             arrowYOffset = 130.0f;
         }
 
-        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) || IsKeyReleased(KEY_SPACE))
+        if (IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) || 
+            IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_TRIGGER_1) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_TRIGGER_2) ||
+            IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_UP) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ||
+            IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ||
+            IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_UP) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
+            IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT) ||
+            IsKeyReleased(KEY_SPACE))
         {
             PlaySound(sfxSelect);
             if (arrowYOffset == 130.0f)
@@ -514,49 +535,49 @@ void Game::inputControl()
         state = GameState::TITLE;
     }
 
-    if (IsKeyDown(KEY_I) || leftStickY < 0)
-    {
-        camDirection = 0.0f;
-        if (leftStickY < 0)
-        {
-           //camDirection -= camSpeed * (-leftStickY);
-        }
-        else
-        {
-            camDirection -= camSpeed;
-        }
-        player.updateHitBox(camDirection);
-        camPos.z += camDirection;
-    }
-    if (IsKeyDown(KEY_K) || leftStickY > 0)
-    {
-        if (leftStickY > 0)
-        {
-            //camDirection = camSpeed * (-leftStickY);
-        }
-        else
-        {
-            camDirection = camSpeed;
-        }
-        player.updateHitBox(camDirection);
-        camPos.z += camDirection;
-    }
+    //if (IsKeyDown(KEY_I) || leftStickY < 0)
+    //{
+    //    camDirection = 0.0f;
+    //    if (leftStickY < 0)
+    //    {
+    //       //camDirection -= camSpeed * (-leftStickY);
+    //    }
+    //    else
+    //    {
+    //        camDirection -= camSpeed;
+    //    }
+    //    player.updateHitBox(camDirection);
+    //    camPos.z += camDirection;
+    //}
+    //if (IsKeyDown(KEY_K) || leftStickY > 0)
+    //{
+    //    if (leftStickY > 0)
+    //    {
+    //        //camDirection = camSpeed * (-leftStickY);
+    //    }
+    //    else
+    //    {
+    //        camDirection = camSpeed;
+    //    }
+    //    player.updateHitBox(camDirection);
+    //    camPos.z += camDirection;
+    //}
 
     if (IsKeyDown(KEY_W))
     {
-        player.move({0, -1, 0});
+        player.move({0, -1 * m_keyboardMoveSensitivity, 0});
     }
     if (IsKeyDown(KEY_S))
     {
-        player.move({0,1,0});
+        player.move({0,1 * m_keyboardMoveSensitivity,0});
     }
     if (IsKeyDown(KEY_A))
     {
-        player.move({-1,0,0});
+        player.move({-1 * m_keyboardMoveSensitivity,0,0});
     }
     if (IsKeyDown(KEY_D))
     {
-        player.move({1,0,0});
+        player.move({1 * m_keyboardMoveSensitivity,0,0});
     }
 
     if (IsKeyReleased(KEY_P) || IsKeyReleased(KEY_TAB))
@@ -594,8 +615,18 @@ void Game::inputControl()
     //    std::cout << "\nPlacing objects.\n";
     //    // placeObjectsFromImage(imgPlacementTest);
     //}
-    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2))
+    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ENTER) || 
+        IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) ||
+        IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_TRIGGER_1) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_TRIGGER_2) ||
+        IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_UP) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) ||
+        IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT) ||
+        IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_UP) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT) ||
+        IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) || IsGamepadButtonReleased(0, GAMEPAD_BUTTON_RIGHT_FACE_LEFT))
     {
+        //Uint32 rumble_duration = 1000; // Duration
+        //Rumble(controller, 0xFFFF, 0xFFFF, rumble_duration);
+        Rumble(controller, 0xFFFF, 0xFFFF, 300);
+
         if (m_collision.hit)
         {
             player.handleInput(EVENT_SHOOT);
@@ -603,6 +634,7 @@ void Game::inputControl()
         }
         else
         {
+            player.handleInput(EVENT_SHOOT);
             player.shootBullet(billPositionRotating);
         }
     }
@@ -625,6 +657,11 @@ void Game::inputControl()
         g_renderWireDebug = !g_renderWireDebug;
     }
 
+    if (IsKeyReleased(KEY_F2))
+    {
+        std::cout << "\nToggling Pain Vignette!\n";
+        m_showPainVignette = !m_showPainVignette;
+    }
 
     Vector3 normVelocity = Vector3Normalize({ leftStickX, leftStickY, 0 });
 
@@ -667,26 +704,26 @@ void Game::inputControl()
 
 void Game::crosshairMove()
 {
-    if (IsKeyDown(KEY_UP))
+    if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_I))
     {
-        keyboardY = -1.0f;
+        keyboardY = -1.0f * m_keyboardLookSensitivity;
     }
-    else if (IsKeyDown(KEY_DOWN))
+    else if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_K))
     {
-        keyboardY = 1.0f;
+        keyboardY = 1.0f * m_keyboardLookSensitivity;
     }
     else
     {
         keyboardY = 0.0f;
     }
 
-    if (IsKeyDown(KEY_LEFT))
+    if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_J))
     {
-        keyboardX = -1.0f;
+        keyboardX = -1.0f * m_keyboardLookSensitivity;
     }
-    else if (IsKeyDown(KEY_RIGHT))
+    else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_L))
     {
-        keyboardX = 1.0f;
+        keyboardX = 1.0f * m_keyboardLookSensitivity;
     }
     else
     {
@@ -716,6 +753,7 @@ void Game::gamepadInit()
 
 void Game::gameBegins()
 {
+    AchievementManager::lockAll();
     state = GameState::GAMEPLAY;
     gameOverTick = 0;
     score = 0;
@@ -773,6 +811,7 @@ void Game::checkCollisions()
             }
             player.hitSound(1);
             player.enemyCollision(true);
+            if (m_showPainVignette) painVignetteStart();
             swarmer[i].collision(true);
             swarmer[i].handleInput(EVENT_ATTACK);
         }
@@ -804,6 +843,7 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.handleInput(EVENT_COLLIDE_R);
         player.hitSound(0);
+        if (m_showPainVignette) painVignetteStart();
         player.rebound(player.getPosition() + PLAYER_COLLISION_OFFSET_LATERAL);
         player.stopAcceleration();
     }
@@ -813,6 +853,7 @@ void Game::checkCollisions()
         player.worldCollision(true);
         player.handleInput(EVENT_COLLIDE_L);
         player.hitSound(0);
+        if (m_showPainVignette) painVignetteStart();
         player.rebound(player.getPosition() - PLAYER_COLLISION_OFFSET_LATERAL);
         player.stopAcceleration();
     }
@@ -821,6 +862,7 @@ void Game::checkCollisions()
     {// Colliding with terrain in front
         player.worldCollision(true);
         player.hitSound(0);
+        if (m_showPainVignette) painVignetteStart();
         player.reboundZ(camPos);
         player.stopAcceleration();
     }
@@ -831,6 +873,7 @@ void Game::checkCollisions()
     {
         std::cout << "Hitting a mushroom!\n\n";
         player.hitSound(0);
+        if (m_showPainVignette) painVignetteStart();
         player.reboundFurniture(m_collisionData);
         player.stopAcceleration();
     }
@@ -859,6 +902,7 @@ void Game::checkCollisions()
             player.handleInput(EVENT_HIT_R);
         }
         player.hitSound(1);
+        if (m_showPainVignette) painVignetteStart();
         player.poisonPlayer(true);
     }
 
@@ -867,7 +911,7 @@ void Game::checkCollisions()
     
     m_ray = GetScreenToWorldRay(m_crosshairOnScreenPos, camera);
 
-    m_collision.distance = FLT_MAX;
+    m_collision.distance = FLT_MAX; // Set distance to maximum.
     m_collision.hit = false;
 
     for (int i = 0; i < MAX_SWARMERS; i++)
@@ -996,13 +1040,65 @@ void Game::healthBarUpdate()
     healthDest.height = player.getHealth() * heightPercent;
 }
 
-void Game::Rumble(SDL_GameController* controller, Uint16 lowFreq, Uint16 highFreq, Uint32 duration){
-    if (controller && SDL_GameControllerHasRumble(controller))
-    {
-        TraceLog(LOG_INFO, "Activating Rumbleeeeeee");
-        SDL_GameControllerRumble(controller, lowFreq, highFreq, duration);
+// RUMBLE REQUIREMENT
+//void Game::Rumble(SDL_GameController* controller, Uint16 lowFreq, Uint16 highFreq, Uint32 duration){
+//    if (controller && SDL_GameControllerHasRumble(controller))
+//    {
+//        TraceLog(LOG_INFO, "Activating Rumbleeeeeee");
+//        SDL_GameControllerRumble(controller, lowFreq, highFreq, duration);
+//    }
+//}
+
+void Game::Rumble(SDL_GameController* controller, Uint16 lowFreq, Uint16 highFreq, Uint32 duration) {
+    if (controller && SDL_GameControllerHasRumble(controller)) {
+        Uint32 currentTime = GetTime() * 1000;
+
+        // Allow a new rumble if previous one has ended (ignores cooldown)
+        if (!m_isRumbling) {
+            TraceLog(LOG_INFO, "Activating Rumbleeeeeee");
+            SDL_GameControllerRumble(controller, lowFreq, highFreq, duration);
+
+            // Update timing variables
+            m_rumbleStartTimeRS = currentTime;
+            m_rumbleDurationRS = duration;
+            m_isRumbling = true;
+        }
     }
 }
 
+void Game::painVignetteStart()
+{
+    std::cout << "Pain starting!\n";
+    m_painCounterCur = m_painCounterMax;
+    m_painShow = true;
+    m_painAlphaCur = m_painAlphaMax;
+}
+
+void Game::painCountDown()
+{
+    if (m_painCounterCur > 0)
+    {
+        std::cout << "Counting down pain at " << m_painCounterCur << "\n";
+        m_painCounterCur -= GetFrameTime();
+        m_painAlphaCur -= GetFrameTime() * 8;
+    }
+    else
+    {
+        m_painShow = false;
+    }
+        
+}
+
+void Game::UpdateRumble(SDL_GameController* controller) {
+    if (m_isRumbling) {
+        Uint32 currentTime = GetTime() * 1000;
+
+        if (currentTime - m_rumbleStartTimeRS >= m_rumbleDurationRS) {
+            SDL_GameControllerRumble(controller, 0, 0, 0); // Stop rumbling
+            TraceLog(LOG_INFO, "Stopping Rumbleeeeeee");
+            m_isRumbling = false;  // Allow next rumble immediately
+        }
+    }
+}
 
 
